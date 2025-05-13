@@ -8,5 +8,10 @@ namespace Ouroboros_Elio.Controllers
         {
             return View();
         }
+
+        public IActionResult ProductDetail()
+        {
+            return View();
+        }
     }
 }
