@@ -9,12 +9,11 @@ namespace BusinessLogicLayer.Dtos.AuthDtos
 {
 	public class LoginRequestViewModel
 	{
-		[Required]
-		[DataType(DataType.PhoneNumber)]
-		[Phone]
-		public string PhoneNumber { get; set; }
+		[DataType(DataType.EmailAddress)]
+		public string Gmail { get; set; }
 		[Required]
 		[DataType(DataType.Password)]
 		public string Password { get; set; }
+		public bool RememberMe { get; set; } = false;
 	}
 }

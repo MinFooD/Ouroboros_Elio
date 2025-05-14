@@ -11,5 +11,7 @@ namespace BusinessLogicLayer.ServiceContracts
 	{
 		//string CreateJWTToken(ApplicationUser user, List<string> roles);
 		Task<bool> VerifyEmailAsync(string token);
+
+		//Task<bool> PasswordSignInAsync(string gmail, string password, bool rememberMe, bool lockoutOnFailure);
 	}
 }

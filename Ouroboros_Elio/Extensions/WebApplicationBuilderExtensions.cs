@@ -43,11 +43,11 @@ namespace Ouroboros.Extensions
 	//});
 	//		});
 
-				builder.Services.AddIdentityCore<ApplicationUser>()
-			.AddRoles<IdentityRole<Guid>>()
-			.AddTokenProvider<DataProtectorTokenProvider<ApplicationUser>>("Ouroboros")
-			.AddEntityFrameworkStores<OuroborosContext>()
-			.AddDefaultTokenProviders();
+			//	builder.Services.AddIdentityCore<ApplicationUser>()
+			//.AddRoles<IdentityRole<Guid>>()
+			//.AddTokenProvider<DataProtectorTokenProvider<ApplicationUser>>("Ouroboros")
+			//.AddEntityFrameworkStores<OuroborosContext>()
+			//.AddDefaultTokenProviders();
 			builder.Services.AddStackExchangeRedisCache(options =>
 			{
 				options.Configuration = "localhost:7111";  

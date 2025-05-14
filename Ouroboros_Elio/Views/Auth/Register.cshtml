@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@model Ouroboros_Elio.Models.LoginRegisterViewModel
+
+<!DOCTYPE html>
 <html class="no-js" lang="en">
 <head>
     <meta charset="utf-8" />
@@ -59,25 +61,39 @@
         <!-- Begin Hiraola's Login Register Area -->
         <div class="hiraola-login-register_area">
             <div class="container">
+                @if (TempData["SuccessMessage"] != null)
+                {
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        @TempData["SuccessMessage"]
+                    </div>
+                }
+                @if (TempData["Error"] != null)
+                {
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        @TempData["Error"]
+                    </div>
+                }
                 <div class="row">
                     <div class="col-sm-12 col-md-12 col-xs-12 col-lg-6">
                         <!-- Login Form s-->
-                        <form action="#">
+                        <form asp-area="" asp-controller="Auth" asp-action="Login" method="post">
                             <div class="login-form">
                                 <h4 class="login-title">Login</h4>
                                 <div class="row">
                                     <div class="col-md-12 col-12">
-                                        <label>Email Address*</label>
-                                        <input type="email" placeholder="Email Address" />
+                                        <label asp-for="Login.Gmail">Email Address*</label>
+                                        <input asp-for="Login.Gmail" type="email" placeholder="Email Address" />
+                                        <span asp-validation-for="Login.Gmail" class="text-danger"></span>
                                     </div>
                                     <div class="col-12 mb--20">
-                                        <label>Password</label>
-                                        <input type="password" placeholder="Password" />
+                                        <label asp-for="Login.Password">Password</label>
+                                        <input asp-for="Login.Password" type="password" placeholder="Password" />
+                                        <span asp-validation-for="Login.Password" class="text-danger"></span>
                                     </div>
                                     <div class="col-md-8">
                                         <div class="check-box">
-                                            <input type="checkbox" id="remember_me" />
-                                            <label for="remember_me">Remember me</label>
+                                            <input asp-for="Login.RememberMe" type="checkbox" id="remember_me" />
+                                            <label asp-for="Login.RememberMe" for="remember_me">Remember me</label>
                                         </div>
                                     </div>
                                 @*     <div class="col-md-4">
@@ -93,29 +109,39 @@
                         </form>
                     </div>
                     <div class="col-sm-12 col-md-12 col-lg-6 col-xs-12">
-                        <form action="#">
+                        <form asp-area="" asp-controller="Auth" asp-action="RegisterAndSendMail" method="post">
                             <div class="login-form">
                                 <h4 class="login-title">Register</h4>
                                 <div class="row">
                                     <div class="col-md-6 col-12 mb--20">
-                                        <label>First Name</label>
-                                        <input type="text" placeholder="First Name" />
+                                        <label asp-for="Register.UserName">UserName</label>
+                                        <input asp-for="Register.UserName" type="text" placeholder="First Name" />
+                                        <span asp-validation-for="Register.UserName" class="text-danger"></span>
                                     </div>
                                     <div class="col-md-6 col-12 mb--20">
-                                        <label>Last Name</label>
-                                        <input type="text" placeholder="Last Name" />
+                                        <label asp-for="Register.Phone">Phone</label>
+                                        <input asp-for="Register.Phone" type="text" placeholder="Last Name" />
+                                        <span asp-validation-for="Register.Phone" class="text-danger"></span>
                                     </div>
                                     <div class="col-md-12">
-                                        <label>Email Address*</label>
-                                        <input type="email" placeholder="Email Address" />
+                                        <label asp-for="Register.Gmail">Gmail*</label>
+                                        <input asp-for="Register.Gmail" type="email" placeholder="Email Address" />
+                                        <span asp-validation-for="Register.Gmail" class="text-danger"></span>
                                     </div>
                                     <div class="col-md-6">
-                                        <label>Password</label>
-                                        <input type="password" placeholder="Password" />
+                                        <label asp-for="Register.Password">Password</label>
+                                        <input asp-for="Register.Password" type="password" placeholder="Password" />
+                                        <span asp-validation-for="Register.Password" class="text-danger"></span>
                                     </div>
                                     <div class="col-md-6">
-                                        <label>Confirm Password</label>
-                                        <input type="password" placeholder="Confirm Password" />
+                                        <label asp-for="Register.ConfirmPassword">Confirm Password</label>
+                                        <input asp-for="Register.ConfirmPassword" type="password" placeholder="Confirm Password" />
+                                        <span asp-validation-for="Register.ConfirmPassword" class="text-danger"></span>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <label asp-for="Register.Address">Address*</label>
+                                        <input asp-for="Register.Address" type="address" placeholder="Address" />
+                                        <span asp-validation-for="Register.Address" class="text-danger"></span>
                                     </div>
                                     <div class="col-12">
                                         <button class="hiraola-register_btn">Register</button>

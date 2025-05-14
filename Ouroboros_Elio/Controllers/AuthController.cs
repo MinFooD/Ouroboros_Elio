@@ -2,23 +2,29 @@
 using BusinessLogicLayer.Dtos.MailUtils;
 using BusinessLogicLayer.ServiceContracts;
 using DataAccessLayer.Entities;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
 using Newtonsoft.Json;
+using Ouroboros_Elio.Models;
+using System.Security.Claims;
 
 namespace Ouroboros_Elio.Controllers
 {
 	public class AuthController : Controller
 	{
 		private readonly UserManager<ApplicationUser> _userManager;
+		private readonly SignInManager<ApplicationUser> _signInManager;
 		private readonly IEmailService _emailService;
 		private readonly IAuthService _authService;
 
-		public AuthController(UserManager<ApplicationUser> userManager, IEmailService emailService, IAuthService authService)
+		public AuthController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IEmailService emailService, IAuthService authService)
 		{
 			_userManager = userManager;
+			_signInManager = signInManager;
 			_emailService = emailService;
 			_authService = authService;
 		}
@@ -26,22 +32,78 @@ namespace Ouroboros_Elio.Controllers
 		[HttpGet]
 		public IActionResult Register()
 		{
-			return View();
+			var model = new LoginRegisterViewModel
+			{
+				Register = new RegisterRequestViewModel(),
+				Login = new LoginRequestViewModel()
+			};
+			return View(model);
+		}
+
+		[HttpPost]
+		[Route("Login")]
+		public async Task<IActionResult> Login(LoginRegisterViewModel model)
+		{
+			var loginRequest = model.Login;
+
+			if (!ModelState.IsValid)
+			{
+				return View("Register", model);
+			}
+
+			var user = await _userManager.FindByEmailAsync(loginRequest.Gmail);
+			if (user == null)
+			{
+				ModelState.AddModelError("Login.Gmail", "Email does not exist.");
+				return View("Register", model);
+			}
+
+			if (!user.EmailConfirmed)
+			{
+				ModelState.AddModelError("Login.Gmail", "Please verify your email before logging in.");
+				return View("Register", model);
+			}
+
+			var result = await _signInManager.PasswordSignInAsync(user.UserName, loginRequest.Password, loginRequest.RememberMe, lockoutOnFailure: false);
+
+			if (result.Succeeded)
+			{
+				// Tùy chọn: ghi thông tin phụ vào cookie (không nên ghi nhạy cảm)
+				Response.Cookies.Append("UserName", user.UserName, new CookieOptions { HttpOnly = true, Secure = true });
+
+				return RedirectToAction("ProductList", "Product"); // Hoặc chuyển đến Dashboard
+			}
+			else if (result.IsLockedOut)
+			{
+				ModelState.AddModelError("", "Account is locked due to multiple failed login attempts.");
+			}
+			else
+			{
+				ModelState.AddModelError("Login.Password", "Incorrect password.");
+			}
+			TempData["Error"] = "Login failed. Please check your email or password.";
+			return View("Register", model);
 		}
 
 		[HttpPost]
 		[Route("RegisterAndSendMail")]
-		public async Task<IActionResult> RegisterAndSendMail(RegisterRequestViewModel registerRequestViewModel)
+		public async Task<IActionResult> RegisterAndSendMail(LoginRegisterViewModel model)
 		{
+			var registerRequestViewModel = model.Register;
 			if (!ModelState.IsValid)
 			{
-				return View("Register", registerRequestViewModel);
+				return View("Register", model);
 			}
 			var user = await _userManager.FindByEmailAsync(registerRequestViewModel.Gmail);
 			if (user != null)
 			{
 				ModelState.AddModelError("Gmail", "Email already exists.");
-				return View("Register", registerRequestViewModel);
+				return View("Register", model);
+			}
+			if (registerRequestViewModel.Password != registerRequestViewModel.ConfirmPassword)
+			{
+				ModelState.AddModelError("Password", "The password is not match.");
+				return View("Register", model);
 			}
 
 			// Kiểm tra nếu số điện thoại đã tồn tại
@@ -49,7 +111,7 @@ namespace Ouroboros_Elio.Controllers
 			if (user != null)
 			{
 				ModelState.AddModelError("Phone", "Phone number already exists.");
-				return View("Register", registerRequestViewModel);
+				return View("Register", model);
 			}
 
 			var identityUser = new ApplicationUser
@@ -68,7 +130,7 @@ namespace Ouroboros_Elio.Controllers
 			if (!identityResult.Succeeded)
 			{
 				ModelState.AddModelError(string.Empty, "User register failed");
-				return View("Register", registerRequestViewModel);
+				return View("Register", model);
 			}
 
 			// Thêm roles cho người dùng
@@ -78,7 +140,7 @@ namespace Ouroboros_Elio.Controllers
 			if (!identityResult.Succeeded)
 			{
 				ModelState.AddModelError(string.Empty, "Role assignment failed.");
-				return View("Register", registerRequestViewModel);
+				return View("Register", model);
 			}
 
 			var verificationLink = Url.Action("VerifyEmail", "Auth", new { token = identityUser.VerificationToken }, Request.Scheme);
@@ -99,7 +161,7 @@ namespace Ouroboros_Elio.Controllers
 			catch (Exception ex)
 			{
 				ModelState.AddModelError(string.Empty, $"Failed to send email: {ex.Message}");
-				return View("Register", registerRequestViewModel);
+				return View("Register", model);
 			}
 
 			TempData["SuccessMessage"] = "Registration successful. Please check your email to verify your account.";
