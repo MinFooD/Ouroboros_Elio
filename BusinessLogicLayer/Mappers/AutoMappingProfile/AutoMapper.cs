@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using BusinessLogicLayer.Dtos.DesignDtos;
 using DataAccessLayer.Entities;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,12 @@ namespace BusinessLogicLayer.Mappers.AutoMappingProfile
 	{
 		public AutoMapper()
 		{
+			CreateMap<Design, DesignViewModel>()
+				.ForMember(dest => dest.DesignImages, opt => opt.MapFrom(src => src.DesignImages))
+				.ReverseMap();
+			CreateMap<DesignImage, DesignImageViewModel>()
+				.ForMember(dest => dest.Design, opt => opt.MapFrom(src => src.Design))
+				.ReverseMap();
 		}
 	}
 }

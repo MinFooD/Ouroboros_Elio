@@ -1,4 +1,6 @@
 ﻿using DataAccessLayer.Context;
+using DataAccessLayer.Repositories;
+using DataAccessLayer.RepositoryContracts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Configuration;
@@ -15,8 +17,10 @@ namespace DataAccessLayer.Extensions
 	{
 		public static void AddDataAccessLayer(this IServiceCollection services, IConfiguration configuration)
 		{
-			var connectionString = configuration.GetConnectionString("DefaultConnection");
-			services.AddDbContext<OuroborosContext>(options => options.UseSqlServer(connectionString));
+			//var connectionString = configuration.GetConnectionString("DefaultConnection");
+			//services.AddDbContext<OuroborosContext>(options => options.UseSqlServer(connectionString));
+
+			services.AddScoped<IDesignRepository, DesignRepository>();
 		}
 	}
 }

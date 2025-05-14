@@ -18,11 +18,13 @@ namespace BusinessLogicLayer.Services
 	{
 		private readonly IConfiguration _configuration;
 		private readonly UserManager<ApplicationUser> _userManager;
+		private readonly SignInManager<ApplicationUser> _signInManager;
 
-		public AuthService(IConfiguration configuration, UserManager<ApplicationUser> userManager)
+		public AuthService(IConfiguration configuration, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
 		{
 			_configuration = configuration;
 			_userManager = userManager;
+			_signInManager = signInManager;
 		}
 
 		public string CreateJWTToken(ApplicationUser user, List<string> roles)
@@ -50,6 +52,25 @@ namespace BusinessLogicLayer.Services
 
 			return new JwtSecurityTokenHandler().WriteToken(token);
 		}
+
+		//public async Task<bool> PasswordSignInAsync(string gmail, string password, bool rememberMe, bool lockoutOnFailure)
+		//{
+		//	var user = await _userManager.FindByEmailAsync(gmail);
+
+		//	if (user == null)
+		//	{
+		//		return false;
+		//	}
+
+		//	if (!user.EmailConfirmed)
+		//	{
+		//		return false;
+		//	}
+
+		//	var result = await _signInManager.PasswordSignInAsync(user, password, rememberMe, lockoutOnFailure);
+
+		//	return result.Succeeded;
+		//}
 
 		public async Task<bool> VerifyEmailAsync(string token)
 		{
