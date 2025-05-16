@@ -9,23 +9,31 @@ namespace Ouroboros_Elio.Controllers
     {
 		private readonly ILogger<ProductController> _logger;
 		private readonly IDesignService _designService;
+		private readonly IModelService _modelService;
 
-		public ProductController(ILogger<ProductController> logger, IDesignService designService)
+		public ProductController(ILogger<ProductController> logger, IDesignService designService, IModelService modelService)
 		{
 			_logger = logger;
 			_designService = designService;
+			_modelService = modelService;
 		}
 
-		[Authorize(Roles = "Admin,Manager,User")]
-		public async Task<IActionResult> ProductList()
+		//[Authorize(Roles = "Admin,Manager,User")]
+		public async Task<IActionResult> ProductList(Guid? modelId)
         {
-            var designs = await _designService.GetAllDesignsAsync();
+            var designs = await _designService.GetAllDesignsAsync(modelId);
+			ViewBag.ListModel = await _modelService.GetAllModelsAsync();
 			return View(designs);
         }
 
-        public IActionResult ProductDetail(Guid designId)
+        public async Task<IActionResult> ProductDetail(Guid designId)
         {
-			var design = _designService.GetDesignByIdAsync(designId);
+			var design = await _designService.GetDesignByIdAsync(designId);
+			var result = await _designService.VisitCountUp(designId);
+			if(result == false)
+			{
+				return NotFound();
+			}
 			if (design == null)
 			{
 				return NotFound();

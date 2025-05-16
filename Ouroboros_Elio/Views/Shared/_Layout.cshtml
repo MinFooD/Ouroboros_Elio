@@ -338,7 +338,7 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="#miniCart" class="minicart-btn toolbar-btn">
+                                    <a asp-area="" asp-controller="Cart" asp-action="CartDetail" class="wishlist-btn">
                                         <i class="ion-bag"></i>
                                     </a>
                                 </li>
@@ -348,7 +348,7 @@
                 </div>
             </div>
         </div>
-        <div class="offcanvas-minicart_wrapper" id="miniCart">
+        @* <div class="offcanvas-minicart_wrapper" id="miniCart">
             <div class="offcanvas-menu-inner">
                 <a href="#" class="btn-close"><i class="ion-android-close"></i></a>
                 <div class="minicart-content">
@@ -777,7 +777,7 @@
                     </nav>
                 </div>
             </div>
-        </div>
+        </div> *@
     </header>
             @RenderBody()
 @*     <footer class="border-top footer text-muted">

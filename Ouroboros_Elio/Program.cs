@@ -28,6 +28,7 @@ builder.AddPresentationLayer();
 builder.Services.AddBusinessLogicLayer();
 
 builder.Services.AddScoped<IDesignRepository, DesignRepository>();
+builder.Services.AddScoped<IModelRepository, ModelRepository>();
 //builder.Services.AddDataAccessLayer(builder.Configuration);
 builder.Services.AddIdentity<ApplicationUser, IdentityRole<Guid>>(options =>
 {
