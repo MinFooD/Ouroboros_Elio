@@ -1,4 +1,5 @@
 ﻿using BusinessLogicLayer.Dtos.DesignDtos;
+using BusinessLogicLayer.Dtos.ModelDtos;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,10 +8,8 @@ using System.Threading.Tasks;
 
 namespace BusinessLogicLayer.ServiceContracts
 {
-	public interface IDesignService
+	public interface IModelService
 	{
-		Task<DesignViewModel?> GetDesignByIdAsync(Guid? designId);
-		Task<List<DesignViewModel>?> GetAllDesignsAsync(Guid? modelId);
-		Task<bool> VisitCountUp(Guid designId);
+		Task<List<ModelViewModel>?> GetAllModelsAsync();
 	}
 }

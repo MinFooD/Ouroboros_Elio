@@ -24,6 +24,10 @@ namespace BusinessLogicLayer.Dtos.DesignDtos
 
 		public int VisitCount { get; set; }
 		public int OrderCount { get; set; }
+		public string? CollectionName { get; set; }
+		public string? CategoryName { get; set; }
+		public string? TopicName { get; set; }
+		public string? ModelName { get; set; }
 		public virtual DesignImageViewModel? FirstImage { get; set; } = null!;
 		public virtual ICollection<DesignImageViewModel> DesignImages { get; set; } = new List<DesignImageViewModel>();
 	}

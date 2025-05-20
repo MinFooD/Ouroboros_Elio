@@ -11,6 +11,7 @@ public partial class Cart
     public Guid UserId { get; set; }
 
     public DateTime? CreatedAt { get; set; }
+	public decimal? Total { get; set; }
 
 	public virtual ApplicationUser User { get; set; }
 

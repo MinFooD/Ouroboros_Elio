@@ -1,4 +1,5 @@
-﻿<!doctype html>
+﻿@model BusinessLogicLayer.Dtos.CartDtos.CartAndListCartItemViewModel
+<!doctype html>
 <html class="no-js" lang="en">
 
 <head>
@@ -12,7 +13,7 @@
     <link rel="shortcut icon" type="image/x-icon" href="assets/images/favicon.ico">
 
     <!-- CSS
-       ============================================ -->
+    ============================================ -->
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="~/assets/css/bootstrap.min.css" />
     <!-- Fontawesome -->
@@ -60,86 +61,84 @@
             <div class="container">
                 <div class="row">
                     <div class="col-12">
-                        <form action="javascript:void(0)">
-                            <div class="table-content table-responsive">
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th class="hiraola-product-remove">remove</th>
-                                            <th class="hiraola-product-thumbnail">images</th>
-                                            <th class="cart-product-name">Product</th>
-                                            <th class="hiraola-product-price">Unit Price</th>
-                                            <th class="hiraola-product-quantity">Quantity</th>
-                                            <th class="hiraola-product-subtotal">Total</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td class="hiraola-product-remove">
-                                                <a href="javascript:void(0)">
-                                                    <i class="fa fa-trash"
-                                                       title="Remove"></i>
-                                                </a>
-                                            </td>
-                                            <td class="hiraola-product-thumbnail"><a href="javascript:void(0)"><img src="~/assets/images/product/small-size/2-1.jpg" alt="Hiraola's Cart Thumbnail"></a></td>
-                                            <td class="hiraola-product-name"><a href="javascript:void(0)">Juma rema pola</a></td>
-                                            <td class="hiraola-product-price"><span class="amount">$46.80</span></td>
-                                            <td class="quantity">
-                                                <label>Quantity</label>
-                                                <div class="cart-plus-minus">
-                                                    <input class="cart-plus-minus-box" value="1" type="text">
-                                                    <div class="dec qtybutton"><i class="fa fa-angle-down"></i></div>
-                                                    <div class="inc qtybutton"><i class="fa fa-angle-up"></i></div>
-                                                </div>
-                                            </td>
-                                            <td class="product-subtotal"><span class="amount">$46.80</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td class="hiraola-product-remove">
-                                                <a href="javascript:void(0)">
-                                                    <i class="fa fa-trash"
-                                                       title="Remove"></i>
-                                                </a>
-                                            </td>
-                                            <td class="hiraola-product-thumbnail"><a href="javascript:void(0)"><img src="~/assets/images/product/small-size/2-2.jpg" alt="Hiraola's Cart Thumbnail"></a></td>
-                                            <td class="hiraola-product-name"><a href="javascript:void(0)">Bag Goodscol model</a></td>
-                                            <td class="hiraola-product-price"><span class="amount">$71.80</span></td>
-                                            <td class="quantity">
-                                                <label>Quantity</label>
-                                                <div class="cart-plus-minus">
-                                                    <input class="cart-plus-minus-box" value="1" type="text">
-                                                    <div class="dec qtybutton"><i class="fa fa-angle-down"></i></div>
-                                                    <div class="inc qtybutton"><i class="fa fa-angle-up"></i></div>
-                                                </div>
-                                            </td>
-                                            <td class="product-subtotal"><span class="amount">$71.80</span></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="row">
-                                <div class="col-12">
-                                    <div class="coupon-all">
+                        @if (Model.cartItemsViewModel != null && Model.cartItemsViewModel.Any() && Model.cartItemsViewModel.Count != 0)
+                        {
+                            <form asp-area="" asp-controller="Order" asp-action="CreatePaymentLink" method="post">
+                                <div class="table-content table-responsive">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th class="hiraola-product-remove">remove</th>
+                                                <th class="hiraola-product-thumbnail">images</th>
+                                                <th class="cart-product-name">Product</th>
+                                                <th class="hiraola-product-price">Unit Price</th>
+                                                <th class="hiraola-product-quantity">Quantity</th>
+                                                <th class="hiraola-product-subtotal">Total</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
 
-                                        <div class="coupon2">
-                                            <input class="button" name="update_cart" value="Update cart" type="submit">
+                                            @foreach (var item in Model.cartItemsViewModel)
+                                            {
+                                                <tr>
+                                                    <td class="hiraola-product-remove">
+                                                        <a asp-area="" asp-controller="Cart" asp-action="UpdateCart"
+                                                        asp-route-designId="@item.DesignId" asp-route-quantity="0">
+                                                            <i class="fa fa-trash"
+                                                            title="Remove"></i>
+                                                        </a>
+                                                    </td>
+                                                    <td class="hiraola-product-thumbnail"><a href="javascript:void(0)"><img src="@item.Design.FirstImage.ImageUrl" alt="Hiraola's Cart Thumbnail" style="max-width:30%"></a></td>
+                                                    <td class="hiraola-product-name"><a href="javascript:void(0)">@item.Design.DesignName</a></td>
+                                                    <td class="hiraola-product-price"><span class="amount">@item.Price VND</span></td>
+                                                    <td class="quantity">
+                                                        <label>Quantity</label>
+                                                        <div class="cart-plus-minus">
+                                                            <input class="cart-plus-minus-box" value="1" type="text">
+                                                            <div class="dec qtybutton"><i class="fa fa-angle-down"></i></div>
+                                                            <div class="inc qtybutton"><i class="fa fa-angle-up"></i></div>
+                                                        </div>
+                                                    </td>
+                                                    <td class="product-subtotal"><span class="amount">$46.80</span></td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <input type="hidden" name="cartId" value="@Model.CartViewModel.CartId" />
+                                <input type="hidden" name="productName" value="Giỏ hàng #@Model.CartViewModel.CartId" />
+                                <input type="hidden" name="price" value="@Convert.ToInt32(Model.CartViewModel.Total ?? 0)" />
+                                <input type="hidden" name="description" value="Đơn hàng gồm @Model.cartItemsViewModel.Count SP" />
+                                <input type="hidden" name="cancelUrl" value="@($"https://localhost:7290/order/success?cartId={@Model.CartViewModel.CartId}")" />
+                                <input type="hidden" name="returnUrl" value="https://localhost:7290/checkout/success" />
+
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="coupon-all">
+                                            <div class="coupon2">
+                                                <input class="button" name="update_cart" value="Update cart" type="submit">
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-5 ml-auto">
-                                    <div class="cart-page-total">
-                                        <h2>Cart totals</h2>
-                                        <ul>
-                                            <li>Subtotal <span>$118.60</span></li>
-                                            <li>Total <span>$118.60</span></li>
-                                        </ul>
-                                        <a href="javascript:void(0)">Proceed to checkout</a>
+
+                                <div class="row">
+                                    <div class="col-md-5 ml-auto">
+                                        <div class="cart-page-total">
+                                            <h2>Cart totals</h2>
+                                            <ul>
+                                                <li>Total <span>$@Model.CartViewModel.Total</span></li>
+                                            </ul>
+                                            <button type="submit" id="create-payment-link-btn">Proceed to checkout</button>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </form>
+                            </form>
+                        } else
+                        {
+                            <h3> Giỏ hàng trống nè !</h3>
+                        }
                     </div>
                 </div>
             </div>

@@ -1,26 +1,27 @@
-﻿<!DOCTYPE html>
+﻿@model BusinessLogicLayer.Dtos.DesignDtos.DesignViewModel
+<!DOCTYPE html>
 <html class="no-js" lang="en">
-  <head>
+<head>
     <meta charset="utf-8" />
     <meta http-equiv="x-ua-compatible" content="ie=edge" />
     <title>
-      Single Product || Hiraola - Jewellery eCommerce Bootstrap 5 Template
+        Single Product || Hiraola - Jewellery eCommerce Bootstrap 5 Template
     </title>
     <meta name="robots" content="noindex, follow" />
     <meta name="description" content="" />
     <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    name="viewport"
+    content="width=device-width, initial-scale=1, shrink-to-fit=no"
     />
     <!-- Favicon -->
     <link
-      rel="shortcut icon"
-      type="image/x-icon"
-      href="assets/images/favicon.ico"
+    rel="shortcut icon"
+    type="image/x-icon"
+    href="assets/images/favicon.ico"
     />
 
     <!-- CSS
-       ============================================ -->
+    ============================================ -->
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="~/assets/css/bootstrap.min.css" />
     <!-- Fontawesome -->
@@ -43,205 +44,185 @@
     <!-- Main Style CSS -->
     <link rel="stylesheet" href="~/assets/css/style.css" />
     <!-- <link rel="stylesheet" href="assets/css/style.min.css"> -->
-  </head>
+</head>
 
-  <body class="template-color-1">
+<body class="template-color-1">
     <div class="main-wrapper">
-      <!-- Begin Hiraola's Breadcrumb Area -->
-      <div class="breadcrumb-area">
-        <div class="container">
-          <div class="breadcrumb-content">
-            <h2>Single Product Type</h2>
-            <ul>
-              <li><a href="index.html">Home</a></li>
-              <li class="active">Single Product</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-      <!-- Hiraola's Breadcrumb Area End Here -->
-
-      <!-- Begin Hiraola's Single Product Area -->
-      <div class="sp-area">
-        <div class="container">
-          <div class="sp-nav">
-            <div class="row">
-              <div class="col-lg-5 col-md-5">
-                <div class="sp-img_area">
-                  <div class="zoompro-border">
-                    <img
-                      class="zoompro"
-                      src="assets/images/single-product/large-size/1.jpg"
-                      data-zoom-image="assets/images/single-product/large-size/1.jpg"
-                      alt="Hiraola's Product Image"
-                    />
-                  </div>
-                  <div id="gallery" class="sp-img_slider">
-                    <a
-                      class="active"
-                      data-image="assets/images/single-product/large-size/1.jpg"
-                      data-zoom-image="assets/images/single-product/large-size/1.jpg"
-                    >
-                      <img
-                        src="assets/images/single-product/small-size/1.jpg"
-                        alt="Hiraola's Product Image"
-                      />
-                    </a>
-                    <a
-                      data-image="assets/images/single-product/large-size/2.jpg"
-                      data-zoom-image="assets/images/single-product/large-size/2.jpg"
-                    >
-                      <img
-                        src="assets/images/single-product/small-size/2.jpg"
-                        alt="Hiraola's Product Image"
-                      />
-                    </a>
-                  </div>
+        <!-- Begin Hiraola's Breadcrumb Area -->
+        <div class="breadcrumb-area">
+            <div class="container">
+                <div class="breadcrumb-content">
+                    <h2>Single Product Type</h2>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li class="active">Single Product</li>
+                    </ul>
                 </div>
-              </div>
-              <div class="col-lg-7 col-md-7">
-                <div class="sp-content">
-                  <div class="sp-heading">
-                    <h5><a href="#">JWDA Penant Lamp Brshed Steel</a></h5>
-                  </div>
-                  <span class="reference">Reference: demo_1</span>
-                  <div class="rating-box">
-                    <ul>
-                      <li><i class="fa fa-star-of-david"></i></li>
-                      <li><i class="fa fa-star-of-david"></i></li>
-                      <li><i class="fa fa-star-of-david"></i></li>
-                      <li><i class="fa fa-star-of-david"></i></li>
-                      <li class="silver-color">
-                        <i class="fa fa-star-of-david"></i>
-                      </li>
-                    </ul>
-                  </div>
-                  <div class="sp-essential_stuff">
-                    <ul>
-                      <li>
-                        EX Tax:
-                        <a href="javascript:void(0)"><span>£453.35</span></a>
-                      </li>
-                      <li>Brands <a href="javascript:void(0)">Buxton</a></li>
-                      <li>
-                        Product Code:
-                        <a href="javascript:void(0)">Product 16</a>
-                      </li>
-                      <li>
-                        Reward Points: <a href="javascript:void(0)">600</a>
-                      </li>
-                      <li>
-                        Availability: <a href="javascript:void(0)">In Stock</a>
-                      </li>
-                    </ul>
-                  </div>
-                  <div class="quantity">
-                    <label>Quantity</label>
-                    <div class="cart-plus-minus">
-                      <input
-                        class="cart-plus-minus-box"
-                        value="1"
-                        type="text"
-                      />
-                      <div class="dec qtybutton">
-                        <i class="fa fa-angle-down"></i>
-                      </div>
-                      <div class="inc qtybutton">
-                        <i class="fa fa-angle-up"></i>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="qty-btn_area">
-                    <ul>
-                      <li>
-                        <a class="qty-cart_btn" href="cart.html">Add To Cart</a>
-                      </li>
-                      <li>
-                        <a
-                          class="qty-wishlist_btn"
-                          href="wishlist.html"
-                          data-bs-toggle="tooltip"
-                          title="Add To Wishlist"
-                          ><i class="ion-android-favorite-outline"></i
-                        ></a>
-                      </li>
-                      <li>
-                        <a
-                          class="qty-compare_btn"
-                          href="compare.html"
-                          data-bs-toggle="tooltip"
-                          title="Compare This Product"
-                          ><i class="ion-ios-shuffle-strong"></i
-                        ></a>
-                      </li>
-                    </ul>
-                  </div>
-                  <div class="hiraola-tag-line">
-                    <h6>Tags:</h6>
-                    <a href="javascript:void(0)">Ring</a>,
-                    <a href="javascript:void(0)">Necklaces</a>,
-                    <a href="javascript:void(0)">Braid</a>
-                  </div>
-                  <div class="hiraola-social_link">
-                    <ul>
-                      <li class="facebook">
-                        <a
-                          href="https://www.facebook.com"
-                          data-bs-toggle="tooltip"
-                          target="_blank"
-                          title="Facebook"
-                        >
-                          <i class="fab fa-facebook"></i>
-                        </a>
-                      </li>
-                      <li class="twitter">
-                        <a
-                          href="https://twitter.com"
-                          data-bs-toggle="tooltip"
-                          target="_blank"
-                          title="Twitter"
-                        >
-                          <i class="fab fa-twitter-square"></i>
-                        </a>
-                      </li>
-                      <li class="youtube">
-                        <a
-                          href="https://www.youtube.com"
-                          data-bs-toggle="tooltip"
-                          target="_blank"
-                          title="Youtube"
-                        >
-                          <i class="fab fa-youtube"></i>
-                        </a>
-                      </li>
-                      <li class="google-plus">
-                        <a
-                          href="https://www.plus.google.com/discover"
-                          data-bs-toggle="tooltip"
-                          target="_blank"
-                          title="Google Plus"
-                        >
-                          <i class="fab fa-google-plus"></i>
-                        </a>
-                      </li>
-                      <li class="instagram">
-                        <a
-                          href="https://rss.com"
-                          data-bs-toggle="tooltip"
-                          target="_blank"
-                          title="Instagram"
-                        >
-                          <i class="fab fa-instagram"></i>
-                        </a>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
             </div>
-          </div>
         </div>
-      </div>
+        <!-- Hiraola's Breadcrumb Area End Here -->
+
+        <!-- Begin Hiraola's Single Product Area -->
+        <div class="sp-area">
+            <div class="container">
+                <div class="sp-nav">
+                    <div class="row">
+                        <div class="col-lg-5 col-md-5">
+                            <div class="sp-img_area">
+                                <div class="zoompro-border">
+                                    <img class="zoompro"
+                                         src="@Model.FirstImage.ImageUrl"
+                                         data-zoom-image="@Model.FirstImage.ImageUrl"
+                                         alt="Hiraola's Product Image" />
+                                </div>
+                                <div id="gallery" class="sp-img_slider">
+                                    @if (Model.DesignImages != null && Model.DesignImages.Any())
+                                    {
+                                        foreach (var item in Model.DesignImages)
+                                        {
+                                            <a @* class="active" *@
+                                               data-image="@item.ImageUrl"
+                                               data-zoom-image="@item.ImageUrl">
+                                                <img src="@item.ImageUrl"
+                                                     alt="Hiraola's Product Image" />
+                                            </a>
+                                        }
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-7 col-md-7">
+                            <div class="sp-content">
+                                <div class="sp-heading">
+                                    <h5><a href="">@Model.DesignName</a></h5>
+                                </div>
+                                <span class="reference">Type: @Model.CategoryName</span>
+                                <div class="rating-box">
+                                    <ul>
+                                        <li><i class="fa fa-star-of-david"></i></li>
+                                        <li><i class="fa fa-star-of-david"></i></li>
+                                        <li><i class="fa fa-star-of-david"></i></li>
+                                        <li><i class="fa fa-star-of-david"></i></li>
+                                        <li class="silver-color">
+                                            <i class="fa fa-star-of-david"></i>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="sp-essential_stuff">
+                                    <ul>
+                                        <li>
+                                            Price:
+                                            <a href=""><span>@Model.Price VND</span></a>
+                                        </li>
+                                        <li>Collection: <a href="">@Model.CollectionName</a></li>
+                                        <li>
+                                            Topic:
+                                            <a href="">@Model.TopicName</a>
+                                        </li>
+                                        <li>
+                                            Model: <a href="">@Model.ModelName</a>
+                                        </li>
+                                        @* <li>
+                                            Visit Count: <a href="">@Model.VisitCount</a>
+                                        </li>
+                                        <li>
+                                            Visit Count: <a href="">@Model.VisitCount</a>
+                                        </li> *@
+                                    </ul>
+                                </div>
+                                <form asp-area="" asp-controller="Cart" asp-action="AddToCart" method="get">
+                                    <input type="hidden" name="designId" value="@Model.DesignId" />
+                                    <div class="quantity">
+                                        <label>Quantity</label>
+                                        <div class="cart-plus-minus">
+                                            <input class="cart-plus-minus-box" name="quantity" value="1" type="text" />
+                                            <div class="dec qtybutton"><i class="fa fa-angle-down"></i> </div>
+                                            <div class="inc qtybutton"><i class="fa fa-angle-up"></i></div>
+                                        </div>
+                                    </div>
+                                    <div class="qty-btn_area">
+                                        <ul>
+                                            <li>
+                                                @* <a class="qty-cart_btn" asp-area="" asp-controller="Cart" *@
+                                                @*    asp-action="AddToCart" asp-route-designId="@Model.DesignId">Add To Cart</a> *@
+                                                <button type="submit" class=""><a class="qty-cart_btn">Add To Cart</a></button>
+                                            </li>
+                                            <li>
+                                                <a class="qty-wishlist_btn"
+                                                   href=""
+                                                   data-bs-toggle="tooltip"
+                                                   title="Add To Wishlist">
+                                                    <i class="ion-android-favorite-outline"></i>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a class="qty-compare_btn"
+                                                   href=""
+                                                   data-bs-toggle="tooltip"
+                                                   title="Compare This Product">
+                                                    <i class="ion-ios-shuffle-strong"></i>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </form>
+                                
+                                @* <div class="hiraola-tag-line">
+                                    <h6>Tags:</h6>
+                                    <a href="javascript:void(0)">Ring</a>,
+                                    <a href="javascript:void(0)">Necklaces</a>,
+                                    <a href="javascript:void(0)">Braid</a>
+                                </div> *@
+                                <div class="hiraola-social_link">
+                                    <ul>
+                                        <li class="facebook">
+                                            <a href="https://www.facebook.com"
+                                               data-bs-toggle="tooltip"
+                                               target="_blank"
+                                               title="Facebook">
+                                                <i class="fab fa-facebook"></i>
+                                            </a>
+                                        </li>
+                                        <li class="twitter">
+                                            <a href="https://twitter.com"
+                                               data-bs-toggle="tooltip"
+                                               target="_blank"
+                                               title="Twitter">
+                                                <i class="fab fa-twitter-square"></i>
+                                            </a>
+                                        </li>
+                                        <li class="youtube">
+                                            <a href="https://www.youtube.com"
+                                               data-bs-toggle="tooltip"
+                                               target="_blank"
+                                               title="Youtube">
+                                                <i class="fab fa-youtube"></i>
+                                            </a>
+                                        </li>
+                                        <li class="google-plus">
+                                            <a href="https://www.plus.google.com/discover"
+                                               data-bs-toggle="tooltip"
+                                               target="_blank"
+                                               title="Google Plus">
+                                                <i class="fab fa-google-plus"></i>
+                                            </a>
+                                        </li>
+                                        <li class="instagram">
+                                            <a href="https://rss.com"
+                                               data-bs-toggle="tooltip"
+                                               target="_blank"
+                                               title="Instagram">
+                                                <i class="fab fa-instagram"></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
       <!-- Hiraola's Single Product Area End Here -->
 
       <!-- Begin Hiraola's Single Product Tab Area -->
@@ -270,11 +251,7 @@
                   </ul>
                 </div>
                 <div class="tab-content hiraola-tab_content">
-                  <div
-                    id="description"
-                    class="tab-pane active show"
-                    role="tabpanel"
-                  >
+                  <div id="description" class="tab-pane active show" role="tabpanel">
                     <div class="product-description">
                       <ul>
                         <li>
@@ -329,29 +306,27 @@
                     </div>
                   </div>
                   <div id="specification" class="tab-pane" role="tabpanel">
-                    <table
-                      class="table table-bordered specification-inner_stuff"
-                    >
+                    <table class="table table-bordered specification-inner_stuff">
                       <tbody>
                         <tr>
-                          <td colspan="2"><strong>Memory</strong></td>
+                          <td colspan="2"><strong>Data</strong></td>
                         </tr>
                       </tbody>
                       <tbody>
                         <tr>
-                          <td>test 1</td>
-                          <td>8gb</td>
+                          <td>Visit Count</td>
+                          <td>@Model.VisitCount</td>
                         </tr>
                       </tbody>
-                      <tbody>
+                      @* <tbody>
                         <tr>
                           <td colspan="2"><strong>Processor</strong></td>
                         </tr>
-                      </tbody>
+                      </tbody> *@
                       <tbody>
                         <tr>
-                          <td>No. of Cores</td>
-                          <td>1</td>
+                          <td>Order Count</td>
+                          <td>@Model.OrderCount</td>
                         </tr>
                       </tbody>
                     </table>
@@ -1051,289 +1026,6 @@
       </div>
       <!-- Hiraola's Product Area Two End Here -->
 
-      <!-- Begin Hiraola's Product Area Two -->
-      <!-- Hiraola's Product Area Two End Here -->
-
-      <!-- Begin Hiraola's Modal Area -->
-      <div class="modal fade modal-wrapper" id="exampleModalCenter">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-          <div class="modal-content">
-            <div class="modal-body">
-              <button
-                type="button"
-                class="close"
-                data-bs-dismiss="modal"
-                aria-label="Close"
-              >
-                <span aria-hidden="true">&times;</span>
-              </button>
-              <div class="modal-inner-area sp-area row">
-                <div class="col-lg-5 col-md-5">
-                  <div class="sp-img_area">
-                    <div
-                      class="sp-img_slider-2 slick-img-slider hiraola-slick-slider arrow-type-two"
-                      data-slick-options='{
-                                    "slidesToShow": 1,
-                                    "arrows": false,
-                                    "fade": true,
-                                    "draggable": false,
-                                    "swipe": false,
-                                    "asNavFor": ".sp-img_slider-nav"
-                                }'
-                    >
-                      <div class="single-slide red">
-                        <img
-                          src="assets/images/single-product/large-size/1.jpg"
-                          alt="Hiraola's Product Image"
-                        />
-                      </div>
-                      <div class="single-slide orange">
-                        <img
-                          src="assets/images/single-product/large-size/2.jpg"
-                          alt="Hiraola's Product Image"
-                        />
-                      </div>
-                      <div class="single-slide brown">
-                        <img
-                          src="assets/images/single-product/large-size/3.jpg"
-                          alt="Hiraola's Product Image"
-                        />
-                      </div>
-                      <div class="single-slide umber">
-                        <img
-                          src="assets/images/single-product/large-size/4.jpg"
-                          alt="Hiraola's Product Image"
-                        />
-                      </div>
-                    </div>
-                    <div
-                      class="sp-img_slider-nav slick-slider-nav hiraola-slick-slider arrow-type-two"
-                      data-slick-options='{
-                                   "slidesToShow": 4,
-                                    "asNavFor": ".sp-img_slider-2",
-                                   "focusOnSelect": true
-                                  }'
-                      data-slick-responsive='[
-                                        {"breakpoint":1201, "settings": {"slidesToShow": 2}},
-                                        {"breakpoint":768, "settings": {"slidesToShow": 3}},
-                                        {"breakpoint":577, "settings": {"slidesToShow": 3}},
-                                        {"breakpoint":481, "settings": {"slidesToShow": 2}},
-                                        {"breakpoint":321, "settings": {"slidesToShow": 2}}
-                                    ]'
-                    >
-                      <div class="single-slide red">
-                        <img
-                          src="assets/images/single-product/small-size/1.jpg"
-                          alt="Hiraola's Product Thumnail"
-                        />
-                      </div>
-                      <div class="single-slide orange">
-                        <img
-                          src="assets/images/single-product/small-size/2.jpg"
-                          alt="Hiraola's Product Thumnail"
-                        />
-                      </div>
-                      <div class="single-slide brown">
-                        <img
-                          src="assets/images/single-product/small-size/3.jpg"
-                          alt="Hiraola's Product Thumnail"
-                        />
-                      </div>
-                      <div class="single-slide umber">
-                        <img
-                          src="assets/images/single-product/small-size/4.jpg"
-                          alt="Hiraola's Product Thumnail"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-xl-7 col-lg-6 col-md-6">
-                  <div class="sp-content">
-                    <div class="sp-heading">
-                      <h5>
-                        <a href="#"
-                          >Light Inverted Pendant Quis Justo Condimentum</a
-                        >
-                      </h5>
-                    </div>
-                    <div class="rating-box">
-                      <ul>
-                        <li><i class="fa fa-star-of-david"></i></li>
-                        <li><i class="fa fa-star-of-david"></i></li>
-                        <li><i class="fa fa-star-of-david"></i></li>
-                        <li><i class="fa fa-star-of-david"></i></li>
-                        <li><i class="fa fa-star-of-david"></i></li>
-                      </ul>
-                    </div>
-                    <div class="price-box">
-                      <span class="new-price">£82.84</span>
-                      <span class="old-price">£93.68</span>
-                    </div>
-                    <div class="essential_stuff">
-                      <ul>
-                        <li>EX Tax:<span>£453.35</span></li>
-                        <li>Price in reward points:<span>400</span></li>
-                      </ul>
-                    </div>
-                    <div class="list-item">
-                      <ul>
-                        <li>10 or more £81.03</li>
-                        <li>20 or more £71.09</li>
-                        <li>30 or more £61.15</li>
-                      </ul>
-                    </div>
-                    <div class="list-item last-child">
-                      <ul>
-                        <li>Brand<a href="javascript:void(0)">Buxton</a></li>
-                        <li>Product Code: Product 15</li>
-                        <li>Reward Points: 100</li>
-                        <li>Availability: In Stock</li>
-                      </ul>
-                    </div>
-                    <div class="color-list_area">
-                      <div class="color-list_heading">
-                        <h4>Available Options</h4>
-                      </div>
-                      <span class="sub-title">Color</span>
-                      <div class="color-list">
-                        <a
-                          href="javascript:void(0)"
-                          class="single-color active"
-                          data-swatch-color="red"
-                        >
-                          <span class="bg-red_color"></span>
-                          <span class="color-text">Red (+£3.61)</span>
-                        </a>
-                        <a
-                          href="javascript:void(0)"
-                          class="single-color"
-                          data-swatch-color="orange"
-                        >
-                          <span class="burnt-orange_color"></span>
-                          <span class="color-text">Orange (+£2.71)</span>
-                        </a>
-                        <a
-                          href="javascript:void(0)"
-                          class="single-color"
-                          data-swatch-color="brown"
-                        >
-                          <span class="brown_color"></span>
-                          <span class="color-text">Brown (+£0.90)</span>
-                        </a>
-                        <a
-                          href="javascript:void(0)"
-                          class="single-color"
-                          data-swatch-color="umber"
-                        >
-                          <span class="raw-umber_color"></span>
-                          <span class="color-text">Umber (+£1.81)</span>
-                        </a>
-                      </div>
-                    </div>
-                    <div class="quantity">
-                      <label>Quantity</label>
-                      <div class="cart-plus-minus">
-                        <input
-                          class="cart-plus-minus-box"
-                          value="1"
-                          type="text"
-                        />
-                        <div class="dec qtybutton">
-                          <i class="fa fa-angle-down"></i>
-                        </div>
-                        <div class="inc qtybutton">
-                          <i class="fa fa-angle-up"></i>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="hiraola-group_btn">
-                      <ul>
-                        <li>
-                          <a href="cart.html" class="add-to_cart"
-                            >Cart To Cart</a
-                          >
-                        </li>
-                        <li>
-                          <a href="cart.html"
-                            ><i class="ion-android-favorite-outline"></i
-                          ></a>
-                        </li>
-                        <li>
-                          <a href="cart.html"
-                            ><i class="ion-ios-shuffle-strong"></i
-                          ></a>
-                        </li>
-                      </ul>
-                    </div>
-                    <div class="hiraola-tag-line">
-                      <h6>Tags:</h6>
-                      <a href="javascript:void(0)">Ring</a>,
-                      <a href="javascript:void(0)">Necklaces</a>,
-                      <a href="javascript:void(0)">Braid</a>
-                    </div>
-                    <div class="hiraola-social_link">
-                      <ul>
-                        <li class="facebook">
-                          <a
-                            href="https://www.facebook.com"
-                            data-bs-toggle="tooltip"
-                            target="_blank"
-                            title="Facebook"
-                          >
-                            <i class="fab fa-facebook"></i>
-                          </a>
-                        </li>
-                        <li class="twitter">
-                          <a
-                            href="https://twitter.com"
-                            data-bs-toggle="tooltip"
-                            target="_blank"
-                            title="Twitter"
-                          >
-                            <i class="fab fa-twitter-square"></i>
-                          </a>
-                        </li>
-                        <li class="youtube">
-                          <a
-                            href="https://www.youtube.com"
-                            data-bs-toggle="tooltip"
-                            target="_blank"
-                            title="Youtube"
-                          >
-                            <i class="fab fa-youtube"></i>
-                          </a>
-                        </li>
-                        <li class="google-plus">
-                          <a
-                            href="https://www.plus.google.com/discover"
-                            data-bs-toggle="tooltip"
-                            target="_blank"
-                            title="Google Plus"
-                          >
-                            <i class="fab fa-google-plus"></i>
-                          </a>
-                        </li>
-                        <li class="instagram">
-                          <a
-                            href="https://rss.com"
-                            data-bs-toggle="tooltip"
-                            target="_blank"
-                            title="Instagram"
-                          >
-                            <i class="fab fa-instagram"></i>
-                          </a>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- Hiraola's Modal Area End Here -->
     </div>
 
     <!-- JS
