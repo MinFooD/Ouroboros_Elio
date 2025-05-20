@@ -9,7 +9,7 @@ namespace BusinessLogicLayer.ServiceContracts
 {
 	public interface IDesignService
 	{
-		Task<DesignViewModel?> GetDesignByIdAsync(Guid designId);
+		Task<DesignViewModel?> GetDesignByIdAsync(Guid? designId);
 		Task<List<DesignViewModel>?> GetAllDesignsAsync(Guid? modelId);
 		Task<bool> VisitCountUp(Guid designId);
 	}

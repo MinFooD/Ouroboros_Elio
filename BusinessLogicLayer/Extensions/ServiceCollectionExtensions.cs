@@ -25,6 +25,8 @@ namespace BusinessLogicLayer.Extensions
 			services.AddScoped<IEmailService, EmailService>();
 			services.AddScoped<IDesignService, DesignService>();
 			services.AddScoped<IModelService, ModelService>();
+			services.AddScoped<ICartService, CartService>();
+			services.AddScoped<IOrderService, OrderService>();
 
 		}
 	}

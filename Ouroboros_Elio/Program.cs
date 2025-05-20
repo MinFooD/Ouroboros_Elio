@@ -6,12 +6,19 @@ using DataAccessLayer.Repositories;
 using DataAccessLayer.RepositoryContracts;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Net.payOS;
 using Ouroboros.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddSingleton(new PayOS(
+	clientId: builder.Configuration["PayOS:ClientId"],
+	apiKey: builder.Configuration["PayOS:ApiKey"],
+	checksumKey: builder.Configuration["PayOS:ChecksumKey"]
+));
 
 builder.Services.ConfigureApplicationCookie(options =>
 {
@@ -29,6 +36,8 @@ builder.Services.AddBusinessLogicLayer();
 
 builder.Services.AddScoped<IDesignRepository, DesignRepository>();
 builder.Services.AddScoped<IModelRepository, ModelRepository>();
+builder.Services.AddScoped<ICartRepository, CartRepository>();
+builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 //builder.Services.AddDataAccessLayer(builder.Configuration);
 builder.Services.AddIdentity<ApplicationUser, IdentityRole<Guid>>(options =>
 {

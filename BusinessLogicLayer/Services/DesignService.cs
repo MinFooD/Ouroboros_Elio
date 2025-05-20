@@ -47,7 +47,7 @@ namespace BusinessLogicLayer.Services
 			return designViewModels;
 		}
 
-		public async Task<DesignViewModel?> GetDesignByIdAsync(Guid designId)
+		public async Task<DesignViewModel?> GetDesignByIdAsync(Guid? designId)
 		{
 			var design = await _designRepository.GetDesignByIdAsync(designId);
 			if (design == null)

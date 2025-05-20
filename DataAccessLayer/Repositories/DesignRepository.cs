@@ -48,7 +48,7 @@ namespace DataAccessLayer.Repositories
 			return false;
 		}
 
-		public async Task<Design?> GetDesignByIdAsync(Guid designId)
+		public async Task<Design?> GetDesignByIdAsync(Guid? designId)
 		{
 			return await _context.Designs
 				.Include(d => d.Category)
