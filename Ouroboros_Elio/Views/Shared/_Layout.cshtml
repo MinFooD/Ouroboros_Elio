@@ -4,9 +4,9 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Ouroboros_Elio</title>
-    @* <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/Ouroboros_Elio.styles.css" asp-append-version="true" /> *@
+
+    <!-- Đoạn code cho VerifyResult hoạt động -->
+    @await RenderSectionAsync("Styles", required: false)
 
     <!-- CSS
     ============================================ -->
@@ -33,27 +33,6 @@
     <link rel="stylesheet" href="~/assets/css/style.css" />
 </head>
 <body>
-        @*  <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Ouroboros_Elio</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    </header> *@
     <header class="header-main_area">
         <div class="header-top_area">
             <div class="container">
@@ -348,551 +327,122 @@
                 </div>
             </div>
         </div>
-        @* <div class="offcanvas-minicart_wrapper" id="miniCart">
-            <div class="offcanvas-menu-inner">
-                <a href="#" class="btn-close"><i class="ion-android-close"></i></a>
-                <div class="minicart-content">
-                    <div class="minicart-heading">
-                        <h4>Shopping Cart</h4>
-                    </div>
-                    <ul class="minicart-list">
-                        <li class="minicart-product">
-                            <a class="product-item_remove" href="javascript:void(0)"><i class="ion-android-close"></i></a>
-                            <div class="product-item_img">
-                                <img src="assets/images/product/small-size/2-1.jpg" alt="Hiraola's Product Image">
-                            </div>
-                            <div class="product-item_content">
-                                <a class="product-item_title" href="shop-left-sidebar.html">Magni dolorum vel</a>
-                                <span class="product-item_quantity">1 x $120.80</span>
-                            </div>
-                        </li>
-                        <li class="minicart-product">
-                            <a class="product-item_remove" href="javascript:void(0)"><i class="ion-android-close"></i></a>
-                            <div class="product-item_img">
-                                <img src="~/assets/images/product/small-size/2-2.jpg" alt="Hiraola's Product Image">
-                            </div>
-                            <div class="product-item_content">
-                                <a class="product-item_title" href="shop-left-sidebar.html">Eius accusantium omnis</a>
-                                <span class="product-item_quantity">1 x $120.80</span>
-                            </div>
-                        </li>
-                        <li class="minicart-product">
-                            <a class="product-item_remove" href="javascript:void(0)"><i class="ion-android-close"></i></a>
-                            <div class="product-item_img">
-                                <img src="~/assets/images/product/small-size/2-3.jpg" alt="Hiraola's Product Image">
-                            </div>
-                            <div class="product-item_content">
-                                <a class="product-item_title" href="shop-left-sidebar.html">Aperiam adipisci dolorem</a>
-                                <span class="product-item_quantity">1 x $120.80</span>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-                <div class="minicart-item_total">
-                    <span>Subtotal</span>
-                    <span class="ammount">$360.00</span>
-                </div>
-                <div class="minicart-btn_area">
-                    <a href="cart.html" class="hiraola-btn hiraola-btn_dark hiraola-btn_fullwidth">Minicart</a>
-                </div>
-                <div class="minicart-btn_area">
-                    <a href="checkout.html" class="hiraola-btn hiraola-btn_dark hiraola-btn_fullwidth">Checkout</a>
-                </div>
-            </div>
-        </div>
-        <div class="mobile-menu_wrapper" id="mobileMenu">
-            <div class="offcanvas-menu-inner">
-                <div class="container">
-                    <a href="#" class="btn-close"><i class="ion-android-close"></i></a>
-                    <div class="offcanvas-inner_search">
-                        <form action="#" class="hm-searchbox">
-                            <input type="text" placeholder="Search for item...">
-                            <button class="search_btn" type="submit"><i class="ion-ios-search-strong"></i></button>
-                        </form>
-                    </div>
-                    <nav class="offcanvas-navigation">
-                        <ul class="mobile-menu">
-                            <li class="menu-item-has-children active">
-                                <a href="#"><span class="mm-text">Home</span></a>
-                                <ul class="sub-menu">
-                                    <li>
-                                        <a href="index.html">
-                                            <span class="mm-text">Home One</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="index-2.html">
-                                            <span class="mm-text">Home Two</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="index-3.html">
-                                            <span class="mm-text">Home Three</span>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li class="menu-item-has-children">
-                                <a href="#">
-                                    <span class="mm-text">Shop</span>
-                                </a>
-                                <ul class="sub-menu">
-                                    <li class="menu-item-has-children">
-                                        <a href="#">
-                                            <span class="mm-text">Grid View</span>
-                                        </a>
-                                        <ul class="sub-menu">
-                                            <li>
-                                                <a href="shop-3-column.html">
-                                                    <span class="mm-text">Column Three</span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="shop-4-column.html">
-                                                    <span class="mm-text">Column Four</span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="shop-left-sidebar.html">
-                                                    <span class="mm-text">Left Sidebar</span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="shop-right-sidebar.html">
-                                                    <span class="mm-text">Right Sidebar</span>
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                    <li class="menu-item-has-children">
-                                        <a href="#">
-                                            <span class="mm-text">Shop List</span>
-                                        </a>
-                                        <ul class="sub-menu">
-                                            <li>
-                                                <a href="shop-list-fullwidth.html">
-                                                    <span class="mm-text">Full Width</span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="shop-list-left-sidebar.html">
-                                                    <span class="mm-text">Left Sidebar</span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="shop-list-right-sidebar.html">
-                                                    <span class="mm-text">Right Sidebar</span>
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                    <li class="menu-item-has-children">
-                                        <a href="#">
-                                            <span class="mm-text">Single Product Style</span>
-                                        </a>
-                                        <ul class="sub-menu">
-                                            <li>
-                                                <a href="single-product-gallery-left.html">
-                                                    <span class="mm-text">Gallery Left</span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="single-product-gallery-right.html">
-                                                    <span class="mm-text">Gallery Right</span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="single-product-tab-style-left.html">
-                                                    <span class="mm-text">Tab Style Left</span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="single-product-tab-style-right.html">
-                                                    <span class="mm-text">Tab Style Right</span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="single-product-sticky-left.html">
-                                                    <span class="mm-text">Sticky Left</span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="single-product-sticky-right.html">
-                                                    <span class="mm-text">Sticky Right</span>
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                    <li class="menu-item-has-children">
-                                        <a href="#">
-                                            <span class="mm-text">Single Product Type</span>
-                                        </a>
-                                        <ul class="sub-menu">
-                                            <li>
-                                                <a href="single-product.html">
-                                                    <span class="mm-text">Single Product</span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="single-product-sale.html">
-                                                    <span class="mm-text">Single Product Sale</span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="single-product-group.html">
-                                                    <span class="mm-text">Single Product Group</span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="single-product-variable.html">
-                                                    <span class="mm-text">Single Product Variable</span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="single-product-affiliate.html">
-                                                    <span class="mm-text">Single Product Affiliate</span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="single-product-slider.html">
-                                                    <span class="mm-text">Single Product Slider</span>
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li class="menu-item-has-children">
-                                <a href="#">
-                                    <span class="mm-text">Blog</span>
-                                </a>
-                                <ul class="sub-menu">
-                                    <li class="menu-item-has-children has-children">
-                                        <a href="#">
-                                            <span class="mm-text">Grid View</span>
-                                        </a>
-                                        <ul class="sub-menu">
-                                            <li>
-                                                <a href="blog-2-column.html">
-                                                    <span class="mm-text">Column Two</span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="blog-3-column.html">
-                                                    <span class="mm-text">Column Three</span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="blog-left-sidebar.html">
-                                                    <span class="mm-text">Left Sidebar</span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="blog-right-sidebar.html">
-                                                    <span class="mm-text">Right Sidebar</span>
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                    <li class="menu-item-has-children has-children">
-                                        <a href="#">
-                                            <span class="mm-text">List View</span>
-                                        </a>
-                                        <ul class="sub-menu">
-                                            <li>
-                                                <a href="blog-list-fullwidth.html">
-                                                    <span class="mm-text">List Fullwidth</span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="blog-list-left-sidebar.html">
-                                                    <span class="mm-text">List Left Sidebar</span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="blog-list-right-sidebar.html">
-                                                    <span class="mm-text">List Right Sidebar</span>
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                    <li class="menu-item-has-children has-children">
-                                        <a href="#">
-                                            <span class="mm-text">Blog Details</span>
-                                        </a>
-                                        <ul class="sub-menu">
-                                            <li>
-                                                <a href="blog-details-left-sidebar.html">
-                                                    <span class="mm-text">Left Sidebar</span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="blog-details-right-sidebar.html">
-                                                    <span class="mm-text">Right Sidebar</span>
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                    <li class="menu-item-has-children has-children">
-                                        <a href="#">
-                                            <span class="mm-text">Blog Format</span>
-                                        </a>
-                                        <ul class="sub-menu">
-                                            <li>
-                                                <a href="blog-gallery-format.html">
-                                                    <span class="mm-text">Gallery Format</span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="blog-audio-format.html">
-                                                    <span class="mm-text">Audio Format</span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="blog-video-format.html">
-                                                    <span class="mm-text">Video Format</span>
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li class="menu-item-has-children">
-                                <a href="#">
-                                    <span class="mm-text">Pages</span>
-                                </a>
-                                <ul class="sub-menu">
-                                    <li>
-                                        <a href="my-account.html">
-                                            <span class="mm-text">My Account</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="login-register.html">
-                                            <span class="mm-text">Login | Register</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="wishlist.html">
-                                            <span class="mm-text">Wishlist</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="cart.html">
-                                            <span class="mm-text">Cart</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="checkout.html">
-                                            <span class="mm-text">Checkout</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="compare.html">
-                                            <span class="mm-text">Compare</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="faq.html">
-                                            <span class="mm-text">FAQ</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="404.html">
-                                            <span class="mm-text">Error 404</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="coming-soon_page.html">
-                                            <span class="mm-text">Comming Soon</span>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </nav>
-                    <nav class="offcanvas-navigation user-setting_area">
-                        <ul class="mobile-menu">
-                            <li class="menu-item-has-children active">
-                                <a href="#">
-                                    <span class="mm-text">
-                                        User
-                                        Setting
-                                    </span>
-                                </a>
-                                <ul class="sub-menu">
-                                    <li>
-                                        <a href="my-account.html">
-                                            <span class="mm-text">My Account</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="login-register.html">
-                                            <span class="mm-text">Login | Register</span>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li class="menu-item-has-children">
-                                <a href="#"><span class="mm-text">Currency</span></a>
-                                <ul class="sub-menu">
-                                    <li>
-                                        <a href="javascript:void(0)">
-                                            <span class="mm-text">EUR €</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:void(0)">
-                                            <span class="mm-text">USD $</span>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li class="menu-item-has-children">
-                                <a href="#"><span class="mm-text">Language</span></a>
-                                <ul class="sub-menu">
-                                    <li>
-                                        <a href="javascript:void(0)">
-                                            <span class="mm-text">English</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:void(0)">
-                                            <span class="mm-text">Français</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:void(0)">
-                                            <span class="mm-text">Romanian</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:void(0)">
-                                            <span class="mm-text">Japanese</span>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </nav>
-                </div>
-            </div>
-        </div> *@
     </header>
+
+    <div class="container">
+        <!-- Nội dung chính của trang -->
         @RenderBody()
-        @*     <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2025 - Ouroboros_Elio - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer> *@
+    </div>
 
-    <div class="hiraola-footer_area">
-        <div class="footer-top_area">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-4">
-                        <div class="footer-widgets_info">
+    <footer class="footer">
+        <div class="hiraola-footer_area">
+            <div class="footer-top_area">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <div class="footer-widgets_info">
 
-                            <div class="footer-widgets_logo">
-                                <a href="#">
-                                    <img src="~/assets/images/footer/logo/1.png" alt="Hiraola's Footer Logo">
-                                </a>
-                            </div>
+                                <div class="footer-widgets_logo">
+                                    <a href="#">
+                                        <img src="~/assets/images/footer/logo/1.png" alt="Hiraola's Footer Logo">
+                                    </a>
+                                </div>
 
-                            <div class="widget-short_desc">
-                                <p>
-                                    We are a team of designers and developers that create high quality HTML Template &
-                                    Woocommerce, Shopify Theme.
-                                </p>
-                            </div>
-                            <div class="hiraola-social_link">
-                                <ul>
-                                    <li class="facebook">
-                                        <a href="https://www.facebook.com" data-bs-toggle="tooltip" target="_blank" title="Facebook">
-                                            <i class="fab fa-facebook"></i>
-                                        </a>
-                                    </li>
-                                    <li class="twitter">
-                                        <a href="https://twitter.com" data-bs-toggle="tooltip" target="_blank" title="Twitter">
-                                            <i class="fab fa-twitter-square"></i>
-                                        </a>
-                                    </li>
-                                    <li class="google-plus">
-                                        <a href="https://www.plus.google.com/discover" data-bs-toggle="tooltip" target="_blank" title="Google Plus">
-                                            <i class="fab fa-google-plus"></i>
-                                        </a>
-                                    </li>
-                                    <li class="instagram">
-                                        <a href="https://rss.com" data-bs-toggle="tooltip" target="_blank" title="Instagram">
-                                            <i class="fab fa-instagram"></i>
-                                        </a>
-                                    </li>
-                                </ul>
+                                <div class="widget-short_desc">
+                                    <p>
+                                        We are a team of designers and developers that create high quality HTML Template &
+                                        Woocommerce, Shopify Theme.
+                                    </p>
+                                </div>
+                                <div class="hiraola-social_link">
+                                    <ul>
+                                        <li class="facebook">
+                                            <a href="https://www.facebook.com" data-bs-toggle="tooltip" target="_blank" title="Facebook">
+                                                <i class="fab fa-facebook"></i>
+                                            </a>
+                                        </li>
+                                        <li class="twitter">
+                                            <a href="https://twitter.com" data-bs-toggle="tooltip" target="_blank" title="Twitter">
+                                                <i class="fab fa-twitter-square"></i>
+                                            </a>
+                                        </li>
+                                        <li class="google-plus">
+                                            <a href="https://www.plus.google.com/discover" data-bs-toggle="tooltip" target="_blank" title="Google Plus">
+                                                <i class="fab fa-google-plus"></i>
+                                            </a>
+                                        </li>
+                                        <li class="instagram">
+                                            <a href="https://rss.com" data-bs-toggle="tooltip" target="_blank" title="Instagram">
+                                                <i class="fab fa-instagram"></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-lg-8">
-                        <div class="footer-widgets_area">
-                            <div class="row">
-                                <div class="col-lg-3">
-                                    <div class="footer-widgets_title">
-                                        <h6>Product</h6>
-                                    </div>
-                                    <div class="footer-widgets">
-                                        <ul>
-                                            <li><a href="#">Prices drop</a></li>
-                                            <li><a href="#">New products</a></li>
-                                            <li><a href="#">Best sales</a></li>
-                                            <li><a href="#">Contact us</a></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                                <div class="col-lg-5">
-                                    <div class="footer-widgets_info">
+                        <div class="col-lg-8">
+                            <div class="footer-widgets_area">
+                                <div class="row">
+                                    <div class="col-lg-3">
                                         <div class="footer-widgets_title">
-                                            <h6>About Us</h6>
+                                            <h6>Product</h6>
                                         </div>
-                                        <div class="widgets-essential_stuff">
+                                        <div class="footer-widgets">
                                             <ul>
-                                                <li class="hiraola-address">
-                                                    <i class="ion-ios-location"></i><span>Address:</span> The Barn,
-                                                    Ullenhall, Henley
-                                                    in
-                                                    Arden B578 5CC, England
-                                                </li>
-                                                <li class="hiraola-phone">
-                                                    <i class="ion-ios-telephone"></i><span>
-                                                        Call
-                                                        Us:
-                                                    </span> <a href="tel://+123123321345">+123 321 345</a>
-                                                </li>
-                                                <li class="hiraola-email">
-                                                    <i class="ion-android-mail"></i><span>Email:</span> <a href="mailto://info@yourdomain.com">info@yourdomain.com</a>
-                                                </li>
+                                                <li><a href="#">Prices drop</a></li>
+                                                <li><a href="#">New products</a></li>
+                                                <li><a href="#">Best sales</a></li>
+                                                <li><a href="#">Contact us</a></li>
                                             </ul>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="col-lg-4">
-                                    <div class="instagram-container footer-widgets_area">
-                                        <div class="footer-widgets_title">
-                                            <h6>Sign Up For Newslatter</h6>
+                                    <div class="col-lg-5">
+                                        <div class="footer-widgets_info">
+                                            <div class="footer-widgets_title">
+                                                <h6>About Us</h6>
+                                            </div>
+                                            <div class="widgets-essential_stuff">
+                                                <ul>
+                                                    <li class="hiraola-address">
+                                                        <i class="ion-ios-location"></i><span>Address:</span> The Barn,
+                                                        Ullenhall, Henley
+                                                        in
+                                                        Arden B578 5CC, England
+                                                    </li>
+                                                    <li class="hiraola-phone">
+                                                        <i class="ion-ios-telephone"></i><span>
+                                                            Call
+                                                            Us:
+                                                        </span> <a href="tel://+123123321345">+123 321 345</a>
+                                                    </li>
+                                                    <li class="hiraola-email">
+                                                        <i class="ion-android-mail"></i><span>Email:</span> <a href="mailto://info@yourdomain.com">info@yourdomain.com</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
                                         </div>
-                                        <div class="widget-short_desc">
-                                            <p>Subscribe to our newsletters now and stay up-to-date with new collections</p>
-                                        </div>
-                                        <div class="newsletter-form_wrap">
-                                            <form class="subscribe-form" id="mc-form" action="#">
-                                                <input class="newsletter-input" id="mc-email" type="email" autocomplete="off" name="Enter Your Email" value="Enter Your Email" onblur="if(this.value==''){this.value='Enter Your Email'}" onfocus="if(this.value=='Enter Your Email'){this.value=''}">
-                                                <button class="newsletter-btn" id="mc-submit">
-                                                    <i class="ion-android-mail"></i>
-                                                </button>
-                                            </form>
-                                            <!-- Mailchimp Alerts -->
-                                            <div class="mailchimp-alerts mt-3">
-                                                <div class="mailchimp-submitting"></div>
-                                                <div class="mailchimp-success"></div>
-                                                <div class="mailchimp-error"></div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="instagram-container footer-widgets_area">
+                                            <div class="footer-widgets_title">
+                                                <h6>Sign Up For Newslatter</h6>
+                                            </div>
+                                            <div class="widget-short_desc">
+                                                <p>Subscribe to our newsletters now and stay up-to-date with new collections</p>
+                                            </div>
+                                            <div class="newsletter-form_wrap">
+                                                <form class="subscribe-form" id="mc-form" action="#">
+                                                    <input class="newsletter-input" id="mc-email" type="email" autocomplete="off" name="Enter Your Email" value="Enter Your Email" onblur="if(this.value==''){this.value='Enter Your Email'}" onfocus="if(this.value=='Enter Your Email'){this.value=''}">
+                                                    <button class="newsletter-btn" id="mc-submit">
+                                                        <i class="ion-android-mail"></i>
+                                                    </button>
+                                                </form>
+                                                <!-- Mailchimp Alerts -->
+                                                <div class="mailchimp-alerts mt-3">
+                                                    <div class="mailchimp-submitting"></div>
+                                                    <div class="mailchimp-success"></div>
+                                                    <div class="mailchimp-error"></div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -903,15 +453,8 @@
                 </div>
             </div>
         </div>
-    </div>
-        @* <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
-    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script> *@
+    </footer>
 
-    <!-- JS
-    ============================================ -->
     <!-- jQuery JS -->
     <script src="~/assets/js/vendor/jquery-3.6.0.min.js"></script>
     <script src="~/assets/js/vendor/jquery-migrate-3.3.2.min.js"></script>

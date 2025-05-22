@@ -36,12 +36,12 @@
     <div class="row justify-content-center">
         <!-- Form Đăng nhập -->
         <article id="login-form" class="col-md-6 d-block animated fadeInUp">
-            <div class="card shadow rounded-3">
+            <div class="card shadow">
                 <div class="card-header text-center bg-primary text-white">
                     <h3 class="mb-0">Đăng nhập</h3>
                 </div>
                 <div class="card-body p-4">
-                    @using (Html.BeginForm("Login", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                    @using (Html.BeginForm("Login", "Auth", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
                     {
                         @Html.AntiForgeryToken()
                         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
@@ -90,12 +90,12 @@
 
         <!-- Form Đăng ký -->
         <article id="register-form" class="col-md-6 d-none animated fadeInUp">
-            <div class="card shadow rounded-3">
+            <div class="card shadow">
                 <div class="card-header text-center bg-success text-white">
                     <h3 class="mb-0">Đăng ký</h3>
                 </div>
                 <div class="card-body p-4">
-                    @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                    @using (Html.BeginForm("RegisterAndSendMail", "Auth", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
                     {
                         @Html.AntiForgeryToken()
                         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
@@ -251,7 +251,8 @@
     .card {
         max-width: 500px;
         margin: 0 auto;
-        border-radius: 1rem;
+        border-radius: 0; /* Góc nhọn */
+        border: 1px solid #e8e8e8; /* Viền mỏng */
         box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
         background: #ffffff;
         position: relative;
@@ -260,6 +261,7 @@
     .card-header {
         padding: 1.5rem;
         border-bottom: none;
+        border-radius: 0; /* Góc nhọn */
     }
     .card-header h3 {
         font-family: 'Playfair Display', Georgia, serif;
@@ -277,6 +279,9 @@
         font-family: 'Poppins', Arial, sans-serif;
         font-size: 0.95rem;
         font-weight: 400;
+    }
+    .form-control {
+        border-radius: 0; /* Góc nhọn */
     }
     .form-control::placeholder {
         font-family: 'Poppins', Arial, sans-serif;
@@ -297,6 +302,10 @@
         border-color: #e8e8e8;
         font-family: 'Poppins', Arial, sans-serif;
         font-size: 0.95rem;
+        border-radius: 0; /* Góc nhọn */
+    }
+    .btn {
+        border-radius: 0; /* Góc nhọn */
     }
     .btn-primary {
         background-color: #1b6ec2;

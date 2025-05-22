@@ -1,7 +1,115 @@
 ﻿@{
     ViewBag.Title = "Email Verification";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
-trang thông báo đã xác thực email thành công (Không cần data, chỉ cần đẹp)
 
-<h2>Email Verification</h2>
-<p>@ViewBag.Message</p>
+@section Styles {
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
+    <link href="/css/VerifyResult.css" rel="stylesheet">
+}
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Khởi tạo Particles.js
+            particlesJS('particles-js', {
+                particles: {
+                    number: { value: 60, density: { enable: true, value_area: 800 } },
+                    color: { value: ['#f5a6c6', '#c3a6f5', '#f5e1a6'] },
+                    shape: { type: ['circle', 'star'], stroke: { width: 0 } },
+                    opacity: { value: 0.6, random: true, anim: { enable: false } },
+                    size: { value: 3, random: true, anim: { enable: false } },
+                    line_linked: { enable: true, distance: 120, color: '#ffffff', opacity: 0.3, width: 1 },
+                    move: {
+                        enable: true,
+                        speed: 1.5,
+                        direction: 'none',
+                        random: true,
+                        straight: false,
+                        out_mode: 'out',
+                        bounce: false
+                    }
+                },
+                interactivity: {
+                    detect_on: 'canvas',
+                    events: {
+                        onhover: { enable: true, mode: 'grab' },
+                        onclick: { enable: true, mode: 'push' },
+                        resize: true
+                    },
+                    modes: {
+                        grab: { distance: 140, line_linked: { opacity: 0.7 } },
+                        push: { particles_nb: 3 }
+                    }
+                },
+                retina_detect: true
+            });
+
+            // Hiệu ứng fade cho particles
+            $('#particles-js').css('opacity', 0).animate({ opacity: 1 }, 1000);
+
+            // Hiệu ứng parallax cho khung .card
+            const parallaxElements = document.querySelectorAll('.card[data-parallax]');
+            document.addEventListener('mousemove', (e) => {
+                parallaxElements.forEach(el => {
+                    const speed = parseFloat(el.getAttribute('data-parallax')) || 0.2;
+                    const x = (window.innerWidth / 2 - e.pageX) * speed / 50;
+                    const y = (window.innerHeight / 2 - e.pageY) * speed / 50;
+                    el.style.transform = `translate(${x}px, ${y}px)`;
+                });
+            });
+
+            // Thời gian đếm ngược và tự động chuyển hướng
+            let countdownTime = 5;
+            let countdownInterval = setInterval(function() {
+                if (countdownTime <= 0) {
+                    clearInterval(countdownInterval);
+                    console.log('Countdown finished, redirecting to ProductList');
+                    window.location.href = "@Url.Action("ProductList", "Product")";
+                } else {
+                    $('#countdown').text(`Tự động chuyển hướng sau ${countdownTime} giây`);
+                    countdownTime--;
+                }
+            }, 1000);
+
+            // Khi nhấn nút, dừng đếm ngược và chuyển hướng ngay
+            $('.btn-custom').click(function(e) {
+                e.preventDefault();
+                clearInterval(countdownInterval);
+                const url = $(this).attr('href');
+                console.log('Button clicked, redirecting to: ' + url);
+                window.location.href = url;
+            });
+        });
+    </script>
+}
+
+<!-- Hình nền động Particles -->
+<div id="particles-js"></div>
+
+<!-- Nội dung chính -->
+<div class="card" data-parallax="0.2">
+    <!-- Hạt trang trí đính trên viền -->
+    <span class="decor-top"></span> <!-- Hạt trên viền trên -->
+    <span class="decor-bottom"></span> <!-- Hạt trên viền dưới -->
+    <span class="decor-left"></span> <!-- Hạt trên viền trái -->
+    <span class="decor-right"></span> <!-- Hạt trên viền phải -->
+    <!-- Tiêu đề với hiệu ứng marquee liên tục -->
+    <h1 class="title">
+        <span>Xác Thực Email Thành Công</span>
+    </h1>
+
+    <!-- Nội dung chào mừng -->
+    <p class="message">
+        Chào mừng bạn đến với thế giới vòng custom! Khám phá ngay để tạo nên những chiếc vòng mang dấu ấn riêng của bạn.
+    </p>
+
+    <!-- Nút khám phá -->
+    <a href="@Url.Action("ProductList", "Product")" class="btn-custom">Khám Phá Vòng Custom</a>
+
+    <!-- Thời gian đếm ngược -->
+    <p id="countdown" class="countdown">Tự động chuyển hướng sau 5 giây</p>
+</div>
