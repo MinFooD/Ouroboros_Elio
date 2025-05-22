@@ -20,3 +20,69 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+/************/
+.price-inputs {
+    position: relative;
+}
+
+.input-wrapper {
+    position: relative;
+    margin-bottom: 15px;
+}
+
+.price-inputs input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.error-message {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    color: red;
+    font-size: 12px;
+    display: none;
+    margin-top: 2px;
+}
+
+    .error-message.active {
+        display: block;
+    }
+
+.price-inputs input.invalid {
+    border-color: red;
+}
+
+.shop-product-wrap.loading,
+.hiraola-paginatoin-area.loading {
+    opacity: 0.5;
+    pointer-events: none;
+    position: relative;
+}
+
+    .shop-product-wrap.loading::after,
+    .hiraola-paginatoin-area.loading::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 30px;
+        height: 30px;
+        border: 3px solid #000;
+        border-top: 3px solid #fff;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}

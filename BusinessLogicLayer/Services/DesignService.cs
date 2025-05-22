@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BusinessLogicLayer.Dtos.DesignDtos;
 using BusinessLogicLayer.ServiceContracts;
+using DataAccessLayer.Entities;
 using DataAccessLayer.RepositoryContracts;
 using System;
 using System.Collections.Generic;
@@ -72,5 +73,43 @@ namespace BusinessLogicLayer.Services
 		{
 			return await _designRepository.VisitCountUp(designId);
 		}
-	}
+
+        public async Task<(List<DesignViewModel> Designs, int TotalCount)> GetPagedDesignsAsync(Guid? modelId, int page, int pageSize)
+        {
+            var (designs, totalCount) = await _designRepository.GetPagedDesignsAsync(modelId, page, pageSize);
+            var designViewModels = _mapper.Map<List<DesignViewModel>>(designs);
+
+            for (int i = 0; i < designs.Count; i++)
+            {
+                var design = designs[i];
+                designViewModels[i].DesignName = $"{design.Model.Topic.Collection.CollectionName}-{design.Model.Topic.TopicName}-{design.Model.ModelName}-{design.Category.CategoryName}";
+                designViewModels[i].CollectionName = design.Model.Topic.Collection.CollectionName;
+                designViewModels[i].ModelName = design.Model.ModelName;
+                designViewModels[i].TopicName = design.Model.Topic.TopicName;
+                designViewModels[i].CategoryName = design.Category.CategoryName;
+                designViewModels[i].FirstImage = _mapper.Map<DesignImageViewModel>(design.DesignImages.FirstOrDefault());
+            }
+
+            return (designViewModels, totalCount);
+        }
+
+        public async Task<(List<DesignViewModel> Designs, int TotalCount)> GetPagedDesignsAsync(Guid? modelId, decimal? minPrice, decimal? maxPrice, int page, int pageSize)
+        {
+            var (designs, totalCount) = await _designRepository.GetPagedDesignsAsync(modelId, minPrice, maxPrice, page, pageSize);
+            var designViewModels = _mapper.Map<List<DesignViewModel>>(designs);
+
+            for (int i = 0; i < designs.Count; i++)
+            {
+                var design = designs[i];
+                designViewModels[i].DesignName = $"{design.Model.Topic.Collection.CollectionName}-{design.Model.Topic.TopicName}-{design.Model.ModelName}-{design.Category.CategoryName}";
+                designViewModels[i].CollectionName = design.Model.Topic.Collection.CollectionName;
+                designViewModels[i].ModelName = design.Model.ModelName;
+                designViewModels[i].TopicName = design.Model.Topic.TopicName;
+                designViewModels[i].CategoryName = design.Category.CategoryName;
+                designViewModels[i].FirstImage = _mapper.Map<DesignImageViewModel>(design.DesignImages.FirstOrDefault());
+            }
+
+            return (designViewModels, totalCount);
+        }
+    }
 }
