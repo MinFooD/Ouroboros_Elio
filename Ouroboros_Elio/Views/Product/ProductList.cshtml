@@ -27,10 +27,16 @@
                                 </div>
                                 <div class="price-filter">
                                     <div class="price-inputs">
-                                        <label>Giá tối thiểu: </label>
-                                        <input type="number" id="minPrice" name="minPrice" placeholder="Giá tối thiểu" min="0" value="@ViewBag.MinPrice" />
-                                        <label>Giá tối đa: </label>
-                                        <input type="number" id="maxPrice" name="maxPrice" placeholder="Giá tối đa" min="0" value="@ViewBag.MaxPrice" />
+                                        <label><strong>Giá tối thiểu</strong>: </label>
+                                        <div class="input-wrapper">
+                                            <input type="number" id="minPrice" name="minPrice" placeholder="Giá tối thiểu" min="0" value="@ViewBag.MinPrice" />
+                                            <span class="error-message" id="minPriceError"></span>
+                                        </div>
+                                        <label><strong>Giá tối đa</strong>: </label>
+                                        <div class="input-wrapper">
+                                            <input type="number" id="maxPrice" name="maxPrice" placeholder="Giá tối đa" min="0" value="@ViewBag.MaxPrice" />
+                                            <span class="error-message" id="maxPriceError"></span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

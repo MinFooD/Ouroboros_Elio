@@ -1179,6 +1179,7 @@
     /*--------------------------------
     Price Slider Active
 -------------------------------- */
+    // Hàm debounce để trì hoãn thực thi
     function debounce(func, wait) {
         var timeout;
         return function executedFunction() {
@@ -1195,15 +1196,32 @@
     function filterPrice() {
         var minPrice = $('#minPrice').val();
         var maxPrice = $('#maxPrice').val();
+        var $minPriceError = $('#minPriceError');
+        var $maxPriceError = $('#maxPriceError');
+
+        // Xóa thông báo lỗi cũ
+        $minPriceError.text('');
+        $maxPriceError.text('');
 
         // Kiểm tra giá trị hợp lệ
-        if ((minPrice === '' && maxPrice === '') || isNaN(minPrice) || isNaN(maxPrice)) {
-            return; // Không gửi yêu cầu nếu cả hai ô đều rỗng hoặc giá trị không hợp lệ
+        if (minPrice !== '' && isNaN(minPrice)) {
+            $minPriceError.text('Giá tối thiểu phải là số.');
+            return;
+        }
+        if (maxPrice !== '' && isNaN(maxPrice)) {
+            $maxPriceError.text('Giá tối đa phải là số.');
+            return;
+        }
+        if (minPrice !== '' && maxPrice !== '' && parseFloat(minPrice) > parseFloat(maxPrice)) {
+            $minPriceError.text('Giá tối thiểu <= Giá tối đa.');
+            $maxPriceError.text('Giá tối đa >= Giá tối thiểu.');
+            return;
         }
 
-        if (minPrice !== '' && maxPrice !== '' && parseFloat(minPrice) > parseFloat(maxPrice)) {
-            alert('Giá tối thiểu không được lớn hơn giá tối đa.');
-            return;
+        // Nếu cả hai ô đều rỗng, gửi yêu cầu không có bộ lọc giá
+        if (minPrice === '' && maxPrice === '') {
+            minPrice = null;
+            maxPrice = null;
         }
 
         // Lấy modelId từ ViewBag (nếu có)
@@ -1212,14 +1230,18 @@
             modelId = null;
         }
 
+        // Hiển thị loading
+        $('.shop-product-wrap').addClass('loading');
+        $('.hiraola-paginatoin-area').addClass('loading');
+
         // Gửi yêu cầu AJAX đến server
         $.ajax({
             url: '/Product/ProductList',
             type: 'GET',
             data: {
                 modelId: modelId,
-                minPrice: minPrice || null,
-                maxPrice: maxPrice || null,
+                minPrice: minPrice,
+                maxPrice: maxPrice,
                 page: 1,
                 pageSize: '@ViewBag.PageSize'
             },
@@ -1230,12 +1252,18 @@
                     $('.hiraola-paginatoin-area').html($response.find('.hiraola-paginatoin-area').html());
                 } else {
                     console.error('Phản hồi không chứa các phần tử mong đợi:', response);
-                    alert('Không thể cập nhật danh sách sản phẩm. Vui lòng thử lại.');
+                    $('#minPriceError').text('Không thể cập nhật danh sách sản phẩm.');
                 }
+                // Ẩn loading
+                $('.shop-product-wrap').removeClass('loading');
+                $('.hiraola-paginatoin-area').removeClass('loading');
             },
             error: function (xhr, status, error) {
                 console.error('Lỗi AJAX:', status, error, xhr.responseText);
-                alert('Đã xảy ra lỗi khi lọc sản phẩm. Vui lòng thử lại.');
+                $('#minPriceError').text('Đã xảy ra lỗi khi lọc sản phẩm.');
+                // Ẩn loading
+                $('.shop-product-wrap').removeClass('loading');
+                $('.hiraola-paginatoin-area').removeClass('loading');
             }
         });
     }
