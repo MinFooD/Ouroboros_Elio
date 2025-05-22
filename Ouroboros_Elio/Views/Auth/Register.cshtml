@@ -47,8 +47,8 @@
                         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
                         <div class="form-group mb-3">
-                            <label for="Login_Gmail" class="form-label"><i class="fas fa-envelope me-2"></i> Email Address*</label>
-                            <div class="input-group">
+@*                             <label for="Login_Gmail" class="form-label"><i class="fas fa-envelope me-2"></i> Email Address*</label>
+ *@                            <div class="input-group">
                                 <span class="input-group-text"><i class="fas fa-envelope"></i></span>
                                 @Html.TextBoxFor(m => m.Login.Gmail, new { @class = "form-control", placeholder = "Nhập email của bạn", required = "required", type = "email", @aria_label = "Email Address" })
                             </div>
@@ -56,8 +56,8 @@
                         </div>
 
                         <div class="form-group mb-3">
-                            <label for="Login_Password" class="form-label"><i class="fas fa-lock me-2"></i> Password*</label>
-                            <div class="input-group">
+@*                             <label for="Login_Password" class="form-label"><i class="fas fa-lock me-2"></i> Password*</label>
+ *@                            <div class="input-group">
                                 <span class="input-group-text"><i class="fas fa-lock"></i></span>
                                 @Html.PasswordFor(m => m.Login.Password, new { @class = "form-control", placeholder = "Nhập mật khẩu", required = "required", @aria_label = "Password" })
                             </div>
@@ -100,27 +100,27 @@
                         @Html.AntiForgeryToken()
                         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-                        <div class="form-group mb-3">
+                        @* <div class="form-group mb-3">
                             <label for="Register_UserName" class="form-label"><i class="fas fa-user me-2"></i> Tên người dùng</label>
                             <div class="input-group">
                                 <span class="input-group-text"><i class="fas fa-user"></i></span>
                                 @Html.TextBoxFor(m => m.Register.UserName, new { @class = "form-control", placeholder = "Nhập tên người dùng", @aria_label = "Tên người dùng" })
                             </div>
                             @Html.ValidationMessageFor(m => m.Register.UserName, "", new { @class = "text-danger" })
-                        </div>
+                        </div> *@
 
-                        <div class="form-group mb-3">
+                        @* <div class="form-group mb-3">
                             <label for="Register_Phone" class="form-label"><i class="fas fa-phone me-2"></i> Số điện thoại</label>
                             <div class="input-group">
                                 <span class="input-group-text"><i class="fas fa-phone"></i></span>
                                 @Html.TextBoxFor(m => m.Register.Phone, new { @class = "form-control", placeholder = "Nhập số điện thoại", type = "tel", @aria_label = "Số điện thoại" })
                             </div>
                             @Html.ValidationMessageFor(m => m.Register.Phone, "", new { @class = "text-danger" })
-                        </div>
+                        </div> *@
 
                         <div class="form-group mb-3">
-                            <label for="Register_Gmail" class="form-label"><i class="fas fa-envelope me-2"></i> Gmail*</label>
-                            <div class="input-group">
+@*                             <label for="Register_Gmail" class="form-label"><i class="fas fa-envelope me-2"></i> Gmail*</label>
+ *@                            <div class="input-group">
                                 <span class="input-group-text"><i class="fas fa-envelope"></i></span>
                                 @Html.TextBoxFor(m => m.Register.Gmail, new { @class = "form-control", placeholder = "Nhập Gmail của bạn", required = "required", type = "email", @aria_label = "Gmail" })
                             </div>
@@ -128,8 +128,8 @@
                         </div>
 
                         <div class="form-group mb-3">
-                            <label for="Register_Password" class="form-label"><i class="fas fa-lock me-2"></i> Mật khẩu*</label>
-                            <div class="input-group">
+@*                             <label for="Register_Password" class="form-label"><i class="fas fa-lock me-2"></i> Mật khẩu*</label>
+ *@                            <div class="input-group">
                                 <span class="input-group-text"><i class="fas fa-lock"></i></span>
                                 @Html.PasswordFor(m => m.Register.Password, new { @class = "form-control", placeholder = "Nhập mật khẩu", required = "required", @aria_label = "Mật khẩu" })
                             </div>
@@ -137,22 +137,22 @@
                         </div>
 
                         <div class="form-group mb-3">
-                            <label for="Register_ConfirmPassword" class="form-label"><i class="fas fa-lock me-2"></i> Xác nhận mật khẩu*</label>
-                            <div class="input-group">
+@*                             <label for="Register_ConfirmPassword" class="form-label"><i class="fas fa-lock me-2"></i> Xác nhận mật khẩu*</label>
+ *@                            <div class="input-group">
                                 <span class="input-group-text"><i class="fas fa-lock"></i></span>
                                 @Html.PasswordFor(m => m.Register.ConfirmPassword, new { @class = "form-control", placeholder = "Nhập lại mật khẩu", required = "required", @aria_label = "Xác nhận mật khẩu" })
                             </div>
                             @Html.ValidationMessageFor(m => m.Register.ConfirmPassword, "", new { @class = "text-danger" })
                         </div>
 
-                        <div class="form-group mb-3">
+                        @* <div class="form-group mb-3">
                             <label for="Register_Address" class="form-label"><i class="fas fa-map-marker-alt me-2"></i> Địa chỉ*</label>
                             <div class="input-group">
                                 <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
                                 @Html.TextBoxFor(m => m.Register.Address, new { @class = "form-control", placeholder = "Nhập địa chỉ", required = "required", @aria_label = "Địa chỉ" })
                             </div>
                             @Html.ValidationMessageFor(m => m.Register.Address, "", new { @class = "text-danger" })
-                        </div>
+                        </div> *@
 
                         <div class="form-group mb-3">
                             <button type="submit" class="btn btn-success btn-block animated pulse"><i class="fas fa-user-plus me-2"></i> Đăng ký</button>
