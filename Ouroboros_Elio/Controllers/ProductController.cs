@@ -18,12 +18,17 @@ namespace Ouroboros_Elio.Controllers
 			_modelService = modelService;
 		}
 
-		//[Authorize(Roles = "Admin,Manager,User")]
-		public async Task<IActionResult> ProductList(Guid? modelId)
+        //[Authorize(Roles = "Admin,Manager,User")]
+        public async Task<IActionResult> ProductList(Guid? modelId, int page = 1, int pageSize = 6)
         {
-            var designs = await _designService.GetAllDesignsAsync(modelId);
-			ViewBag.ListModel = await _modelService.GetAllModelsAsync();
-			return View(designs);
+            var (designs, totalCount) = await _designService.GetPagedDesignsAsync(modelId, page, pageSize);
+            ViewBag.ListModel = await _modelService.GetAllModelsAsync();
+            ViewBag.Page = page;
+            ViewBag.PageSize = pageSize;
+            ViewBag.TotalCount = totalCount;
+            ViewBag.TotalPages = (int)Math.Ceiling((double)totalCount / pageSize);
+            ViewBag.ModelId = modelId; // Đảm bảo modelId được truyền vào ViewBag
+            return View(designs);
         }
 
         public async Task<IActionResult> ProductDetail(Guid designId)

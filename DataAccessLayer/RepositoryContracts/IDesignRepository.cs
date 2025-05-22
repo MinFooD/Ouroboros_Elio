@@ -15,10 +15,11 @@ namespace DataAccessLayer.RepositoryContracts
 		Task<Design?> GetDesignByIdAsync(Guid? designId);
 		Task<List<Design>?> GetAllDesignsAsync(Guid? modelId);
 		Task<bool> VisitCountUp(Guid designId);
-		//Task<IEnumerable<Design>> GetDesignsByCategoryIdAsync(Guid categoryId);
-		//Task<IEnumerable<Design>> GetTopVisitedDesignsAsync(int count);
-		//Task<IEnumerable<Design>> GetTopOrderedDesignsAsync(int count);
-		//Task<IEnumerable<Design>> SearchDesignsAsync(string searchTerm);
-		//Task<bool> IsExistAsync(Guid designId);
-	}
+        Task<(List<Design> Designs, int TotalCount)> GetPagedDesignsAsync(Guid? modelId, int page, int pageSize);
+        //Task<IEnumerable<Design>> GetDesignsByCategoryIdAsync(Guid categoryId);
+        //Task<IEnumerable<Design>> GetTopVisitedDesignsAsync(int count);
+        //Task<IEnumerable<Design>> GetTopOrderedDesignsAsync(int count);
+        //Task<IEnumerable<Design>> SearchDesignsAsync(string searchTerm);
+        //Task<bool> IsExistAsync(Guid designId);
+    }
 }

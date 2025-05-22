@@ -1,3 +1,4 @@
+﻿using BusinessLogicLayer.Dtos.DesignDtos;
 using BusinessLogicLayer.Dtos.MailUtils;
 using BusinessLogicLayer.Extensions;
 using DataAccessLayer.Context;
@@ -30,6 +31,9 @@ builder.Services.ConfigureApplicationCookie(options =>
 	//options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
 });
 
+// Thêm AutoMapper
+builder.Services.AddAutoMapper(typeof(BusinessLogicLayer.Mappers.AutoMappingProfile.AutoMapper));
+
 // Add services to the container.
 builder.AddPresentationLayer();
 builder.Services.AddBusinessLogicLayer();
@@ -51,16 +55,6 @@ var mailsettings = builder.Configuration.GetSection("MailSettings");
 builder.Services.Configure<MailSettings>(mailsettings);
 
 builder.Services.AddDbContext<OuroborosContext>(option => option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-
-//builder.Services.AddCors(options =>
-//{
-//	options.AddPolicy("AllowSpecificOrigins", policy =>
-//	{
-//		policy.WithOrigins("http://localhost:3000")
-//			  .AllowAnyHeader()
-//			  .AllowAnyMethod();
-//	});
-//});
 
 var app = builder.Build();
 
