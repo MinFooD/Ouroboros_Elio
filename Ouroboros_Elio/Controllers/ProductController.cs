@@ -19,15 +19,21 @@ namespace Ouroboros_Elio.Controllers
 		}
 
         //[Authorize(Roles = "Admin,Manager,User")]
-        public async Task<IActionResult> ProductList(Guid? modelId, int page = 1, int pageSize = 6)
+        public async Task<IActionResult> ProductList(Guid? modelId, decimal? minPrice, decimal? maxPrice, int page = 1, int pageSize = 6)
         {
-            var (designs, totalCount) = await _designService.GetPagedDesignsAsync(modelId, page, pageSize);
+            var (designs, totalCount) = minPrice.HasValue || maxPrice.HasValue
+                ? await _designService.GetPagedDesignsAsync(modelId, minPrice, maxPrice, page, pageSize)
+                : await _designService.GetPagedDesignsAsync(modelId, page, pageSize);
+
             ViewBag.ListModel = await _modelService.GetAllModelsAsync();
             ViewBag.Page = page;
             ViewBag.PageSize = pageSize;
             ViewBag.TotalCount = totalCount;
             ViewBag.TotalPages = (int)Math.Ceiling((double)totalCount / pageSize);
-            ViewBag.ModelId = modelId; // Đảm bảo modelId được truyền vào ViewBag
+            ViewBag.ModelId = modelId;
+            ViewBag.MinPrice = minPrice;
+            ViewBag.MaxPrice = maxPrice;
+
             return View(designs);
         }
 

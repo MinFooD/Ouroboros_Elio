@@ -1,4 +1,4 @@
-(function ($) {
+﻿(function ($) {
     'use strict';
     /*----------------------------------------*/
     /* Hiraola's Newsletter Popup
@@ -76,8 +76,8 @@
 /*----------------------------------------*/
     /*Variables*/
     var $offcanvasNav = $(
-            '.offcanvas-menu, .offcanvas-minicart_menu, .offcanvas-search_menu, .mobile-menu'
-        ),
+        '.offcanvas-menu, .offcanvas-minicart_menu, .offcanvas-search_menu, .mobile-menu'
+    ),
         $offcanvasNavWrap = $(
             '.offcanvas-menu_wrapper, .offcanvas-minicart_wrapper, .offcanvas-search_wrapper, .mobile-menu_wrapper'
         ),
@@ -924,7 +924,7 @@
         ],
     });
     /*----------------------------------
-	/* 	Instafeed active 
+    /* 	Instafeed active 
 ------------------------------------*/
     if ($('#Instafeed').length) {
         var feed = new Instafeed({
@@ -1179,24 +1179,71 @@
     /*--------------------------------
     Price Slider Active
 -------------------------------- */
-    var sliderrange = $('#slider-range');
-    var amountprice = $('#amount');
-    $(function () {
-        sliderrange.slider({
-            range: true,
-            min: 20,
-            max: 100,
-            values: [0, 100],
-            slide: function (event, ui) {
-                amountprice.val('$' + ui.values[0] + ' - $' + ui.values[1]);
+    function debounce(func, wait) {
+        var timeout;
+        return function executedFunction() {
+            var context = this;
+            var args = arguments;
+            clearTimeout(timeout);
+            timeout = setTimeout(function () {
+                func.apply(context, args);
+            }, wait);
+        };
+    }
+
+    // Hàm lọc giá
+    function filterPrice() {
+        var minPrice = $('#minPrice').val();
+        var maxPrice = $('#maxPrice').val();
+
+        // Kiểm tra giá trị hợp lệ
+        if ((minPrice === '' && maxPrice === '') || isNaN(minPrice) || isNaN(maxPrice)) {
+            return; // Không gửi yêu cầu nếu cả hai ô đều rỗng hoặc giá trị không hợp lệ
+        }
+
+        if (minPrice !== '' && maxPrice !== '' && parseFloat(minPrice) > parseFloat(maxPrice)) {
+            alert('Giá tối thiểu không được lớn hơn giá tối đa.');
+            return;
+        }
+
+        // Lấy modelId từ ViewBag (nếu có)
+        var modelId = '@(ViewBag.ModelId ?? "")';
+        if (modelId === '') {
+            modelId = null;
+        }
+
+        // Gửi yêu cầu AJAX đến server
+        $.ajax({
+            url: '/Product/ProductList',
+            type: 'GET',
+            data: {
+                modelId: modelId,
+                minPrice: minPrice || null,
+                maxPrice: maxPrice || null,
+                page: 1,
+                pageSize: '@ViewBag.PageSize'
             },
+            success: function (response) {
+                var $response = $(response);
+                if ($response.find('.shop-product-wrap').length && $response.find('.hiraola-paginatoin-area').length) {
+                    $('.shop-product-wrap').html($response.find('.shop-product-wrap').html());
+                    $('.hiraola-paginatoin-area').html($response.find('.hiraola-paginatoin-area').html());
+                } else {
+                    console.error('Phản hồi không chứa các phần tử mong đợi:', response);
+                    alert('Không thể cập nhật danh sách sản phẩm. Vui lòng thử lại.');
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error('Lỗi AJAX:', status, error, xhr.responseText);
+                alert('Đã xảy ra lỗi khi lọc sản phẩm. Vui lòng thử lại.');
+            }
         });
-        amountprice.val(
-            '$' +
-                sliderrange.slider('values', 0) +
-                ' - $' +
-                sliderrange.slider('values', 1)
-        );
+    }
+
+    // Gắn sự kiện input với debounce
+    $(document).ready(function () {
+        var debouncedFilter = debounce(filterPrice, 500); // Trì hoãn 500ms
+        $('#minPrice, #maxPrice').on('input', debouncedFilter);
     });
     /*----------------------------------------*/
     /*  Hiraola's Slick Carousel
@@ -1233,8 +1280,8 @@
                     : '';
 
             var $spaceBetween = $options.spaceBetween
-                    ? parseInt($options.spaceBetween, 10)
-                    : 0,
+                ? parseInt($options.spaceBetween, 10)
+                : 0,
                 $spaceBetween_xl = $options.spaceBetween_xl
                     ? parseInt($options.spaceBetween_xl, 10)
                     : 0,
@@ -1281,27 +1328,27 @@
                     $arrows === true
                         ? $options.prevArrow
                             ? '<span class="' +
-                              $options.prevArrow.buttonClass +
-                              '"><i class="' +
-                              $options.prevArrow.iconClass +
-                              '"></i></span>'
+                            $options.prevArrow.buttonClass +
+                            '"><i class="' +
+                            $options.prevArrow.iconClass +
+                            '"></i></span>'
                             : '<button class="tty-slick-text-btn tty-slick-text-prev"><i class="ion-ios-arrow-back"></i></span>'
                         : '',
                 $nextArrow =
                     $arrows === true
                         ? $options.nextArrow
                             ? '<span class="' +
-                              $options.nextArrow.buttonClass +
-                              '"><i class="' +
-                              $options.nextArrow.iconClass +
-                              '"></i></span>'
+                            $options.nextArrow.buttonClass +
+                            '"><i class="' +
+                            $options.nextArrow.iconClass +
+                            '"></i></span>'
                             : '<button class="tty-slick-text-btn tty-slick-text-next"><i class="ion-ios-arrow-forward"></i></span>'
                         : '',
                 $rows = $options.rows ? parseInt($options.rows, 10) : 1,
                 $rtl =
                     $options.rtl ||
-                    $html.attr('dir="rtl"') ||
-                    $body.attr('dir="rtl"')
+                        $html.attr('dir="rtl"') ||
+                        $body.attr('dir="rtl"')
                         ? true
                         : false,
                 $slidesToShow = $options.slidesToShow
@@ -1313,9 +1360,9 @@
 
             /*Responsive Variable, Array & Loops*/
             var $responsiveSetting =
-                    typeof $this.data('slick-responsive') !== 'undefined'
-                        ? $this.data('slick-responsive')
-                        : '',
+                typeof $this.data('slick-responsive') !== 'undefined'
+                    ? $this.data('slick-responsive')
+                    : '',
                 $responsiveSettingLength = $responsiveSetting.length,
                 $responsiveArray = [];
             for (var i = 0; i < $responsiveSettingLength; i++) {
@@ -1626,7 +1673,7 @@
     });
     /*--------------------------
         Hiraola's Product Zoom
-	---------------------------- */
+    ---------------------------- */
     $('.zoompro').elevateZoom({
         gallery: 'gallery',
         galleryActiveClass: 'active',
@@ -1676,8 +1723,8 @@
         ],
     });
     /*------------------------------------
-	        DateCountdown active 1
-	    ------------------------------------- */
+            DateCountdown active 1
+        ------------------------------------- */
     $('.DateCountdown').TimeCircles({
         direction: 'Counter-clockwise',
         fg_width: 0.009,
@@ -1727,49 +1774,49 @@
     /*--------------------------------
     Ajax Contact Form
 -------------------------------- */
-$(function () {
-    // Get the form.
-    var form = $('#contact-form');
-    // Get the messages div.
-    var formMessages = $('.form-message');
-    // Set up an event listener for the contact form.
-    $(form).submit(function (e) {
-        // Stop the browser from submitting the form.
-        e.preventDefault();
-        // Serialize the form data.
-        var formData = $(form).serialize();
-        // Submit the form using AJAX.
-        $.ajax({
-            type: 'POST',
-            url: $(form).attr('action'),
-            data: formData,
-        })
-            .done(function (response) {
-                // Make sure that the formMessages div has the 'success' class.
-                $(formMessages).removeClass('error');
-                $(formMessages).addClass('success');
-
-                // Set the message text.
-                $(formMessages).text(response);
-
-                // Clear the form.
-                $('#contact-form input,#contact-form textarea').val('');
+    $(function () {
+        // Get the form.
+        var form = $('#contact-form');
+        // Get the messages div.
+        var formMessages = $('.form-message');
+        // Set up an event listener for the contact form.
+        $(form).submit(function (e) {
+            // Stop the browser from submitting the form.
+            e.preventDefault();
+            // Serialize the form data.
+            var formData = $(form).serialize();
+            // Submit the form using AJAX.
+            $.ajax({
+                type: 'POST',
+                url: $(form).attr('action'),
+                data: formData,
             })
-            .fail(function (data) {
-                // Make sure that the formMessages div has the 'error' class.
-                $(formMessages).removeClass('success');
-                $(formMessages).addClass('error');
+                .done(function (response) {
+                    // Make sure that the formMessages div has the 'success' class.
+                    $(formMessages).removeClass('error');
+                    $(formMessages).addClass('success');
 
-                // Set the message text.
-                if (data.responseText !== '') {
-                    $(formMessages).text(data.responseText);
-                } else {
-                    $(formMessages).text(
-                        'Oops! An error occured and your message could not be sent.'
-                    );
-                }
-            });
+                    // Set the message text.
+                    $(formMessages).text(response);
+
+                    // Clear the form.
+                    $('#contact-form input,#contact-form textarea').val('');
+                })
+                .fail(function (data) {
+                    // Make sure that the formMessages div has the 'error' class.
+                    $(formMessages).removeClass('success');
+                    $(formMessages).addClass('error');
+
+                    // Set the message text.
+                    if (data.responseText !== '') {
+                        $(formMessages).text(data.responseText);
+                    } else {
+                        $(formMessages).text(
+                            'Oops! An error occured and your message could not be sent.'
+                        );
+                    }
+                });
+        });
     });
-});
 
 })(jQuery);

@@ -26,16 +26,11 @@
                                     <h5>Tìm Kiếm Theo Giá</h5>
                                 </div>
                                 <div class="price-filter">
-                                    <div id="slider-range"></div>
-                                    <div class="price-slider-amount">
-                                        <div class="label-input">
-                                            <label>Giá : </label>
-                                            <input type="text"
-                                                   id="amount"
-                                                   name="price"
-                                                   placeholder="Add Your Price" />
-                                        </div>
-                                        <!-- <button type="button">Filter</button> -->
+                                    <div class="price-inputs">
+                                        <label>Giá tối thiểu: </label>
+                                        <input type="number" id="minPrice" name="minPrice" placeholder="Giá tối thiểu" min="0" value="@ViewBag.MinPrice" />
+                                        <label>Giá tối đa: </label>
+                                        <input type="number" id="maxPrice" name="maxPrice" placeholder="Giá tối đa" min="0" value="@ViewBag.MaxPrice" />
                                     </div>
                                 </div>
                             </div>
@@ -215,7 +210,12 @@
                                                 @if (ViewBag.Page > 1)
                                                 {
                                                     <li>
-                                                        <a asp-action="ProductList" asp-route-modelId="@ViewBag.ModelId" asp-route-page="@(ViewBag.Page - 1)" asp-route-pageSize="@ViewBag.PageSize">
+                                                        <a asp-action="ProductList"
+                                                           asp-route-modelId="@ViewBag.ModelId"
+                                                           asp-route-minPrice="@ViewBag.MinPrice"
+                                                           asp-route-maxPrice="@ViewBag.MaxPrice"
+                                                           asp-route-page="@(ViewBag.Page - 1)"
+                                                           asp-route-pageSize="@ViewBag.PageSize">
                                                             <i class="ion-ios-arrow-left"></i>
                                                         </a>
                                                     </li>
@@ -223,13 +223,23 @@
                                                 @for (int i = 1; i <= ViewBag.TotalPages; i++)
                                                 {
                                                     <li class="@(i == ViewBag.Page ? "active" : "")">
-                                                        <a asp-action="ProductList" asp-route-modelId="@ViewBag.ModelId" asp-route-page="@i" asp-route-pageSize="@ViewBag.PageSize">@i</a>
+                                                        <a asp-action="ProductList"
+                                                           asp-route-modelId="@ViewBag.ModelId"
+                                                           asp-route-minPrice="@ViewBag.MinPrice"
+                                                           asp-route-maxPrice="@ViewBag.MaxPrice"
+                                                           asp-route-page="@i"
+                                                           asp-route-pageSize="@ViewBag.PageSize">@i</a>
                                                     </li>
                                                 }
                                                 @if (ViewBag.Page < ViewBag.TotalPages)
                                                 {
                                                     <li>
-                                                        <a asp-action="ProductList" asp-route-modelId="@ViewBag.ModelId" asp-route-page="@(ViewBag.Page + 1)" asp-route-pageSize="@ViewBag.PageSize">
+                                                        <a asp-action="ProductList"
+                                                           asp-route-modelId="@ViewBag.ModelId"
+                                                           asp-route-minPrice="@ViewBag.MinPrice"
+                                                           asp-route-maxPrice="@ViewBag.MaxPrice"
+                                                           asp-route-page="@(ViewBag.Page + 1)"
+                                                           asp-route-pageSize="@ViewBag.PageSize">
                                                             <i class="ion-ios-arrow-right"></i>
                                                         </a>
                                                     </li>
@@ -253,4 +263,3 @@
         </div>
     </div>
 </body>
-

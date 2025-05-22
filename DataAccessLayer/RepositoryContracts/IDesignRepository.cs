@@ -9,17 +9,10 @@ namespace DataAccessLayer.RepositoryContracts
 {
 	public interface IDesignRepository
 	{
-		//Task<bool> AddDesignAsync(Design design);
-		//Task<bool> UpdateDesignAsync(Design design);
-		//Task<bool> DeleteDesignAsync(Guid designId);
 		Task<Design?> GetDesignByIdAsync(Guid? designId);
 		Task<List<Design>?> GetAllDesignsAsync(Guid? modelId);
 		Task<bool> VisitCountUp(Guid designId);
         Task<(List<Design> Designs, int TotalCount)> GetPagedDesignsAsync(Guid? modelId, int page, int pageSize);
-        //Task<IEnumerable<Design>> GetDesignsByCategoryIdAsync(Guid categoryId);
-        //Task<IEnumerable<Design>> GetTopVisitedDesignsAsync(int count);
-        //Task<IEnumerable<Design>> GetTopOrderedDesignsAsync(int count);
-        //Task<IEnumerable<Design>> SearchDesignsAsync(string searchTerm);
-        //Task<bool> IsExistAsync(Guid designId);
+        Task<(List<Design> Designs, int TotalCount)> GetPagedDesignsAsync(Guid? modelId, decimal? minPrice, decimal? maxPrice, int page, int pageSize);
     }
 }
