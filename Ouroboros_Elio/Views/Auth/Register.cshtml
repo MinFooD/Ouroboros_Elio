@@ -1,201 +1,350 @@
 ﻿@model Ouroboros_Elio.Models.LoginRegisterViewModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
 
-<!DOCTYPE html>
-<html class="no-js" lang="en">
-<head>
-    <meta charset="utf-8" />
-    <meta http-equiv="x-ua-compatible" content="ie=edge" />
-    <title>
-        Login & Register || Hiraola - Jewellery eCommerce Bootstrap 5 Template
-    </title>
-    <meta name="robots" content="noindex, follow" />
-    <meta name="description" content="" />
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <!-- Favicon -->
-    <link rel="shortcut icon"
-          type="image/x-icon"
-          href="~/assets/images/favicon.ico" />
+<section class="container py-5 position-relative">
+    <!-- Hình nền động Particles -->
+    <div id="particles-js" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;"></div>
 
-    <!-- CSS
-          ============================================ -->
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="~/assets/css/bootstrap.min.css" />
-    <!-- Fontawesome -->
-    <link rel="stylesheet" href="~/assets/css/font-awesome.min.css" />
-    <!-- Fontawesome Star -->
-    <link rel="stylesheet" href="~/assets/css/fontawesome-stars.css" />
-    <!-- Ion Icon -->
-    <link rel="stylesheet" href="~/assets/css/ionicons.min.css" />
-    <!-- Slick CSS -->
-    <link rel="stylesheet" href="~/assets/css/slick.min.css" />
-    <!-- Animation -->
-    <link rel="stylesheet" href="~/assets/css/animate.min.css" />
-    <!-- jQuery Ui -->
-    <link rel="stylesheet" href="~/assets/css/jquery-ui.min.css" />
-    <!-- Nice Select -->
-    <link rel="stylesheet" href="~/assets/css/nice-select.min.css" />
-    <!-- Timecircles -->
-    <link rel="stylesheet" href="~/assets/css/timecircles.min.css" />
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Đăng nhập & Đăng ký</li>
+        </ol>
+    </nav>
 
-    <!-- Main Style CSS -->
-    <link rel="stylesheet" href="~/assets/css/style.css" />
-    <!-- <link rel="stylesheet" href="assets/css/style.min.css"> -->
-</head>
-
-<body class="template-color-1">
-    <div class="main-wrapper">
-        <!-- Begin Hiraola's Breadcrumb Area -->
-        <div class="breadcrumb-area">
-            <div class="container">
-                <div class="breadcrumb-content">
-                    <h2>Other</h2>
-                    <ul>
-                        <li><a href="index.html">Home</a></li>
-                        <li class="active">Login & Register</li>
-                    </ul>
+    <!-- Thông báo -->
+    <div class="row justify-content-center mb-4">
+        <div class="col-md-6">
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success animated fadeIn" role="alert">
+                    @TempData["SuccessMessage"]
                 </div>
-            </div>
-        </div>
-        <!-- Hiraola's Breadcrumb Area End Here -->
-        <!-- Begin Hiraola's Login Register Area -->
-        <div class="hiraola-login-register_area">
-            <div class="container">
-                @if (TempData["SuccessMessage"] != null)
-                {
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        @TempData["SuccessMessage"]
-                    </div>
-                }
-                @if (TempData["Error"] != null)
-                {
-                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        @TempData["Error"]
-                    </div>
-                }
-                <div class="row">
-                    <div class="col-sm-12 col-md-12 col-xs-12 col-lg-6">
-                        <!-- Login Form s-->
-                        <form asp-area="" asp-controller="Auth" asp-action="Login" method="post">
-                            <div class="login-form">
-                                <h4 class="login-title">Login</h4>
-                                <div class="row">
-                                    <div class="col-md-12 col-12">
-                                        <label asp-for="Login.Gmail">Email Address*</label>
-                                        <input asp-for="Login.Gmail" type="email" placeholder="Email Address" />
-                                        <span asp-validation-for="Login.Gmail" class="text-danger"></span>
-                                    </div>
-                                    <div class="col-12 mb--20">
-                                        <label asp-for="Login.Password">Password</label>
-                                        <input asp-for="Login.Password" type="password" placeholder="Password" />
-                                        <span asp-validation-for="Login.Password" class="text-danger"></span>
-                                    </div>
-                                    <div class="col-md-8">
-                                        <div class="check-box">
-                                            <input asp-for="Login.RememberMe" type="checkbox" id="remember_me" />
-                                            <label asp-for="Login.RememberMe" for="remember_me">Remember me</label>
-                                        </div>
-                                    </div>
-                                @*     <div class="col-md-4">
-                                        <div class="forgotton-password_info">
-                                            <a href="#"> Forgotten pasward?</a>
-                                        </div>
-                                    </div> *@
-                                    <div class="col-md-12">
-                                        <button class="hiraola-login_btn">Login</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="col-sm-12 col-md-12 col-lg-6 col-xs-12">
-                        <form asp-area="" asp-controller="Auth" asp-action="RegisterAndSendMail" method="post">
-                            <div class="login-form">
-                                <h4 class="login-title">Register</h4>
-                                <div class="row">
-                                    <div class="col-md-6 col-12 mb--20">
-                                        <label asp-for="Register.UserName">UserName</label>
-                                        <input asp-for="Register.UserName" type="text" placeholder="First Name" />
-                                        <span asp-validation-for="Register.UserName" class="text-danger"></span>
-                                    </div>
-                                    <div class="col-md-6 col-12 mb--20">
-                                        <label asp-for="Register.Phone">Phone</label>
-                                        <input asp-for="Register.Phone" type="text" placeholder="Last Name" />
-                                        <span asp-validation-for="Register.Phone" class="text-danger"></span>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <label asp-for="Register.Gmail">Gmail*</label>
-                                        <input asp-for="Register.Gmail" type="email" placeholder="Email Address" />
-                                        <span asp-validation-for="Register.Gmail" class="text-danger"></span>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label asp-for="Register.Password">Password</label>
-                                        <input asp-for="Register.Password" type="password" placeholder="Password" />
-                                        <span asp-validation-for="Register.Password" class="text-danger"></span>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label asp-for="Register.ConfirmPassword">Confirm Password</label>
-                                        <input asp-for="Register.ConfirmPassword" type="password" placeholder="Confirm Password" />
-                                        <span asp-validation-for="Register.ConfirmPassword" class="text-danger"></span>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <label asp-for="Register.Address">Address*</label>
-                                        <input asp-for="Register.Address" type="address" placeholder="Address" />
-                                        <span asp-validation-for="Register.Address" class="text-danger"></span>
-                                    </div>
-                                    <div class="col-12">
-                                        <button class="hiraola-register_btn">Register</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
+            }
+            @if (TempData["Error"] != null)
+            {
+                <div class="alert alert-danger animated fadeIn" role="alert">
+                    @TempData["Error"]
                 </div>
-            </div>
+            }
         </div>
-        <!-- Hiraola's Login Register Area  End Here -->
     </div>
 
+    <div class="row justify-content-center">
+        <!-- Form Đăng nhập -->
+        <article id="login-form" class="col-md-6 d-block animated fadeInUp">
+            <div class="card shadow">
+                <div class="card-header text-center bg-primary text-white">
+                    <h3 class="mb-0">Đăng nhập</h3>
+                </div>
+                <div class="card-body p-4">
+                    @using (Html.BeginForm("Login", "Auth", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-    <!-- JS
-      ============================================ -->
-    <!-- jQuery JS -->
-    <script src="~/assets/js/vendor/jquery-3.6.0.min.js"></script>
-    <script src="~/assets/js/vendor/jquery-migrate-3.3.2.min.js"></script>
-    <!-- Modernizer JS -->
-    <script src="~/assets/js/vendor/modernizr-3.11.2.min.js"></script>
-    <!-- Bootstrap JS -->
-    <script src="~/assets/js/vendor/bootstrap.bundle.min.js"></script>
+                        <div class="form-group mb-3">
+                            <label for="Login_Gmail" class="form-label"><i class="fas fa-envelope me-2"></i> Email Address*</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                                @Html.TextBoxFor(m => m.Login.Gmail, new { @class = "form-control", placeholder = "Nhập email của bạn", required = "required", type = "email", @aria_label = "Email Address" })
+                            </div>
+                            @Html.ValidationMessageFor(m => m.Login.Gmail, "", new { @class = "text-danger" })
+                        </div>
 
-    <!-- Slick Slider JS -->
-    <script src="~/assets/js/plugins/slick.min.js"></script>
-    <!-- Countdown JS -->
-    <script src="~/assets/js/plugins/countdown.min.js"></script>
-    <!-- Barrating JS -->
-    <script src="~/assets/js/plugins/jquery.barrating.min.js"></script>
-    <!-- Counterup JS -->
-    <script src="~/assets/js/plugins/jquery.counterup.min.js"></script>
-    <!-- Waypoints -->
-    <script src="~/assets/js/plugins/waypoints.min.js"></script>
-    <!-- Nice Select JS -->
-    <script src="~/assets/js/plugins/jquery.nice-select.min.js"></script>
-    <!-- Sticky Sidebar JS -->
-    <script src="~/assets/js/plugins/jquery.sticky-sidebar.js"></script>
-    <!-- Jquery-ui JS -->
-    <script src="~/assets/js/plugins/jquery-ui.min.js"></script>
-    <!-- Scroll Top JS -->
-    <script src="~/assets/js/plugins/scroll-top.min.js"></script>
-    <!-- Theia Sticky Sidebar JS -->
-    <script src="~/assets/js/plugins/theia-sticky-sidebar.min.js"></script>
-    <!-- ElevateZoom JS -->
-    <script src="~/assets/js/plugins/jquery.elevateZoom-3.0.8.min.js"></script>
-    <!-- Timecircles JS -->
-    <script src="~/assets/js/plugins/timecircles.min.js"></script>
-    <!-- Mailchimp Ajax JS -->
-    <script src="~/assets/js/plugins/mailchimp-ajax.js"></script>
+                        <div class="form-group mb-3">
+                            <label for="Login_Password" class="form-label"><i class="fas fa-lock me-2"></i> Password*</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                                @Html.PasswordFor(m => m.Login.Password, new { @class = "form-control", placeholder = "Nhập mật khẩu", required = "required", @aria_label = "Password" })
+                            </div>
+                            @Html.ValidationMessageFor(m => m.Login.Password, "", new { @class = "text-danger" })
+                        </div>
 
-    <!-- Main JS -->
-    <script src="~/assets/js/main.js"></script>
-    <!-- <script src="assets/js/main.min.js"></script> -->
-</body>
-</html>
+                        <div class="form-group d-flex justify-content-between align-items-center mb-3">
+                            <div class="form-check">
+                                @Html.CheckBoxFor(m => m.Login.RememberMe, new { @class = "form-check-input" })
+                                @Html.LabelFor(m => m.Login.RememberMe, "Ghi nhớ tôi", new { @class = "form-check-label" })
+                            </div>
+                            <a href="@Url.Action("ForgotPassword", "Account")" class="text-primary" aria-label="Quên mật khẩu">
+                                <i class="fas fa-question-circle"></i> Quên mật khẩu?
+                            </a>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <button type="submit" class="btn btn-primary btn-block animated pulse"><i class="fas fa-sign-in-alt me-2"></i> Đăng nhập</button>
+                        </div>
+
+                        <div class="form-group text-center">
+                            <a href="#" class="btn btn-outline-primary btn-block toggle-form animated bounceIn" data-target="register-form" aria-label="Chuyển sang form đăng ký">
+                                <i class="fas fa-user-plus me-2"></i> Chưa có tài khoản? Đăng ký ngay!
+                            </a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </article>
+
+        <!-- Form Đăng ký -->
+        <article id="register-form" class="col-md-6 d-none animated fadeInUp">
+            <div class="card shadow">
+                <div class="card-header text-center bg-success text-white">
+                    <h3 class="mb-0">Đăng ký</h3>
+                </div>
+                <div class="card-body p-4">
+                    @using (Html.BeginForm("RegisterAndSendMail", "Auth", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                        <div class="form-group mb-3">
+                            <label for="Register_UserName" class="form-label"><i class="fas fa-user me-2"></i> Tên người dùng</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                @Html.TextBoxFor(m => m.Register.UserName, new { @class = "form-control", placeholder = "Nhập tên người dùng", @aria_label = "Tên người dùng" })
+                            </div>
+                            @Html.ValidationMessageFor(m => m.Register.UserName, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="Register_Phone" class="form-label"><i class="fas fa-phone me-2"></i> Số điện thoại</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                                @Html.TextBoxFor(m => m.Register.Phone, new { @class = "form-control", placeholder = "Nhập số điện thoại", type = "tel", @aria_label = "Số điện thoại" })
+                            </div>
+                            @Html.ValidationMessageFor(m => m.Register.Phone, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="Register_Gmail" class="form-label"><i class="fas fa-envelope me-2"></i> Gmail*</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                                @Html.TextBoxFor(m => m.Register.Gmail, new { @class = "form-control", placeholder = "Nhập Gmail của bạn", required = "required", type = "email", @aria_label = "Gmail" })
+                            </div>
+                            @Html.ValidationMessageFor(m => m.Register.Gmail, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="Register_Password" class="form-label"><i class="fas fa-lock me-2"></i> Mật khẩu*</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                                @Html.PasswordFor(m => m.Register.Password, new { @class = "form-control", placeholder = "Nhập mật khẩu", required = "required", @aria_label = "Mật khẩu" })
+                            </div>
+                            @Html.ValidationMessageFor(m => m.Register.Password, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="Register_ConfirmPassword" class="form-label"><i class="fas fa-lock me-2"></i> Xác nhận mật khẩu*</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                                @Html.PasswordFor(m => m.Register.ConfirmPassword, new { @class = "form-control", placeholder = "Nhập lại mật khẩu", required = "required", @aria_label = "Xác nhận mật khẩu" })
+                            </div>
+                            @Html.ValidationMessageFor(m => m.Register.ConfirmPassword, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="Register_Address" class="form-label"><i class="fas fa-map-marker-alt me-2"></i> Địa chỉ*</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
+                                @Html.TextBoxFor(m => m.Register.Address, new { @class = "form-control", placeholder = "Nhập địa chỉ", required = "required", @aria_label = "Địa chỉ" })
+                            </div>
+                            @Html.ValidationMessageFor(m => m.Register.Address, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <button type="submit" class="btn btn-success btn-block animated pulse"><i class="fas fa-user-plus me-2"></i> Đăng ký</button>
+                        </div>
+
+                        <div class="form-group text-center">
+                            <a href="#" class="btn btn-outline-primary btn-block toggle-form animated bounceIn" data-target="login-form" aria-label="Chuyển sang form đăng nhập">
+                                <i class="fas fa-sign-in-alt me-2"></i> Đã có tài khoản? Đăng nhập ngay!
+                            </a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </article>
+    </div>
+</section>
+
+@section Scripts {
+    <!-- Thêm Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@400;500&display=swap" rel="stylesheet">
+    <!-- Thêm Particles.js từ CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Khởi tạo Particles.js
+            particlesJS('particles-js', {
+                particles: {
+                    number: { value: 60, density: { enable: true, value_area: 800 } },
+                    color: { value: ['#ff6b6b', '#4ecdc4', '#f7b731'] },
+                    shape: { type: ['circle', 'star'], stroke: { width: 0 } },
+                    opacity: { value: 0.6, random: true, anim: { enable: false } },
+                    size: { value: 3, random: true, anim: { enable: false } },
+                    line_linked: { enable: true, distance: 120, color: '#ffffff', opacity: 0.3, width: 1 },
+                    move: {
+                        enable: true,
+                        speed: 1.5,
+                        direction: 'none',
+                        random: true,
+                        straight: false,
+                        out_mode: 'out',
+                        bounce: false
+                    }
+                },
+                interactivity: {
+                    detect_on: 'canvas',
+                    events: {
+                        onhover: { enable: true, mode: 'grab' },
+                        onclick: { enable: true, mode: 'push' },
+                        resize: true
+                    },
+                    modes: {
+                        grab: { distance: 140, line_linked: { opacity: 0.7 } },
+                        push: { particles_nb: 3 }
+                    }
+                },
+                retina_detect: true
+            });
+
+            // Hiệu ứng fade cho particles khi tải trang
+            $('#particles-js').css('opacity', 0).animate({ opacity: 1 }, 1000);
+
+            // Thêm hiệu ứng animate khi focus vào input
+            $('input').on('focus', function () {
+                $(this).addClass('animated pulse');
+            }).on('blur', function () {
+                $(this).removeClass('animated pulse');
+            });
+
+            // Xử lý chuyển đổi giữa form Login và Register
+            $('.toggle-form').on('click', function (e) {
+                e.preventDefault();
+                var targetForm = $(this).data('target');
+                var currentForm = $(this).closest('article').attr('id');
+
+                // Ẩn form hiện tại với hiệu ứng fadeOutUp
+                $('#' + currentForm).addClass('animated fadeOutUp').one('animationend', function () {
+                    $(this).removeClass('animated fadeOutUp').addClass('d-none');
+                    // Hiển thị form đích với hiệu ứng fadeInUp
+                    $('#' + targetForm).removeClass('d-none').addClass('animated fadeInUp').one('animationend', function () {
+                        $(this).removeClass('animated fadeInUp');
+                    });
+                });
+            });
+        });
+    </script>
+}
+
+<style>
+    body {
+        background: #ffffff;
+        min-height: 100vh;
+        font-family: 'Poppins', Arial, sans-serif;
+        color: #333333;
+    }
+    .card {
+        max-width: 500px;
+        margin: 0 auto;
+        border-radius: 0; /* Góc nhọn */
+        border: 1px solid #e8e8e8; /* Viền mỏng */
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+        background: #ffffff;
+        position: relative;
+        z-index: 1;
+    }
+    .card-header {
+        padding: 1.5rem;
+        border-bottom: none;
+        border-radius: 0; /* Góc nhọn */
+    }
+    .card-header h3 {
+        font-family: 'Playfair Display', Georgia, serif;
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: #ffffff;
+    }
+    .form-label {
+        font-family: 'Poppins', Arial, sans-serif;
+        font-size: 1rem;
+        font-weight: 500;
+        color: #333333;
+    }
+    .form-control, .btn, .form-check-label, .text-primary {
+        font-family: 'Poppins', Arial, sans-serif;
+        font-size: 0.95rem;
+        font-weight: 400;
+    }
+    .form-control {
+        border-radius: 0; /* Góc nhọn */
+    }
+    .form-control::placeholder {
+        font-family: 'Poppins', Arial, sans-serif;
+        font-style: italic;
+        color: #6c757d;
+    }
+    .text-danger {
+        font-family: 'Poppins', Arial, sans-serif;
+        font-size: 0.85rem;
+        font-style: italic;
+        font-weight: 400;
+    }
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+    .input-group-text {
+        background-color: #f8f9fa;
+        border-color: #e8e8e8;
+        font-family: 'Poppins', Arial, sans-serif;
+        font-size: 0.95rem;
+        border-radius: 0; /* Góc nhọn */
+    }
+    .btn {
+        border-radius: 0; /* Góc nhọn */
+    }
+    .btn-primary {
+        background-color: #1b6ec2;
+        border-color: #1b6ec2;
+        color: #ffffff;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .btn-primary:hover {
+        background-color: #155a9e;
+        border-color: #155a9e;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+    .btn-success {
+        background-color: #28a745;
+        border-color: #28a745;
+        color: #ffffff;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .btn-success:hover {
+        background-color: #218838;
+        border-color: #218838;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+    .toggle-form {
+        color: #0077cc;
+        border-color: #0077cc;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .toggle-form:hover {
+        background-color: #0077cc;
+        color: #ffffff !important;
+        border-color: #0077cc;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+    .form-control:focus {
+        border-color: #1b6ec2;
+        box-shadow: 0 0 0 0.25rem rgba(27, 110, 194, 0.25);
+    }
+</style>
