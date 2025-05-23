@@ -1,9 +1,15 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html class="no-js" lang="en">
+
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Ouroboros_Elio</title>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>OROBORUS</title>
+    <meta name="robots" content="noindex, follow" />
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="~/assets/images/menu//logo/oroborus.jpg">
 
     <!-- Đoạn code cho VerifyResult hoạt động -->
     @await RenderSectionAsync("Styles", required: false)
@@ -31,112 +37,108 @@
 
     <!-- Main Style CSS -->
     <link rel="stylesheet" href="~/assets/css/style.css" />
+    <!-- <link rel="stylesheet" href="assets/css/style.min.css"> -->
 </head>
-<body>
-    <header class="header-main_area">
-        <div class="header-top_area">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-5">
-                        <div class="ht-left_area">
-                            <div class="header-shipping_area">
-                                <ul>
-                                    <li>
-                                        <span>Telephone Enquiry:</span>
-                                        <a href="callto://+123123321345">(+123) 123 321 345</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-7">
-                        <div class="ht-right_area">
-                            <div class="ht-menu">
-                                <ul>
-                                    <li>
-                                        <a href="my-account.html">My Account<i class="fa fa-chevron-down"></i></a>
-                                        <ul class="ht-dropdown ht-my_account">
-@*                                             <li><a href="/Auth/Register">Register</a></li>
- *@                                            <li class="active"><a href="Auth/Register">Login</a></li>
-                                        </ul>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="header-middle_area d-none d-lg-block">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-3">
-                        <div class="header-logo">
-                            <a href="/Product/ProductList">
-                                <img src="~/assets/images/menu/logo/oroborus.jpg" alt="Hiraola's Header Logo" style="width: 20%">
-                                <img src="~/assets/images/menu/logo/oroletter.jpg" alt="Hiraola's Header Logo" style="width: 50%">
-                            </a>
-                        </div>
-                    </div>
-                    <div class="col-lg-9">
-                        <div class="hm-form_area">
-                            <form action="#" class="hm-searchbox">
-                                <input type="text" placeholder="Tìm Kiếm...">
-                                <button class="li-btn" type="submit"><i class="fa fa-search"></i></button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="header-bottom_area header-sticky stick">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-4 col-sm-4 d-lg-none d-block">
-                        <div class="header-logo">
-                            <a href="index.html">
-                                <img src="~/assets/images/menu/logo/2.png" alt="Hiraola's Header Logo">
-                            </a>
-                        </div>
-                    </div>
-                    <div class="col-lg-9 d-none d-lg-block position-static">
-                        <div class="main-menu_area">
-                            <nav>
-                                <ul>
-                                    <li class="dropdown-holder">
-                                        <a href="/Product/ProductList">Trang Chủ</a>
-                                    </li>
-                                </ul>
-                            </nav>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-md-8 col-sm-8">
-                        <div class="header-right_area">
-                            <ul>
-                                <li>
-                                    <a href="#mobileMenu" class="mobile-menu_btn toolbar-btn color--white d-lg-none d-block">
-                                        <i class="ion-navicon"></i>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a asp-area="" asp-controller="Cart" asp-action="CartDetail" class="wishlist-btn">
-                                        <i class="ion-bag"></i>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </header>
 
-    <div class="container">
-        <!-- Nội dung chính của trang -->
+<body class="template-color-1">
+    <div class="main-wrapper">
+        <header class="header-main_area">
+            <div class="header-top_area">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-5">
+                            <div class="ht-left_area">
+                                <div class="header-shipping_area">
+                                    <ul>
+                                        <li>
+                                            <span>Telephone Enquiry:</span>
+                                            <a href="callto://+123123321345">(+123) 123 321 345</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-7">
+                            <div class="ht-right_area">
+                                <div class="ht-menu">
+                                    <ul>
+                                        <li>
+                                            <a href="/Auth/Register">My Account<i class="fa fa-chevron-down"></i></a>
+                                            <ul class="ht-dropdown ht-my_account">
+                                            <li class="active"><a href="/Auth/Register">Login</a></li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="header-middle_area d-none d-lg-block">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <div class="header-logo">
+                                <a href="/Product/ProductList">
+                                    <img src="~/assets/images/menu/logo/oroborus.jpg" alt="Hiraola's Header Logo" style="width: 20%">
+                                    <img src="~/assets/images/menu/logo/oroletter.jpg" alt="Hiraola's Header Logo" style="width: 50%">
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-lg-9">
+                            <div class="hm-form_area">
+                                <form action="#" class="hm-searchbox">
+                                    <input type="text" placeholder="Tìm Kiếm...">
+                                    <button class="li-btn" type="submit"><i class="fa fa-search"></i></button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="header-bottom_area header-sticky stick">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-4 col-sm-4 d-lg-none d-block">
+                            <div class="header-logo">
+                                <a href="index.html">
+                                    <img src="~/assets/images/menu/logo/2.png" alt="Hiraola's Header Logo">
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-lg-9 d-none d-lg-block position-static">
+                            <div class="main-menu_area">
+                                <nav>
+                                    <ul>
+                                        <li class="dropdown-holder">
+                                            <a href="/Product/ProductList">Trang Chủ</a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-8 col-sm-8">
+                            <div class="header-right_area">
+                                <ul>
+                                    <li>
+                                        <a href="#mobileMenu" class="mobile-menu_btn toolbar-btn color--white d-lg-none d-block">
+                                            <i class="ion-navicon"></i>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a asp-area="" asp-controller="Cart" asp-action="CartDetail" class="wishlist-btn">
+                                            <i class="ion-bag"></i>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
         @RenderBody()
-    </div>
-
-    <footer class="footer">
         <div class="hiraola-footer_area">
             <div class="footer-top_area">
                 <div class="container">
@@ -246,8 +248,9 @@
                 </div>
             </div>
         </div>
-    </footer>
-
+    </div>
+    <!-- JS
+    ============================================ -->
     <!-- jQuery JS -->
     <script src="~/assets/js/vendor/jquery-3.6.0.min.js"></script>
     <script src="~/assets/js/vendor/jquery-migrate-3.3.2.min.js"></script>
