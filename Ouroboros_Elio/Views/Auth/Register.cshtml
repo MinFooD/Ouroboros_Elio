@@ -40,7 +40,8 @@
                     <h3 class="mb-0">Đăng nhập</h3>
                 </div>
                 <div class="card-body p-4">
-                    @using (Html.BeginForm("Login", "Auth", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                    @using (Html.BeginForm("Login", "Auth", FormMethod.Post, 
+                    new { @class = "form-horizontal", role = "form", novalidate = "novalidate" }))
                     {
                         @Html.AntiForgeryToken()
                         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
@@ -48,7 +49,14 @@
                         <div class="form-group mb-3">
                             <div class="input-group">
                                 <span class="input-group-text"><i class="fas fa-envelope"></i></span>
-                                @Html.TextBoxFor(m => m.Login.Gmail, new { @class = "form-control", placeholder = "Nhập email của bạn", required = "required", type = "email", @aria_label = "Email Address" })
+                                @Html.TextBoxFor(m => m.Login.Gmail, new { 
+                                    @class = "form-control", 
+                                    placeholder = "Nhập email của bạn", 
+                                    required = "required", 
+                                    type = "email", 
+                                    @aria_label = "Email Address",
+                                    Value = Context.Request.Cookies["RememberedEmail"] // Tự động điền email từ cookie
+                                })
                             </div>
                             @Html.ValidationMessageFor(m => m.Login.Gmail, "", new { @class = "text-danger" })
                         </div>
@@ -56,14 +64,16 @@
                         <div class="form-group mb-3">
                             <div class="input-group">
                                 <span class="input-group-text"><i class="fas fa-lock"></i></span>
-                                @Html.PasswordFor(m => m.Login.Password, new { @class = "form-control", placeholder = "Nhập mật khẩu", required = "required", @aria_label = "Password" })
+                                @Html.PasswordFor(m => m.Login.Password, new { @class = "form-control", placeholder = "Nhập mật khẩu", 
+                                required = "required", @aria_label = "Password" })
                             </div>
                             @Html.ValidationMessageFor(m => m.Login.Password, "", new { @class = "text-danger" })
                         </div>
 
                         <div class="form-group d-flex justify-content-between align-items-center mb-3">
                             <div class="form-check">
-                                @Html.CheckBoxFor(m => m.Login.RememberMe, new { @class = "form-check-input" })
+                                 @Html.CheckBoxFor(m => m.Login.RememberMe, new { @class = "form-check-input", 
+                                 @checked = Context.Request.Cookies["RememberedEmail"] != null ? "checked" : null })
                                 @Html.LabelFor(m => m.Login.RememberMe, "Ghi nhớ tôi", new { @class = "form-check-label" })
                             </div>
                             <a href="@Url.Action("ForgotPassword", "Account")" class="text-primary" aria-label="Quên mật khẩu">
@@ -92,7 +102,8 @@
                     <h3 class="mb-0">Đăng ký</h3>
                 </div>
                 <div class="card-body p-4">
-                    @using (Html.BeginForm("RegisterAndSendMail", "Auth", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                    @using (Html.BeginForm("RegisterAndSendMail", "Auth", FormMethod.Post, 
+                    new { @class = "form-horizontal", role = "form", novalidate = "novalidate" }))
                     {
                         @Html.AntiForgeryToken()
                         @Html.ValidationSummary(true, "", new { @class = "text-danger" })                        

@@ -70,18 +70,35 @@ namespace Ouroboros_Elio.Controllers
 			{
 				// Tùy chọn: ghi thông tin phụ vào cookie (không nên ghi nhạy cảm)
 				Response.Cookies.Append("UserName", user.UserName, new CookieOptions { HttpOnly = true, Secure = true });
+                Response.Cookies.Append("Email", user.Email, new CookieOptions { HttpOnly = true, Secure = true });
 
-				return RedirectToAction("ProductList", "Product"); // Hoặc chuyển đến Dashboard
+                // Nếu chọn "Ghi nhớ tôi", lưu email vào cookie RememberedEmail
+                if (loginRequest.RememberMe)
+                {
+                    Response.Cookies.Append("RememberedEmail", user.Email, new CookieOptions
+                    {
+                        HttpOnly = true,
+                        Secure = true,
+                        Expires = DateTimeOffset.UtcNow.AddDays(30) // Cookie tồn tại 30 ngày
+                    });
+                }
+                else
+                {
+                    // Xóa cookie RememberedEmail nếu không chọn "Ghi nhớ tôi"
+                    Response.Cookies.Delete("RememberedEmail");
+                }
+
+                return RedirectToAction("ProductList", "Product"); 
 			}
 			else if (result.IsLockedOut)
 			{
 				ModelState.AddModelError("", "Account is locked due to multiple failed login attempts.");
 			}
-			else
-			{
-				ModelState.AddModelError("Login.Password", "Incorrect password.");
-			}
-			TempData["Error"] = "Login failed. Please check your email or password.";
+			//else
+			//{
+			//	ModelState.AddModelError("Login.Password", "Sai Mật Khẩu");
+			//}
+			TempData["Error"] = "Vui lòng kiểm tra Email hoặc Mật Khẩu của bạn.";
 			return View("Register", model);
 		}
 
@@ -187,5 +204,21 @@ namespace Ouroboros_Elio.Controllers
 		{
 			return View();
 		}
-	}
+
+        [HttpGet]
+        [Route("Logout")]
+        public async Task<IActionResult> Logout()
+        {
+            // Đăng xuất người dùng
+            await _signInManager.SignOutAsync();
+
+            // Xóa cookie UserName
+            Response.Cookies.Delete("UserName");
+            Response.Cookies.Delete("Email");
+            Response.Cookies.Delete("RememberedEmail");
+
+            // Chuyển hướng về trang chủ
+            return RedirectToAction("ProductList", "Product");
+        }
+    }
 }
