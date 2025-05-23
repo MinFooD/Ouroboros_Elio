@@ -19,50 +19,58 @@ namespace DataAccessLayer.Repositories
 			_context = context;
 		}
 
-		public async Task<bool> AddToCart(Guid userId, Guid designId, int quantity, bool productType = false)
-		{
-			if (quantity <= 0)
-			{
-				return false; // không cho thêm với số lượng <= 0
-			}
-			var design = await _context.Designs.FirstOrDefaultAsync(d => d.DesignId == designId);
-			if (design == null)
-			{
-				return false;
-			}
-			var cart = await _context.Carts.FirstOrDefaultAsync(c => c.UserId == userId);
-			if (cart == null)
-			{
-				cart = new Cart
-				{
-					UserId = userId,
-					Total = 0,
-					CreatedAt = DateTime.UtcNow,
-				};
-				await _context.Carts.AddAsync(cart);
-				await _context.SaveChangesAsync(); // Để có CartId
-			}
-			var cartItem = await _context.CartItems.FirstOrDefaultAsync(ci => ci.CartId == cart.CartId && ci.DesignId == designId);
-			if (cartItem != null)
-			{
-				// Sản phẩm đã có, không thêm mới
-				return false;
-			}
-			cartItem = new CartItem
-			{
-				CartId = cart.CartId,
-				DesignId = designId,
-				Quantity = quantity,
-				ProductType = productType,
-				Price = design.Price,
-			};
-			await _context.CartItems.AddAsync(cartItem);
-			await _context.SaveChangesAsync();
-			await UpdateCartTotalAsync(cart.CartId);
-			return true;
-		}
+        public async Task<bool> AddToCart(Guid userId, Guid designId, int quantity, bool productType = false)
+        {
+            if (quantity <= 0)
+            {
+                return false;
+            }
 
-		public async Task<bool?> UpdateQuantity(Guid userId, Guid designId, int quantity)
+            var design = await _context.Designs.FirstOrDefaultAsync(d => d.DesignId == designId);
+            if (design == null)
+            {
+                return false;
+            }
+
+            var cart = await _context.Carts.FirstOrDefaultAsync(c => c.UserId == userId);
+            if (cart == null)
+            {
+                cart = new Cart
+                {
+                    UserId = userId,
+                    Total = 0,
+                    CreatedAt = DateTime.UtcNow,
+                };
+                await _context.Carts.AddAsync(cart);
+                await _context.SaveChangesAsync();
+            }
+
+            var cartItem = await _context.CartItems.FirstOrDefaultAsync(ci => ci.CartId == cart.CartId && ci.DesignId == designId);
+            if (cartItem != null)
+            {
+                // Sản phẩm đã có, tăng số lượng
+                cartItem.Quantity += quantity;
+            }
+            else
+            {
+                // Thêm sản phẩm mới
+                cartItem = new CartItem
+                {
+                    CartId = cart.CartId,
+                    DesignId = designId,
+                    Quantity = quantity,
+                    ProductType = productType,
+                    Price = design.Price,
+                };
+                await _context.CartItems.AddAsync(cartItem);
+            }
+
+            await _context.SaveChangesAsync();
+            await UpdateCartTotalAsync(cart.CartId);
+            return true;
+        }
+
+        public async Task<bool?> UpdateQuantity(Guid userId, Guid designId, int quantity)
 		{
 			var cart = await _context.Carts.FirstOrDefaultAsync(c => c.UserId == userId);
 			if (cart == null)
