@@ -1,9 +1,7 @@
 ﻿@model BusinessLogicLayer.Dtos.CartDtos.CartAndListCartItemViewModel
 
 <body class="template-color-1">
-
     <div class="main-wrapper">
-        <!-- Begin Hiraola's Breadcrumb Area -->
         <div class="breadcrumb-area">
             <div class="container">
                 <div class="breadcrumb-content">
@@ -15,8 +13,6 @@
                 </div>
             </div>
         </div>
-        <!-- Hiraola's Breadcrumb Area End Here -->
-        <!-- Begin Hiraola's Cart Area -->
         <div class="hiraola-cart-area">
             <div class="container">
                 <div class="row">
@@ -35,51 +31,11 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @* <tr>
-                                            <td class="hiraola-product-remove">
-                                                <a href="javascript:void(0)">
-                                                    <i class="fa fa-trash"
-                                                       title="Remove"></i>
-                                                </a>
-                                            </td>
-                                            <td class="hiraola-product-thumbnail"><a href="javascript:void(0)"><img src="assets/images/product/small-size/2-1.jpg" alt="Hiraola's Cart Thumbnail"></a></td>
-                                            <td class="hiraola-product-name"><a href="javascript:void(0)">Juma rema pola</a></td>
-                                            <td class="hiraola-product-price"><span class="amount">$46.80</span></td>
-                                            <td class="quantity">
-                                                <label>Quantity</label>
-                                                <div class="cart-plus-minus">
-                                                    <input class="cart-plus-minus-box" value="1" type="text">
-                                                    <div class="dec qtybutton"><i class="fa fa-angle-down"></i></div>
-                                                    <div class="inc qtybutton"><i class="fa fa-angle-up"></i></div>
-                                                </div>
-                                            </td>
-                                            <td class="product-subtotal"><span class="amount">$46.80</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td class="hiraola-product-remove">
-                                                <a href="javascript:void(0)">
-                                                    <i class="fa fa-trash"
-                                                       title="Remove"></i>
-                                                </a>
-                                            </td>
-                                            <td class="hiraola-product-thumbnail"><a href="javascript:void(0)"><img src="assets/images/product/small-size/2-2.jpg" alt="Hiraola's Cart Thumbnail"></a></td>
-                                            <td class="hiraola-product-name"><a href="javascript:void(0)">Bag Goodscol model</a></td>
-                                            <td class="hiraola-product-price"><span class="amount">$71.80</span></td>
-                                            <td class="quantity">
-                                                <label>Quantity</label>
-                                                <div class="cart-plus-minus">
-                                                    <input class="cart-plus-minus-box" value="1" type="text">
-                                                    <div class="dec qtybutton"><i class="fa fa-angle-down"></i></div>
-                                                    <div class="inc qtybutton"><i class="fa fa-angle-up"></i></div>
-                                                </div>
-                                            </td>
-                                            <td class="product-subtotal"><span class="amount">$71.80</span></td>
-                                        </tr> *@
                                         @if (Model.cartItemsViewModel != null && Model.cartItemsViewModel.Any())
                                         {
                                             foreach (var item in Model.cartItemsViewModel)
                                             {
-                                                <tr>
+                                                <tr data-design-id="@item.DesignId">
                                                     <td class="hiraola-product-remove">
                                                         <a href="javascript:void(0)" onclick="removeFromCart('@item.DesignId')">
                                                             <i class="fa fa-trash" title="Remove"></i>
@@ -99,13 +55,13 @@
                                                     <td class="quantity">
                                                         <label>Số Lượng</label>
                                                         <div class="cart-plus-minus">
-                                                            <input class="cart-plus-minus-box" value="@item.Quantity" type="text" onchange="updateQuantity('@item.DesignId', this.value)">
+                                                            <input class="cart-plus-minus-box" value="@item.Quantity" type="text" data-design-id="@item.DesignId" data-price="@item.Price">
                                                             <div class="dec qtybutton"><i class="fa fa-angle-down"></i></div>
                                                             <div class="inc qtybutton"><i class="fa fa-angle-up"></i></div>
                                                         </div>
                                                     </td>
                                                     <td class="product-subtotal">
-                                                        <span class="amount">@((item.Quantity * item.Price)) VND</span>
+                                                        <span class="amount" data-subtotal="@((item.Quantity * item.Price))">@((item.Quantity * item.Price)) VND</span>
                                                     </td>
                                                 </tr>
                                             }
@@ -123,12 +79,8 @@
                                 <div class="col-md-5 ml-auto">
                                     <div class="cart-page-total">
                                         <h2>Tổng Giỏ Hàng</h2>
-                                        @* <ul>
-                                            <li>Tổng <span>120000 VNĐ</span></li>
-                                        </ul>
-                                        <a href="javascript:void(0)">Thanh Toán</a> *@
                                         <ul>
-                                            <li>Tổng <span>@(Model.CartViewModel?.Total ?? 0) VND</span></li>
+                                            <li>Tổng <span id="cart-total">@(Model.CartViewModel?.Total ?? 0) VND</span></li>
                                         </ul>
                                         <a href="javascript:void(0)">Thanh Toán</a>
                                     </div>
@@ -139,16 +91,71 @@
                 </div>
             </div>
         </div>
-        <!-- Hiraola's Cart Area End Here -->       
     </div>
+
     <script>
-        function updateQuantity(designId, quantity) {
-            quantity = parseInt(quantity);
+        // Kiểm tra jQuery
+        if (typeof jQuery === 'undefined') {
+            console.error('jQuery không được tải!');
+        } else {
+            console.log('jQuery đã được tải, phiên bản:', jQuery.fn.jquery);
+        }
+
+        $(document).ready(function () {
+            let isUpdating = false;
+
+            // Gắn sự kiện click cho .qtybutton
+            $('.qtybutton').off('click').on('click', function () {
+                console.log('Sự kiện click .qtybutton được kích hoạt');
+                if (isUpdating) {
+                    console.log('Đang xử lý, bỏ qua click');
+                    return;
+                }
+
+                var $button = $(this);
+                var $input = $button.parent().find('input');
+                var oldValue = parseInt($input.val()) || 1;
+                var newVal;
+
+                if ($button.hasClass('inc')) {
+                    newVal = oldValue + 1;
+                } else {
+                    newVal = oldValue > 1 ? oldValue - 1 : 1;
+                }
+
+                console.log('Cập nhật số lượng từ', oldValue, 'thành', newVal);
+                $input.val(newVal);
+                var designId = $input.data('design-id');
+                console.log('designId:', designId);
+                updateQuantity(designId, newVal, $input);
+            });
+
+            // Gắn sự kiện change cho input
+            $('.cart-plus-minus-box').off('change').on('change', function () {
+                console.log('Sự kiện change .cart-plus-minus-box được kích hoạt');
+                if (isUpdating) {
+                    console.log('Đang xử lý, bỏ qua change');
+                    return;
+                }
+
+                var $input = $(this);
+                var quantity = parseInt($input.val());
+                var designId = $input.data('design-id');
+                console.log('designId:', designId, 'quantity:', quantity);
+                updateQuantity(designId, quantity, $input);
+            });
+        });
+
+        function updateQuantity(designId, quantity, $input) {
             if (isNaN(quantity) || quantity <= 0) {
+                console.log('Số lượng không hợp lệ:', quantity);
                 alert("Số lượng phải lớn hơn 0");
+                $input.val(1);
                 return;
             }
 
+            console.log('Gửi AJAX request: designId=', designId, 'quantity=', quantity);
+            isUpdating = true;
             $.ajax({
                 url: '/Cart/UpdateCart',
                 type: 'POST',
@@ -156,28 +163,64 @@
                     designId: designId,
                     quantity: quantity
                 },
-                success: function (response) {
-                    window.location.reload(); // Tải lại trang để cập nhật giỏ hàng
+                headers: {
+                    'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
                 },
-                error: function () {
+                success: function (response) {
+                    console.log('AJAX success:', response);
+                    if (response.success) {
+                        var price = parseFloat($input.data('price'));
+                        var subtotal = quantity * price;
+                        $input.closest('tr').find('.product-subtotal .amount')
+                            .text(subtotal + ' VND')
+                            .data('subtotal', subtotal);
+
+                        var total = 0;
+                        $('.product-subtotal .amount').each(function () {
+                            total += parseFloat($(this).data('subtotal'));
+                        });
+                        $('#cart-total').text(total + ' VND');
+                    } else {
+                        console.log('Lỗi từ server:', response.message);
+                        alert(response.message);
+                        $input.val($input.data('original-value') || 1);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error('AJAX error:', status, error, xhr.responseText);
                     alert("Có lỗi xảy ra khi cập nhật số lượng.");
+                    $input.val($input.data('original-value') || 1);
+                },
+                complete: function () {
+                    isUpdating = false;
+                    console.log('AJAX complete');
                 }
             });
         }
 
         function removeFromCart(designId) {
             if (confirm("Bạn có chắc muốn xóa sản phẩm này khỏi giỏ hàng?")) {
+                console.log('Gửi AJAX request xóa: designId=', designId);
                 $.ajax({
                     url: '/Cart/UpdateCart',
                     type: 'POST',
                     data: {
                         designId: designId,
-                        quantity: 0 // Gửi quantity = 0 để xóa
+                        quantity: 0
+                    },
+                    headers: {
+                        'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
                     },
                     success: function (response) {
-                        window.location.reload();
+                        console.log('AJAX success (xóa):', response);
+                        if (response.success) {
+                            window.location.reload();
+                        } else {
+                            alert(response.message);
+                        }
                     },
-                    error: function () {
+                    error: function (xhr, status, error) {
+                        console.error('AJAX error (xóa):', status, error, xhr.responseText);
                         alert("Có lỗi xảy ra khi xóa sản phẩm.");
                     }
                 });

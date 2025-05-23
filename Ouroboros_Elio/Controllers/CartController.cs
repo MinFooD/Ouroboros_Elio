@@ -46,13 +46,20 @@ namespace Ouroboros_Elio.Controllers
                 return Json(new { success = false, message = "Vui lòng đăng nhập." });
             }
 
-            var result = await _cartService.UpdateQuantity(Guid.Parse(userId), designId, quantity);
-            if (result == true)
+            try
             {
-                return Json(new { success = true });
+                var result = await _cartService.UpdateQuantity(Guid.Parse(userId), designId, quantity);
+                if (result == true)
+                {
+                    return Json(new { success = true });
+                }
+                return Json(new { success = false, message = "Không tìm thấy sản phẩm trong giỏ hàng." });
             }
-
-            return Json(new { success = false, message = "Không thể cập nhật số lượng." });
+            catch (Exception ex)
+            {
+                // Log lỗi nếu cần
+                return Json(new { success = false, message = "Có lỗi xảy ra khi cập nhật số lượng." });
+            }
         }
 
         public async Task<IActionResult> AddToCart(Guid designId, int quantity, bool productType)
@@ -62,16 +69,23 @@ namespace Ouroboros_Elio.Controllers
 
             if (userId == null)
             {
-                return Json(new { success = false, message = "Vui lòng đăng nhập để thêm vào giỏ hàng." });
+                return RedirectToAction("Login", "Auth");
             }
 
-            var result = await _cartService.AddToCart(Guid.Parse(userId), designId, quantity, productType);
-            if (result)
+            try
             {
-                return Json(new { success = true, message = "Thêm vào giỏ hàng thành công!" });
+                var result = await _cartService.AddToCart(Guid.Parse(userId), designId, quantity, productType);
+                if (result)
+                {
+                    return Json(new { success = true });
+                }
+                return Json(new { success = false, message = "Không thể thêm sản phẩm vào giỏ hàng." });
             }
-
-            return Json(new { success = false, message = "Không thể thêm sản phẩm vào giỏ hàng." });
+            catch (Exception ex)
+            {
+                // Log lỗi nếu cần
+                return Json(new { success = false, message = "Có lỗi xảy ra khi thêm sản phẩm." });
+            }
         }
     }
 }
