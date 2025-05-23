@@ -1,0 +1,123 @@
+﻿body {
+    background: #ffffff;
+    min-height: 100vh;
+    font-family: 'Poppins', Arial, sans-serif;
+    color: #333333;
+}
+
+.card {
+    max-width: 500px;
+    margin: 0 auto;
+    border-radius: 0; /* Góc nhọn */
+    border: 1px solid #e8e8e8; /* Viền mỏng */
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+    background: #ffffff;
+    position: relative;
+    z-index: 1;
+}
+
+.card-header {
+    padding: 1.5rem;
+    border-bottom: none;
+    border-radius: 0; /* Góc nhọn */
+}
+
+    .card-header h3 {
+        font-family: 'Playfair Display', Georgia, serif;
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: #ffffff;
+    }
+
+.form-label {
+    font-family: 'Poppins', Arial, sans-serif;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #333333;
+}
+
+.form-control, .btn, .form-check-label, .text-primary {
+    font-family: 'Poppins', Arial, sans-serif;
+    font-size: 0.95rem;
+    font-weight: 400;
+}
+
+.form-control {
+    border-radius: 0; /* Góc nhọn */
+}
+
+    .form-control::placeholder {
+        font-family: 'Poppins', Arial, sans-serif;
+        font-style: italic;
+        color: #6c757d;
+    }
+
+.text-danger {
+    font-family: 'Poppins', Arial, sans-serif;
+    font-size: 0.85rem;
+    font-style: italic;
+    font-weight: 400;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.input-group-text {
+    background-color: #f8f9fa;
+    border-color: #e8e8e8;
+    font-family: 'Poppins', Arial, sans-serif;
+    font-size: 0.95rem;
+    border-radius: 0; /* Góc nhọn */
+}
+
+.btn {
+    border-radius: 0; /* Góc nhọn */
+}
+
+.btn-primary {
+    background-color: #15A45A;
+    border-color: #15A45A;
+    color: #ffffff;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+    .btn-primary:hover {
+        background-color: #9ECEA4;
+        border-color: #9ECEA4;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+.btn-success {
+    background-color: #28a745;
+    border-color: #28a745;
+    color: #ffffff;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+    .btn-success:hover {
+        background-color: #28a745;
+        border-color: #28a745;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+.toggle-form {
+    color: #15A45A;
+    border-color: #15A45A;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+    .toggle-form:hover {
+        background-color: #9ECEA4;
+        color: #ffffff !important;
+        border-color: #9ECEA4;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+.form-control:focus {
+    border-color: #1b6ec2;
+    box-shadow: 0 0 0 0.25rem rgba(27, 110, 194, 0.25);
+}

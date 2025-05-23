@@ -105,7 +105,9 @@
                                                             <li class="quick-view-btn"
                                                                 data-bs-toggle="modal"
                                                                 data-bs-target="#exampleModalCenter">
-                                                                <a href="javascript:void(0)"
+                                                                <a asp-controller="Product"
+                                                                   asp-action="ProductDetail"
+                                                                   asp-route-designId="@item.DesignId"
                                                                    data-bs-toggle="tooltip"
                                                                    data-placement="top"
                                                                    title="Xem">
@@ -191,7 +193,9 @@
                                                             <li class="quick-view-btn"
                                                                 data-bs-toggle="modal"
                                                                 data-bs-target="#exampleModalCenter">
-                                                                <a href="javascript:void(0)"
+                                                                <a asp-controller="Product"
+                                                                   asp-action="ProductDetail"
+                                                                   asp-route-designId="@item.DesignId"
                                                                    data-bs-toggle="tooltip"
                                                                    data-placement="top"
                                                                    title="Xem">
