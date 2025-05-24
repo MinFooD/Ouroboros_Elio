@@ -92,10 +92,18 @@
                                                     <div class="add-actions">
                                                         <ul>
                                                             <li>
-                                                                <a class="hiraola-add_cart"
+                                                                @* <a class="hiraola-add_cart"
                                                                    asp-area="" asp-controller="Cart"
                                                                    asp-action="AddToCart" asp-route-designId="@item.DesignId"
                                                                    asp-route-quantity="1" asp-route-productType="0"
+                                                                   data-bs-toggle="tooltip"
+                                                                   data-placement="top"
+                                                                   title="Thêm">
+                                                                    <i class="ion-bag"></i>
+                                                                </a> *@
+                                                                <a class="hiraola-add_cart"
+                                                                   href="javascript:void(0)"
+                                                                   onclick="addToCart('@item.DesignId', 1, false)"
                                                                    data-bs-toggle="tooltip"
                                                                    data-placement="top"
                                                                    title="Thêm">
@@ -182,13 +190,21 @@
                                                     <div class="add-actions">
                                                         <ul>
                                                             <li>
-                                                                <a class="hiraola-add_cart"
+                                                                @* <a class="hiraola-add_cart"
                                                                    asp-area="" asp-controller="Cart"
                                                                    asp-action="AddToCart" asp-route-designId="@item.DesignId"
                                                                    asp-route-quantity="1" asp-route-productType="0"
                                                                    data-bs-toggle="tooltip"
                                                                    data-placement="top"
-                                                                   title="Giỏ Hàng">Thêm</a>
+                                                                   title="Giỏ Hàng">Thêm</a> *@
+                                                                <a class="hiraola-add_cart"
+                                                                   href="javascript:void(0)"
+                                                                   onclick="addToCart('@item.DesignId', 1, false)"
+                                                                   data-bs-toggle="tooltip"
+                                                                   data-placement="top"
+                                                                   title="Giỏ Hàng">
+                                                                    Thêm
+                                                                </a>
                                                             </li>
                                                             <li class="quick-view-btn"
                                                                 data-bs-toggle="modal"
@@ -272,4 +288,127 @@
             </div>
         </div>
     </div>
+    <!-- Thêm CSRF Token -->
+    <form id="antiForgeryForm">
+        @Html.AntiForgeryToken()
+    </form>
+
+    <!-- Thêm SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- CSS tùy chỉnh cho SweetAlert2 -->
+    <style>
+        /* Tùy chỉnh SweetAlert2 để đồng bộ với giao diện website */
+        .swal2-popup {
+            font-family: 'Lato', sans-serif; /* Font chữ giống website */
+            background: #f4f4f4; /* Màu nền xám nhạt giống form */
+            color: #595959; /* Màu chữ xám giống nội dung */
+            border: 1px solid #e5e5e5; /* Viền giống các thành phần trên website */
+            border-radius: 8px; /* Bo góc nhẹ */
+        }
+
+        .swal2-title {
+            color: #333; /* Màu tiêu đề giống website */
+            font-size: 18px; /* Kích thước chữ tiêu đề */
+            font-weight: 700; /* Đậm giống h3, h4 */
+        }
+
+        .swal2-content {
+            color: #595959; /* Màu nội dung giống website */
+            font-size: 16px; /* Kích thước chữ nội dung */
+        }
+
+        .swal2-confirm {
+            background-color: #cda557 !important; /* Nút "Xác nhận" màu vàng */
+            color: #fff !important; /* Chữ trắng */
+            border-radius: 3px !important; /* Bo góc giống hiraola-btn */
+            padding: 10px 20px !important; /* Kích thước giống nút */
+            font-size: 12px !important; /* Kích thước chữ */
+            text-transform: uppercase !important; /* Chữ in hoa */
+            transition: all 0.3s ease-in !important; /* Hiệu ứng chuyển đổi */
+        }
+
+        .swal2-cancel {
+            background-color: #595959 !important; /* Nút "Hủy" màu xám đậm */
+            color: #fff !important; /* Chữ trắng */
+            border-radius: 3px !important; /* Bo góc giống hiraola-btn */
+            padding: 10px 20px !important; /* Kích thước giống nút */
+            font-size: 12px !important; /* Kích thước chữ */
+            text-transform: uppercase !important; /* Chữ in hoa */
+            transition: all 0.3s ease-in !important; /* Hiệu ứng chuyển đổi */
+        }
+
+        .swal2-confirm:hover {
+            background-color: #d5b473 !important; /* Hover màu vàng nhạt hơn */
+        }
+
+        .swal2-cancel:hover {
+            background-color: #333 !important; /* Hover màu xám đậm hơn */
+        }
+
+        .swal2-icon.swal2-warning {
+            color: #cda557 !important; /* Màu biểu tượng cảnh báo */
+            border-color: #cda557 !important;
+        }
+
+        .swal2-icon.swal2-error {
+            color: #ea3a3c !important; /* Màu biểu tượng lỗi (đỏ) */
+            border-color: #ea3a3c !important;
+        }
+    </style>
+    <script>
+                function addToCart(designId, quantity, productType) {
+            $.ajax({
+                url: '/Cart/AddToCart',
+                type: 'POST',
+                data: {
+                    designId: designId,
+                    quantity: quantity,
+                    productType: productType
+                },
+                headers: {
+                    'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
+                },
+                success: function (response) {
+                    if (response.success) {
+                        window.location.href = '/Cart/CartDetail?designId=' + designId;
+                    } else {
+                        Swal.fire({
+                            title: 'Lỗi',
+                            text: response.message,
+                            icon: 'error',
+                            confirmButtonText: 'Đóng'
+                        });
+                    }
+                },
+                error: function (xhr) {
+                    if (xhr.status === 401) {
+                        Swal.fire({
+                            title: 'Yêu cầu đăng nhập',
+                            text: 'Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng.',
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonText: 'Đăng nhập',
+                            cancelButtonText: 'Đóng',
+                            customClass: {
+                                confirmButton: 'swal2-confirm',
+                                cancelButton: 'swal2-cancel'
+                            }
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.href = '/Auth/Register';
+                            }
+                        });
+                    } else {
+                        Swal.fire({
+                            title: 'Lỗi',
+                            text: 'Có lỗi xảy ra, vui lòng thử lại.',
+                            icon: 'error',
+                            confirmButtonText: 'Đóng'
+                        });
+                    }
+                }
+            });
+        }
+    </script>
 </body>

@@ -65,6 +65,7 @@ namespace Ouroboros_Elio.Controllers
             }
         }
 
+        [HttpPost]
         public async Task<IActionResult> AddToCart(Guid designId, int quantity, bool productType)
         {
             var currentUser = HttpContext.User;
@@ -72,7 +73,9 @@ namespace Ouroboros_Elio.Controllers
 
             if (userId == null)
             {
-                return RedirectToAction("Login", "Auth");
+                Response.StatusCode = 401; // Trả về mã trạng thái 401
+                return Json(new { success = false, message = "Vui lòng đăng nhập." });
+                //return RedirectToAction("Login", "Auth");
             }
 
             try
