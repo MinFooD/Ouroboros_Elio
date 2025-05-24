@@ -1,5 +1,11 @@
 ﻿@model BusinessLogicLayer.Dtos.DesignDtos.DesignViewModel
 
+<style>
+    .qty-cart_btn {
+        cursor: pointer; /* Hiển thị con trỏ dạng bàn tay khi trỏ chuột vào */
+    }
+</style>
+
 <body class="template-color-1">
     <div class="main-wrapper">
         <!-- Begin Hiraola's Breadcrumb Area -->
@@ -224,6 +230,24 @@
     </div>
 </body>
 <script>
+    $(document).ready(function () {
+        // Gắn sự kiện click cho các nút tăng/giảm số lượng
+        $('.qtybutton').on('click', function () {
+            var $button = $(this);
+            var $input = $button.parent().find('input.cart-plus-minus-box');
+            var oldValue = parseInt($input.val()) || 1;
+            var newVal;
+
+            if ($button.hasClass('inc')) {
+                newVal = oldValue + 1; // Tăng số lượng
+            } else {
+                newVal = oldValue > 1 ? oldValue - 1 : 1; // Giảm số lượng, nhưng không nhỏ hơn 1
+            }
+
+            $input.val(newVal); // Cập nhật giá trị mới vào input
+        });
+    });
+
     function addToCart(designId) {
         var quantity = parseInt($('.cart-plus-minus-box').val());
         if (quantity <= 0) {
@@ -241,7 +265,7 @@
             },
             success: function (response) {
                 if (response.success) {
-                    window.location.href = '/Cart/CartDetail';
+                   window.location.href = '/Cart/CartDetail?designId=' + designId;
                 } else {
                     alert(response.message);
                 }

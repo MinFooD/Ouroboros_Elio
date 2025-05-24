@@ -18,7 +18,7 @@ namespace Ouroboros_Elio.Controllers
 			_cartService = cartService;
 		}
 
-		public async Task<IActionResult> CartDetail()
+		public async Task<IActionResult> CartDetail(Guid? designId)
         {
             var currentUser = HttpContext.User;
 			var userId = _userManager.GetUserId(currentUser);
@@ -33,7 +33,10 @@ namespace Ouroboros_Elio.Controllers
 					CartViewModel = await _cartService.GetCartByUserIdAsync(Guid.Parse(userId)),
 					cartItemsViewModel = await _cartService.GetCartItemsByUserIdAsync(Guid.Parse(userId))
 				};
-				return View(cartAndCartItems);
+
+                ViewBag.designId = designId;
+
+                return View(cartAndCartItems);
 			}
         }
 

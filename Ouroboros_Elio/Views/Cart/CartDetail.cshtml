@@ -35,43 +35,44 @@
                                         {
                                             foreach (var item in Model.cartItemsViewModel)
                                             {
-                                                <tr data-design-id="@item.DesignId">
-                                                    <td class="hiraola-product-remove">
-                                                        <a href="javascript:void(0)" onclick="removeFromCart('@item.DesignId')">
-                                                            <i class="fa fa-trash" title="Remove"></i>
-                                                        </a>
-                                                    </td>
-                                                    <td class="hiraola-product-thumbnail">
-                                                        <a href="javascript:void(0)">
-                                                            <img src="@item.Design.FirstImage.ImageUrl" alt="Hiraola's Cart Thumbnail" style="max-width:30%">
-                                                        </a>
-                                                    </td>
-                                                    <td class="hiraola-product-name">
-                                                        <a href="javascript:void(0)">@item.Design.DesignName</a>
-                                                    </td>
-                                                    <td class="hiraola-product-price">
-                                                        <span class="amount">
-                                                            @String.Format(new System.Globalization.CultureInfo("vi-VN")
-                                                            , "{0:N0}"
-                                                            , item.Price) ₫</span>
-                                                    </td>
-                                                    <td class="quantity">
-                                                        <label>Số Lượng</label>
-                                                        <div class="cart-plus-minus">
-                                                            <input class="cart-plus-minus-box" value="@item.Quantity" type="text" data-design-id="@item.DesignId" data-price="@item.Price">
-                                                            <div class="dec qtybutton"><i class="fa fa-angle-down"></i></div>
-                                                            <div class="inc qtybutton"><i class="fa fa-angle-up"></i></div>
-                                                        </div>
-                                                    </td>
-                                                    <td class="product-subtotal">
-                                                        <span class="amount" data-subtotal="@((item.Quantity * item.Price))">
-                                                            @String.Format(new System.Globalization.CultureInfo("vi-VN")
-                                                            , "{0:N0}"
-                                                            , (item.Quantity) * (item.Price)) ₫
-                                                            </span>
-                                                    </td>
-                                                </tr>
-                                            }
+                                        <tr data-design-id="@item.DesignId">
+                                            <td class="hiraola-product-remove">
+                                                <a href="javascript:void(0)" onclick="removeFromCart('@item.DesignId')">
+                                                    <i class="fa fa-trash" title="Remove"></i>
+                                                </a>
+                                            </td>
+                                            <td class="hiraola-product-thumbnail">
+                                                <a href="javascript:void(0)">
+                                                    <img src="@item.Design.FirstImage.ImageUrl" alt="Hiraola's Cart Thumbnail" style="max-width:30%">
+                                                </a>
+                                            </td>
+                                            <td class="hiraola-product-name">
+                                                <a href="/Product/ProductDetail?designId=@item.DesignId" title="Xem chi tiết sản phẩm">@item.Design.DesignName</a>
+                                            </td>
+                                            <td class="hiraola-product-price">
+                                                <span class="amount">
+                                                    @String.Format(new System.Globalization.CultureInfo("vi-VN")
+                                                                                                        , "{0:N0}"
+                                                                                                        , item.Price) ₫
+                                                </span>
+                                            </td>
+                                            <td class="quantity">
+                                                <label>Số Lượng</label>
+                                                <div class="cart-plus-minus">
+                                                    <input class="cart-plus-minus-box" value="@item.Quantity" type="text" data-design-id="@item.DesignId" data-price="@item.Price">
+                                                    <div class="dec qtybutton"><i class="fa fa-angle-down"></i></div>
+                                                    <div class="inc qtybutton"><i class="fa fa-angle-up"></i></div>
+                                                </div>
+                                            </td>
+                                            <td class="product-subtotal">
+                                                <span class="amount" data-subtotal="@((item.Quantity * item.Price))">
+                                                    @String.Format(new System.Globalization.CultureInfo("vi-VN")
+                                                                                                        , "{0:N0}"
+                                                                                                        , (item.Quantity) * (item.Price)) ₫
+                                                </span>
+                                            </td>
+                                        </tr>
+                                                                                }
                                         }
                                         else
                                         {
@@ -85,17 +86,17 @@
                             <div class="row">
                                 <div class="col-md-5 ml-auto">
                                     <div class="cart-page-total">
-                                        <h2>Tổng Giỏ Hàng</h2>
+                                        <h2>Tất Cả</h2>
                                         <ul>
                                             <li>
-                                                Tổng 
+                                                Tổng
                                                 <span id="cart-total">
-                                                @String.Format(new System.Globalization
-                                                    .CultureInfo("vi-VN")
-                                                    , "{0:N0}"
-                                                    , Model.CartViewModel?.Total) ₫
+                                                    @String.Format(new System.Globalization
+                                                                                                        .CultureInfo("vi-VN")
+                                                                                                        , "{0:N0}"
+                                                                                                        , Model.CartViewModel?.Total) ₫
                                                 </span>
-                                                </li>
+                                            </li>
                                         </ul>
                                         <a href="javascript:void(0)">Thanh Toán</a>
                                     </div>
