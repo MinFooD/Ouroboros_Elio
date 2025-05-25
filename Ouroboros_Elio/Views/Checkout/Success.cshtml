@@ -1,1 +1,105 @@
-﻿<h2>Thành Công</h2>
+﻿@model Ouroboros_Elio.Models.SuccessViewModel
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<body class="template-color-1">
+    <div class="main-wrapper">
+        <!-- Begin Hiraola's Breadcrumb Area -->
+        <div class="breadcrumb-area">
+            <div class="container">
+                <div class="breadcrumb-content">
+                    <h2>Khác</h2>
+                    <ul>
+                        <li><a href="/Product/ProductList">Danh Sách</a></li>
+                        @* <li><a href="/Cart/CartDetail">Giỏ Hàng</a></li>
+                        <li><a href="/Checkout/PlaceOrder">Đặt Hàng</a></li> *@
+                        <li class="active">Xác Nhận Đơn Hàng</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- Hiraola's Breadcrumb Area End Here -->
+        <!-- Begin Hiraola's Checkout Area -->
+        <div class="checkout-area">
+            <div class="container">
+                <h3>Đặt Hàng Thành Công!</h3>
+                <p>Cảm ơn bạn đã đặt hàng. Đơn hàng của bạn đã được ghi nhận với thông tin sau:</p>
+
+                <!-- Thông tin đơn hàng -->
+                <div class="your-order" style="margin-bottom: 30px;">
+                    <h4>Thông Tin Đơn Hàng</h4>
+                    <div class="your-order-table table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th class="cart-product-name">Sản Phẩm</th>
+                                    <th class="cart-product-total">Tổng</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.OrderItems != null && Model.OrderItems.Any())
+                                {
+                                    foreach (var item in Model.OrderItems)
+                                    {
+                                        <tr class="cart_item">
+                                            <td class="cart-product-name">
+                                                @(item.DesignName ?? "Unknown")<strong class="product-quantity"> × @item.Quantity</strong>
+                                            </td>
+                                            <td class="cart-product-total">
+                                                <span class="amount">
+                                                    @String.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:N0}", item.Quantity * item.Price) đ
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="2">Không có sản phẩm trong đơn hàng</td>
+                                    </tr>
+                                }
+                            </tbody>
+                            <tfoot>
+                                <tr class="order-total">
+                                    <th>Tổng Đơn Hàng</th>
+                                    <td>
+                                        <strong>
+                                            <span class="amount">
+                                                @String.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:N0}", Model.TotalAmount) đ
+                                            </span>
+                                        </strong>
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    <div style="padding: 15px;">
+                        <p><strong>Mã Đơn Hàng:</strong> @Model.OrderId</p>
+                        <p><strong>Ngày Đặt Hàng:</strong> @Model.OrderDate</p>
+                        <p><strong>Trạng Thái:</strong> @Model.Status</p>
+                    </div>
+                </div>
+
+                <!-- Thông tin người nhận -->
+                <div class="your-order">
+                    <h4>Thông Tin Người Nhận</h4>
+                    <div style="padding: 15px;">
+                        <p><strong>Họ và Tên:</strong> @(Model.FirstName ?? "") @(Model.LastName ?? "")</p>
+                        <p><strong>Địa Chỉ:</strong> @(Model.Address ?? "N/A")</p>
+                        <p><strong>Email:</strong> @(Model.Email ?? "N/A")</p>
+                        <p><strong>Số Điện Thoại:</strong> @(Model.PhoneNumber ?? "N/A")</p>
+                    </div>
+                </div>
+
+                <!-- Nút quay lại -->
+                <div class="order-button-payment" style="margin-top: 20px;">
+                    <a href="/Product/ProductList" class="hiraola-btn">Quay Về Danh Sách Sản Phẩm</a>
+                </div>
+            </div>
+        </div>
+        <!-- Hiraola's Checkout Area End Here -->
+    </div>
+</body>

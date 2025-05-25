@@ -70,11 +70,6 @@
                                             <span asp-validation-for="PhoneNumber" class="text-danger"></span>
                                         </div>
                                     </div>
-                                    @* <div class="col-md-12">
-                                        <div class="order-button-payment">
-                                            <input value="Thanh Toán" type="submit">
-                                        </div>
-                                    </div> *@
                                 </div>
                             </div>
                         </div>
@@ -141,27 +136,5 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.12/jquery.validate.unobtrusive.min.js"></script>
-    <script>
-        $(document).ready(function () {
-            $('form').validate({
-                errorClass: 'error-message',
-                highlight: function (element) {
-                    $(element).addClass('invalid');
-                },
-                unhighlight: function (element) {
-                    $(element).removeClass('invalid');
-                },
-                rules: {
-                    FirstName: {
-                        required: true
-                    }
-                },
-                messages: {
-                    FirstName: {
-                        required: "Vui lòng nhập tên"
-                    }
-                }
-            });
-        });
-    </script>
+
 </body>

@@ -3,6 +3,7 @@ using DataAccessLayer.Entities;
 using DataAccessLayer.RepositoryContracts;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Ouroboros_Elio.Models;
 using System.Security.Claims;
 
@@ -151,6 +152,7 @@ namespace Ouroboros_Elio.Controllers
                 var order = await _orderRepository.CreateOrderFromCartAsync(cart.CartId, userGuid);
                 if (order != null)
                 {
+                    TempData["OrderId"] = order.OrderId.ToString();
                     return RedirectToAction("Success");
                 }
                 else
@@ -195,9 +197,74 @@ namespace Ouroboros_Elio.Controllers
 			return View("cancel");
 		}
 
-        public IActionResult Success()
+        [HttpGet("Checkout/Success")]
+        public async Task<IActionResult> Success()
         {
-            return View("success");
+            if (!User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Login", "Auth", new { ReturnUrl = "/Checkout/Success" });
+            }
+
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (!Guid.TryParse(userId, out var userGuid))
+            {
+                return BadRequest("Invalid user ID format.");
+            }
+
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return NotFound("User not found.");
+            }
+
+            // Lấy OrderId từ TempData
+            if (!TempData.TryGetValue("OrderId", out var orderIdObj) || !Guid.TryParse(orderIdObj?.ToString(), out var orderId))
+            {
+                return BadRequest("Invalid order ID.");
+            }
+
+            // Lấy thông tin đơn hàng
+            var order = await _orderRepository.GetOrderByIdAsync(orderId, userGuid);
+            if (order == null)
+            {
+                return NotFound("Order not found.");
+            }
+
+            // Tải trước tất cả DesignViewModel
+            var designIds = order.OrderItems
+                .Where(oi => oi.DesignId.HasValue)
+                .Select(oi => oi.DesignId.Value)
+                .Distinct()
+                .ToList();
+            var designTasks = designIds.Select(id => _designService.GetDesignByIdAsync(id)).ToList();
+            var designs = await Task.WhenAll(designTasks);
+            var designDict = designs
+                .Where(d => d != null)
+                .ToDictionary(d => d.DesignId, d => d.DesignName ?? "Unknown");
+
+            // Tạo SuccessViewModel
+            var model = new SuccessViewModel
+            {
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Address = user.Address,
+                Email = user.Email,
+                PhoneNumber = user.PhoneNumber,
+                OrderId = order.OrderId,
+                OrderDate = order.OrderDate,
+                TotalAmount = order.TotalAmount,
+                Status = order.Status,
+                OrderItems = order.OrderItems.Select(oi => new OrderItemViewModel
+                {
+                    OrderItemId = oi.OrderItemId,
+                    DesignId = oi.DesignId,
+                    DesignName = oi.DesignId.HasValue && designDict.ContainsKey(oi.DesignId.Value) ? designDict[oi.DesignId.Value] : "Unknown",
+                    Quantity = oi.Quantity,
+                    Price = oi.Price
+                }).ToList()
+            };
+
+            return View(model);
         }
     }
 }
