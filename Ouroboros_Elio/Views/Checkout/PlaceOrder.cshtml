@@ -121,10 +121,15 @@
                                         </tfoot>
                                     </table>
                                 </div>
-
-                                <div class="order-button-payment">
+                                @if (Model.CartItems != null && Model.CartItems.Any())
+                                {
+                                    <div class="order-button-payment">
+                                        <input value="Thanh Toán" type="submit" class="hiraola-btn">
+                                    </div>
+                                }
+                                @* <div class="order-button-payment">
                                     <input value="Thanh Toán" type="submit">
-                                </div>
+                                </div> *@
                             </div>
                         </div>
                     </div>
