@@ -4,11 +4,11 @@ namespace Ouroboros_Elio.Controllers
 {
 	public class CheckoutController : Controller
 	{
-		//[HttpGet("")]
-		//public IActionResult Index()
-		//{
-		//	return View("index");
-		//}
+		[HttpGet]
+		public IActionResult PlaceOrder()
+		{
+			return View();
+		}
 
 		public IActionResult Cancel()
 		{
