@@ -40,7 +40,7 @@ namespace DataAccessLayer.Repositories
 				UserId = cart.UserId,
 				OrderDate = DateTime.UtcNow,
 				TotalAmount = cart.Total,
-				Status = "Pending", // Hoặc giá trị mặc định phù hợp
+				Status = "Chưa giao", 
 				ShippingAddress = user.Address,
 				OrderItems = cart.CartItems.Select(item => new OrderItem
 				{
@@ -61,5 +61,13 @@ namespace DataAccessLayer.Repositories
 			await _context.SaveChangesAsync();
 			return order;
 		}
-	}
+
+        public async Task<Order?> GetOrderByIdAsync(Guid orderId, Guid userId)
+        {
+            return await _context.Orders
+                .Include(o => o.OrderItems)
+                .ThenInclude(oi => oi.Design)
+                .FirstOrDefaultAsync(o => o.OrderId == orderId && o.UserId == userId);
+        }
+    }
 }

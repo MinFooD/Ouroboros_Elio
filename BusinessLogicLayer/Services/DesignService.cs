@@ -61,7 +61,7 @@ namespace BusinessLogicLayer.Services
 			var collectionName = design.Model.Topic.Collection.CollectionName;
 			var designViewModel = _mapper.Map<DesignViewModel>(design);
 			designViewModel.FirstImage = _mapper.Map<DesignImageViewModel>(design.DesignImages.FirstOrDefault());
-			designViewModel.DesignName = $"{collectionName}-{topicName}-{modelName}-{categoryName}";
+			designViewModel.DesignName = $"{collectionName} - {topicName} - {modelName}";
 			designViewModel.CollectionName = collectionName;
 			designViewModel.ModelName = modelName;
 			designViewModel.TopicName = topicName;

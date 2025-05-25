@@ -1,9 +1,18 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html class="no-js" lang="en">
+
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Ouroboros_Elio</title>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>OROBORUS</title>
+    <meta name="robots" content="noindex, follow" />
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="~/assets/images/menu//logo/oroborus.jpg">
+
+    <!-- Include jQuery trước các script khác -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <!-- Đoạn code cho VerifyResult hoạt động -->
     @await RenderSectionAsync("Styles", required: false)
@@ -31,112 +40,132 @@
 
     <!-- Main Style CSS -->
     <link rel="stylesheet" href="~/assets/css/style.css" />
+    <!-- <link rel="stylesheet" href="assets/css/style.min.css"> -->
 </head>
-<body>
-    <header class="header-main_area">
-        <div class="header-top_area">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-5">
-                        <div class="ht-left_area">
-                            <div class="header-shipping_area">
-                                <ul>
-                                    <li>
-                                        <span>Telephone Enquiry:</span>
-                                        <a href="callto://+123123321345">(+123) 123 321 345</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-7">
-                        <div class="ht-right_area">
-                            <div class="ht-menu">
-                                <ul>
-                                    <li>
-                                        <a href="my-account.html">My Account<i class="fa fa-chevron-down"></i></a>
-                                        <ul class="ht-dropdown ht-my_account">
-                                            <li><a href="javascript:void(0)">Register</a></li>
-                                            <li class="active"><a href="javascript:void(0)">Login</a></li>
-                                        </ul>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="header-middle_area d-none d-lg-block">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-3">
-                        <div class="header-logo">
-                            <a href="index.html">
-                                <img src="~/assets/images/menu/logo/oroborus.jpg" alt="Hiraola's Header Logo" style="width: 20%">
-                                <img src="~/assets/images/menu/logo/oroletter.jpg" alt="Hiraola's Header Logo" style="width: 50%">
-                            </a>
-                        </div>
-                    </div>
-                    <div class="col-lg-9">
-                        <div class="hm-form_area">
-                            <form action="#" class="hm-searchbox">
-                                <input type="text" placeholder="Tìm Kiếm...">
-                                <button class="li-btn" type="submit"><i class="fa fa-search"></i></button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="header-bottom_area header-sticky stick">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-4 col-sm-4 d-lg-none d-block">
-                        <div class="header-logo">
-                            <a href="index.html">
-                                <img src="~/assets/images/menu/logo/2.png" alt="Hiraola's Header Logo">
-                            </a>
-                        </div>
-                    </div>
-                    <div class="col-lg-9 d-none d-lg-block position-static">
-                        <div class="main-menu_area">
-                            <nav>
-                                <ul>
-                                    <li class="dropdown-holder">
-                                        <a href="index.html">Trang Chủ</a>
-                                    </li>
-                                </ul>
-                            </nav>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-md-8 col-sm-8">
-                        <div class="header-right_area">
-                            <ul>
-                                <li>
-                                    <a href="#mobileMenu" class="mobile-menu_btn toolbar-btn color--white d-lg-none d-block">
-                                        <i class="ion-navicon"></i>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a asp-area="" asp-controller="Cart" asp-action="CartDetail" class="wishlist-btn">
-                                        <i class="ion-bag"></i>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </header>
 
-    <div class="container">
-        <!-- Nội dung chính của trang -->
+<body class="template-color-1">
+    <!-- Hiệu ứng nền Particles.js -->
+    <div id="particles-js" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;"></div>
+    <!---->
+
+    <div class="main-wrapper">
+        <header class="header-main_area">
+            <div class="header-top_area">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-5">
+                            <div class="ht-left_area">
+                                <div class="header-shipping_area">
+                                    <ul>
+                                        <li>
+                                            @if (User.Identity.IsAuthenticated && Context.Request.Cookies["Email"] != null)
+                                            {
+                                                <span>Email: </span>
+                                                <a href="#">@Context.Request.Cookies["Email"]</a>
+                                            }
+                                            else
+                                            {
+                                                <span>Email: </span>
+                                                <a href="#"></a>
+                                            }                                            
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-7">
+                            <div class="ht-right_area">
+                                <div class="ht-menu">
+                                    <ul>
+                                        <li>
+                                            @if (User.Identity.IsAuthenticated)
+                                            {
+                                                <a href="#">@User.Identity.Name<i class="fa fa-chevron-down"></i></a>
+                                                <ul class="ht-dropdown ht-my_account">
+                                                    <li class="active"><a asp-controller="Auth" asp-action="Logout">Đăng Xuất</a></li>
+                                                </ul>
+                                            }
+                                            else
+                                            {
+                                                <a href="/Auth/Register">Tài Khoản<i class="fa fa-chevron-down"></i></a>
+                                                <ul class="ht-dropdown ht-my_account">
+                                                    <li class="active"><a href="/Auth/Register">Đăng Nhập</a></li>
+                                                </ul>
+                                            }
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="header-middle_area d-none d-lg-block">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <div class="header-logo">
+                                <a href="/Product/ProductList">
+                                    <img src="~/assets/images/menu/logo/oroborus.jpg" alt="Hiraola's Header Logo" style="width: 20%">
+                                    <img src="~/assets/images/menu/logo/oroletter.jpg" alt="Hiraola's Header Logo" style="width: 50%">
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-lg-9">
+                            <div class="hm-form_area">
+                                <form action="#" class="hm-searchbox">
+                                    <input type="text" placeholder="Tìm Kiếm...">
+                                    <button class="li-btn" type="submit"><i class="fa fa-search"></i></button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="header-bottom_area header-sticky stick">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-4 col-sm-4 d-lg-none d-block">
+                            <div class="header-logo">
+                                <a href="index.html">
+                                    <img src="~/assets/images/menu/logo/2.png" alt="Hiraola's Header Logo">
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-lg-9 d-none d-lg-block position-static">
+                            <div class="main-menu_area">
+                                <nav>
+                                    <ul>
+                                        <li class="dropdown-holder">
+                                            <a href="/Product/ProductList">Trang Chủ</a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-8 col-sm-8">
+                            <div class="header-right_area">
+                                <ul>
+                                    <li>
+                                        <a href="#mobileMenu" class="mobile-menu_btn toolbar-btn color--white d-lg-none d-block">
+                                            <i class="ion-navicon"></i>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a asp-area="" asp-controller="Cart" asp-action="CartDetail" class="wishlist-btn">
+                                            <i class="ion-bag"></i>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <!--Hiển thị nội dung-->
         @RenderBody()
-    </div>
-
-    <footer class="footer">
+        <!--------------------->
         <div class="hiraola-footer_area">
             <div class="footer-top_area">
                 <div class="container">
@@ -246,8 +275,9 @@
                 </div>
             </div>
         </div>
-    </footer>
-
+    </div>
+    <!-- JS
+    ============================================ -->
     <!-- jQuery JS -->
     <script src="~/assets/js/vendor/jquery-3.6.0.min.js"></script>
     <script src="~/assets/js/vendor/jquery-migrate-3.3.2.min.js"></script>
@@ -285,6 +315,52 @@
 
     <!-- Main JS -->
     <script src="~/assets/js/main.js"></script>
+
+    <!-- Start Register.cshtml -->
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Khởi tạo Particles.js
+            particlesJS('particles-js', {
+                particles: {
+                    number: { value: 60, density: { enable: true, value_area: 800 } },
+                    color: { value: ['#ff6b6b', '#4ecdc4', '#f7b731'] },
+                    shape: { type: ['circle', 'star'], stroke: { width: 0 } },
+                    opacity: { value: 0.6, random: true, anim: { enable: false } },
+                    size: { value: 3, random: true, anim: { enable: false } },
+                    line_linked: { enable: true, distance: 120, color: '#ffffff', opacity: 0.3, width: 1 },
+                    move: {
+                        enable: true,
+                        speed: 1.5,
+                        direction: 'none',
+                        random: true,
+                        straight: false,
+                        out_mode: 'out',
+                        bounce: false
+                    }
+                },
+                interactivity: {
+                    detect_on: 'canvas',
+                    events: {
+                        onhover: { enable: true, mode: 'grab' },
+                        onclick: { enable: true, mode: 'push' },
+                        resize: true
+                    },
+                    modes: {
+                        grab: { distance: 140, line_linked: { opacity: 0.7 } },
+                        push: { particles_nb: 3 }
+                    }
+                },
+                retina_detect: true
+            });
+
+            // Hiệu ứng fade cho particles khi tải trang
+            $('#particles-js').css('opacity', 0).animate({ opacity: 1 }, 1000);
+        });
+    </script>
     @await RenderSectionAsync("Scripts", required: false)
+    <!-- Regitres.cshtml End -->
 </body>
 </html>

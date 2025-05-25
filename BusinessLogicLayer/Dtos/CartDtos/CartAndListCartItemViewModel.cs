@@ -8,7 +8,7 @@ namespace BusinessLogicLayer.Dtos.CartDtos
 {
 	public class CartAndListCartItemViewModel
 	{
-		public List<CartItemViewModel>? cartItemsViewModel;
-		public CartViewModel? CartViewModel;
+		public List<CartItemViewModel> cartItemsViewModel;
+		public CartViewModel CartViewModel;
 	}
 }
