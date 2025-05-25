@@ -158,7 +158,10 @@
                                                 </span>
                                             </li>
                                         </ul>
-                                        <a href="/Checkout/PlaceOrder">Đặt Hàng</a>
+                                        @if (Model.cartItemsViewModel != null && Model.cartItemsViewModel.Any())
+                                        {
+                                            <a href="/Checkout/PlaceOrder">Đặt Hàng</a>
+                                        }
                                     </div>
                                 </div>
                             </div>

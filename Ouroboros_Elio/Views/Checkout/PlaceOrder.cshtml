@@ -1,6 +1,6 @@
 ﻿@model Ouroboros_Elio.Models.CheckoutViewModel
 
-<body class="template-color-1">
+<body class="template-color-1">    
 
     <div class="main-wrapper">
 
@@ -27,23 +27,25 @@
                         @TempData["Error"]
                     </div>
                 }
-                <div class="row">
-                    <div class="col-lg-6 col-12">
-                        <form asp-action="PlaceOrder" asp-controller="Checkout" method="post">
+                @* <validation-summary class="alert alert-danger" /> *@
+
+                <form asp-action="PlaceOrder" asp-controller="Checkout" method="post">
+                    <div class="row">
+                        <div class="col-lg-6 col-12">
                             <div class="checkbox-form">
                                 <h3>Thông Tin</h3>
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="checkout-form-list">
                                             <label>Tên <span class="required">*</span></label>
-                                            <input asp-for="FirstName" required value="@Model.FirstName" />
+                                            <input asp-for="FirstName" value="@Model.FirstName" />
                                             <span asp-validation-for="FirstName" class="text-danger"></span>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="checkout-form-list">
                                             <label>Họ <span class="required">*</span></label>
-                                            <input asp-for="LastName" required value="@Model.LastName" />
+                                            <input asp-for="LastName" value="@Model.LastName" />
                                             <span asp-validation-for="LastName" class="text-danger"></span>
                                         </div>
                                     </div>
@@ -64,7 +66,7 @@
                                     <div class="col-md-6">
                                         <div class="checkout-form-list">
                                             <label>Số Điện Thoại <span class="required">*</span></label>
-                                            <input asp-for="PhoneNumber" required value="@Model.PhoneNumber" />
+                                            <input asp-for="PhoneNumber" type="text" required value="@Model.PhoneNumber" />
                                             <span asp-validation-for="PhoneNumber" class="text-danger"></span>
                                         </div>
                                     </div>
@@ -75,70 +77,91 @@
                                     </div> *@
                                 </div>
                             </div>
-                        </form>
-                    </div>
-                    <div class="col-lg-6 col-12">
-                        <div class="your-order">
-                            <h3>Đơn Hàng</h3>
-                            <div class="your-order-table table-responsive">
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th class="cart-product-name">Sản Phẩm</th>
-                                            <th class="cart-product-total">Tổng</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @if (Model.CartItems != null && Model.CartItems.Any())
-                                        {
-                                            foreach (var item in Model.CartItems)
+                        </div>
+                        <div class="col-lg-6 col-12">
+                            <div class="your-order">
+                                <h3>Đơn Hàng</h3>
+                                <div class="your-order-table table-responsive">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th class="cart-product-name">Sản Phẩm</th>
+                                                <th class="cart-product-total">Tổng</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @if (Model.CartItems != null && Model.CartItems.Any())
                                             {
-                                                <tr class="cart_item">
-                                                    <td class="cart-product-name">
-                                                        @item.Design.DesignName<strong class="product-quantity"> × @item.Quantity</strong>
-                                                    </td>
-                                                    <td class="cart-product-total">
-                                                        <span class="amount">
-                                                            @String.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:N0}", item.Quantity * item.Price) đ
-                                                        </span>
-                                                    </td>
+                                                foreach (var item in Model.CartItems)
+                                                {
+                                                    <tr class="cart_item">
+                                                        <td class="cart-product-name">
+                                                            @item.Design.DesignName<strong class="product-quantity"> × @item.Quantity</strong>
+                                                        </td>
+                                                        <td class="cart-product-total">
+                                                            <span class="amount">
+                                                                @String.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:N0}", item.Quantity * item.Price) đ
+                                                            </span>
+                                                        </td>
+                                                    </tr>
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <tr>
+                                                    <td colspan="2">Giỏ hàng trống</td>
                                                 </tr>
                                             }
-                                        }
-                                        else
-                                        {
-                                            <tr>
-                                                <td colspan="2">Giỏ hàng trống</td>
+                                        </tbody>
+                                        <tfoot>
+                                            <tr class="order-total">
+                                                <th>Tổng Đơn Hàng</th>
+                                                <td>
+                                                    <strong>
+                                                        <span class="amount">
+                                                            @String.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:N0}", Model.TotalAmount) đ
+                                                        </span>
+                                                    </strong>
                                             </tr>
-                                        }
-                                    </tbody>
-                                    <tfoot>
-                                        <tr class="order-total">
-                                            <th>Tổng Đơn Hàng</th>
-                                            <td>
-                                                <strong>
-                                                    <span class="amount">
-                                                        @String.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:N0}", Model.TotalAmount) đ
-                                                    </span>
-                                                </strong>
-                                        </tr>
-                                    </tfoot>
-                                </table>
-                            </div>
-                            <div class="payment-method">
-                                <div class="payment-accordion">
-                                    <div class="order-button-payment">
-                                        <input value="Thanh Toán" type="submit">
-                                    </div>
+                                        </tfoot>
+                                    </table>
+                                </div>
+
+                                <div class="order-button-payment">
+                                    <input value="Thanh Toán" type="submit">
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                </form>
             </div>
         </div>
         <!-- Hiraola's Checkout Area End Here -->
-
     </div>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.12/jquery.validate.unobtrusive.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('form').validate({
+                errorClass: 'error-message',
+                highlight: function (element) {
+                    $(element).addClass('invalid');
+                },
+                unhighlight: function (element) {
+                    $(element).removeClass('invalid');
+                },
+                rules: {
+                    FirstName: {
+                        required: true
+                    }
+                },
+                messages: {
+                    FirstName: {
+                        required: "Vui lòng nhập tên"
+                    }
+                }
+            });
+        });
+    </script>
 </body>

@@ -97,34 +97,6 @@ namespace Ouroboros_Elio.Controllers
                 return BadRequest("Invalid user ID format.");
             }
 
-            if (!ModelState.IsValid)
-            {
-                // Lấy lại giỏ hàng để hiển thị
-                var cartItems = await _cartRepository.GetCartItemsByUserIdAsync(userGuid);
-                var userCart = await _cartRepository.GetCartByUserIdAsync(userGuid);
-                var cartItemViewModels = new List<CartItemViewModel>();
-                if (cartItems != null)
-                {
-                    foreach (var item in cartItems)
-                    {
-                        var designViewModel = await _designService.GetDesignByIdAsync(item.DesignId);
-                        if (designViewModel != null)
-                        {
-                            cartItemViewModels.Add(new CartItemViewModel
-                            {
-                                DesignId = item.DesignId,
-                                Quantity = item.Quantity,
-                                Price = item.Price,
-                                Design = designViewModel
-                            });
-                        }
-                    }
-                }
-                model.CartItems = cartItemViewModels;
-                model.TotalAmount = userCart?.Total ?? 0;
-                return View(model);
-            }
-
             // Cập nhật thông tin người dùng
             var user = await _userManager.FindByIdAsync(userId);
             if (user != null)
@@ -141,7 +113,7 @@ namespace Ouroboros_Elio.Controllers
                     {
                         ModelState.AddModelError("", error.Description);
                     }
-                    // Lấy lại giỏ hàng để hiển thị
+                    // Lấy lại giỏ hàng
                     var cartItems = await _cartRepository.GetCartItemsByUserIdAsync(userGuid);
                     var userCart = await _cartRepository.GetCartByUserIdAsync(userGuid);
                     var cartItemViewModels = new List<CartItemViewModel>();
@@ -223,9 +195,9 @@ namespace Ouroboros_Elio.Controllers
 			return View("cancel");
 		}
 
-		//public IActionResult Success()
-		//{
-		//	return View("success");
-		//}
-	}
+        public IActionResult Success()
+        {
+            return View("success");
+        }
+    }
 }

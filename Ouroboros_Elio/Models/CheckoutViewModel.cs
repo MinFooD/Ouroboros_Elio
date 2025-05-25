@@ -1,16 +1,30 @@
 ﻿using BusinessLogicLayer.Dtos.CartDtos;
 using BusinessLogicLayer.Dtos.DesignDtos;
 using DataAccessLayer.Entities;
+using System.ComponentModel.DataAnnotations;
 
 namespace Ouroboros_Elio.Models;
 
 public class CheckoutViewModel
 {
     // Thông tin người dùng
+    [Required(ErrorMessage = "Vui lòng nhập Tên")]
+    [StringLength(50, MinimumLength = 2, ErrorMessage = "Tên phải từ 2 đến 50 ký tự")]
     public string FirstName { get; set; }
+
+    [Required(ErrorMessage = "Vui lòng nhập Họ")]
+    [StringLength(50, MinimumLength = 2, ErrorMessage = "Họ phải từ 2 đến 50 ký tự")]
     public string LastName { get; set; }
+
+    [Required(ErrorMessage = "Vui lòng nhập Địa Chỉ")]
     public string Address { get; set; }
+
+    [Required(ErrorMessage = "Vui lòng nhập Email")]
+    [EmailAddress(ErrorMessage = "Email không hợp lệ.")]
     public string Email { get; set; }
+
+    [Required(ErrorMessage = "Vui lòng nhập số Điện Thoại")]
+    [Phone(ErrorMessage = "Số điện thoại không hợp lệ.")]
     public string PhoneNumber { get; set; }
 
     // Thông tin giỏ hàng
