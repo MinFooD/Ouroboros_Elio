@@ -266,9 +266,17 @@
                         // Định dạng tổng với dấu chấm
                         var formattedTotal = total.toLocaleString('vi-VN', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
                         $('#cart-total').text(formattedTotal + ' ₫');
+
+                        // Cập nhật số lượng giỏ hàng
+                        updateCartCount();
                     } else {
                         console.log('Lỗi từ server:', response.message);
-                        alert(response.message);
+                        Swal.fire({
+                            title: 'Lỗi',
+                            text: response.message,
+                            icon: 'error',
+                            confirmButtonText: 'Đóng'
+                        });
                         $input.val($input.data('original-value') || 1);
                     }
                 },
@@ -312,6 +320,8 @@
                             console.log('AJAX success (xóa):', response);
                             if (response.success) {
                                 window.location.reload();
+                                // Cập nhật số lượng giỏ hàng
+                                updateCartCount();
                             } else {
                                 Swal.fire({
                                     title: 'Lỗi',

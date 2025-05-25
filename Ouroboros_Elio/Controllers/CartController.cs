@@ -93,5 +93,28 @@ namespace Ouroboros_Elio.Controllers
                 return Json(new { success = false, message = "Có lỗi xảy ra khi thêm sản phẩm." });
             }
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetCartItemCount()
+        {
+            var currentUser = HttpContext.User;
+            var userId = _userManager.GetUserId(currentUser);
+
+            if (userId == null)
+            {
+                return Json(new { success = false, count = 0 });
+            }
+
+            try
+            {
+                var cartItems = await _cartService.GetCartItemsByUserIdAsync(Guid.Parse(userId));
+                var count = cartItems?.Sum(item => item.Quantity) ?? 0;
+                return Json(new { success = true, count = count });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, count = 0 });
+            }
+        }
     }
 }
