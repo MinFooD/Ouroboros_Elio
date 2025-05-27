@@ -1,6 +1,8 @@
 ﻿using BusinessLogicLayer.Dtos.DesignDtos;
 using BusinessLogicLayer.Dtos.MailUtils;
 using BusinessLogicLayer.Extensions;
+using BusinessLogicLayer.ServiceContracts;
+using BusinessLogicLayer.Services;
 using DataAccessLayer.Context;
 using DataAccessLayer.Entities;
 using DataAccessLayer.Repositories;
@@ -42,6 +44,8 @@ builder.Services.AddScoped<IDesignRepository, DesignRepository>();
 builder.Services.AddScoped<IModelRepository, ModelRepository>();
 builder.Services.AddScoped<ICartRepository, CartRepository>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
 //builder.Services.AddDataAccessLayer(builder.Configuration);
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole<Guid>>(options =>
@@ -57,6 +61,8 @@ var mailsettings = builder.Configuration.GetSection("MailSettings");
 builder.Services.Configure<MailSettings>(mailsettings);
 
 builder.Services.AddDbContext<OuroborosContext>(option => option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddMemoryCache();
 
 var app = builder.Build();
 
