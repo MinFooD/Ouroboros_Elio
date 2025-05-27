@@ -24,16 +24,17 @@ public class ProductController : Controller
 		decimal? maxPrice, 
 		int page = 1, 
 		int pageSize = 6,
-        string? sortBy = null
+        string? sortBy = null,
+        string? searchQuery = null
         )
     {
         var (designs, totalCount) = minPrice.HasValue || maxPrice.HasValue
             ? await _designService
 			.GetPagedDesignsAsync
-			(modelId, minPrice, maxPrice, page, pageSize, sortBy)
+			(modelId, minPrice, maxPrice, page, pageSize, sortBy, searchQuery)
             : await _designService
 			.GetPagedDesignsAsync
-			(modelId, page, pageSize, sortBy);
+			(modelId, page, pageSize, sortBy, searchQuery);
 
         ViewBag.ListModel = await _modelService.GetAllActiveModelsAsync();
         ViewBag.Page = page;
@@ -44,6 +45,7 @@ public class ProductController : Controller
         ViewBag.MinPrice = minPrice;
         ViewBag.MaxPrice = maxPrice;
         ViewBag.SortBy = sortBy;
+        ViewBag.SearchQuery = searchQuery;
 
         return View(designs);
     }

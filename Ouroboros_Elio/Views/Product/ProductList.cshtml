@@ -90,6 +90,14 @@
                                 </div>
                             </div>
                         </div>
+
+                        @* @if (!string.IsNullOrWhiteSpace(ViewBag.SearchQuery))
+                        {
+                            <div class="search-info">
+                                <p>Kết quả tìm kiếm cho: <strong>@ViewBag.SearchQuery</strong></p>
+                            </div>
+                        } *@
+
                         <div class="shop-product-wrap grid gridview-3 row">
                             @if (Model != null && Model.Any())
                             {
@@ -244,7 +252,8 @@
                                                            asp-route-maxPrice="@ViewBag.MaxPrice"
                                                            asp-route-page="@(ViewBag.Page - 1)"
                                                            asp-route-pageSize="@ViewBag.PageSize"
-                                                           asp-route-sortBy="@ViewBag.SortBy">
+                                                           asp-route-sortBy="@ViewBag.SortBy"
+                                                           asp-route-searchQuery="@ViewBag.SearchQuery">
                                                             <i class="ion-ios-arrow-left"></i>
                                                         </a>
                                                     </li>
@@ -258,7 +267,8 @@
                                                            asp-route-maxPrice="@ViewBag.MaxPrice"
                                                            asp-route-page="@i"
                                                            asp-route-pageSize="@ViewBag.PageSize"
-                                                           asp-route-sortBy="@ViewBag.SortBy">@i</a>
+                                                           asp-route-sortBy="@ViewBag.SortBy"
+                                                           asp-route-searchQuery="@ViewBag.SearchQuery">@i</a>
                                                     </li>
                                                 }
                                                 @if (ViewBag.Page < ViewBag.TotalPages)
@@ -270,7 +280,8 @@
                                                            asp-route-maxPrice="@ViewBag.MaxPrice"
                                                            asp-route-page="@(ViewBag.Page + 1)"
                                                            asp-route-pageSize="@ViewBag.PageSize"
-                                                           asp-route-sortBy="@ViewBag.SortBy">
+                                                           asp-route-sortBy="@ViewBag.SortBy"
+                                                           asp-route-searchQuery="@ViewBag.SearchQuery">
                                                             <i class="ion-ios-arrow-right"></i>
                                                         </a>
                                                     </li>
@@ -444,7 +455,7 @@
         }
 
         // Hàm lọc sản phẩm
-        function filterProducts(modelId, sortBy, minPrice, maxPrice, page = 1) {
+        function filterProducts(modelId, sortBy, minPrice, maxPrice, page = 1, searchQuery = null) {
             $.ajax({
                 url: '/Product/ProductList',
                 type: 'GET',
@@ -486,8 +497,14 @@
                     } else {
                         url.searchParams.delete('maxPrice');
                     }
+                    if (searchQuery) {
+                        url.searchParams.set('searchQuery', searchQuery);
+                    } else {
+                        url.searchParams.delete('searchQuery');
+                    }
                     url.searchParams.set('page', page);
                     window.history.pushState({}, '', url);
+                    $('.nice-select').niceSelect('update');
                 },
                 error: function () {
                     Swal.fire({

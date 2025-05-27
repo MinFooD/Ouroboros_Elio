@@ -20,7 +20,8 @@ public class DesignRepository : IDesignRepository
         Guid? modelId, 
         int page, 
         int pageSize,
-        string? sortBy = null
+        string? sortBy = null,
+        string? searchQuery = null
         )
     {
         var query = _context.Designs
@@ -32,6 +33,15 @@ public class DesignRepository : IDesignRepository
         if (modelId != null)
         {
             query = query.Where(d => d.ModelId == modelId);
+        }
+
+        if (!string.IsNullOrWhiteSpace(searchQuery))
+        {
+            query = query.Where(d =>
+                EF.Functions.Like(d.Category.CategoryName, $"%{searchQuery}%") ||
+                EF.Functions.Like(d.Model.ModelName, $"%{searchQuery}%") ||
+                EF.Functions.Like(d.Model.Topic.TopicName, $"%{searchQuery}%") ||
+                EF.Functions.Like(d.Model.Topic.Collection.CollectionName, $"%{searchQuery}%"));
         }
 
         // Áp dụng sắp xếp
@@ -58,7 +68,8 @@ public class DesignRepository : IDesignRepository
         decimal? minPrice, 
         decimal? maxPrice, 
         int page, int pageSize,
-        string? sortBy = null
+        string? sortBy = null,
+        string? searchQuery = null
         )
     {
         var query = _context.Designs
@@ -80,6 +91,15 @@ public class DesignRepository : IDesignRepository
         if (maxPrice.HasValue)
         {
             query = query.Where(d => d.Price <= maxPrice.Value);
+        }
+
+        if (!string.IsNullOrWhiteSpace(searchQuery))
+        {
+            query = query.Where(d =>
+                EF.Functions.Like(d.Category.CategoryName, $"%{searchQuery}%") ||
+                EF.Functions.Like(d.Model.ModelName, $"%{searchQuery}%") ||
+                EF.Functions.Like(d.Model.Topic.TopicName, $"%{searchQuery}%") ||
+                EF.Functions.Like(d.Model.Topic.Collection.CollectionName, $"%{searchQuery}%"));
         }
 
         // Áp dụng sắp xếp

@@ -86,10 +86,17 @@ namespace BusinessLogicLayer.Services
             Guid? modelId,
             int page,
             int pageSize,
-            string? sortBy = null
+            string? sortBy = null,
+            string? searchQuery = null
             )
         {
-            var cacheKey = $"{PagedDesignsCacheKey}_{modelId}_{page}_{pageSize}_{sortBy}";
+            var cacheKey = $"{PagedDesignsCacheKey}" +
+                $"_{modelId}" +
+                $"_{page}" +
+                $"_{pageSize}" +
+                $"_{sortBy}" +
+                $"_{searchQuery}";
+
             if (_cache.TryGetValue(cacheKey, out (List<DesignViewModel> Designs, int TotalCount) cachedResult))
             {
                 return cachedResult;
@@ -97,13 +104,13 @@ namespace BusinessLogicLayer.Services
 
             var (designs, totalCount) = await _designRepository
                 .GetPagedDesignsAsync
-                (modelId, page, pageSize, sortBy);
+                (modelId, page, pageSize, sortBy, searchQuery);
             var designViewModels = _mapper.Map<List<DesignViewModel>>(designs);
 
             for (int i = 0; i < designs.Count; i++)
             {
                 var design = designs[i];
-                designViewModels[i].DesignName = 
+                designViewModels[i].DesignName =
                     $"{design.Model.Topic.Collection.CollectionName}" +
                     $"-{design.Model.Topic.TopicName}" +
                     $"-{design.Model.ModelName}" +
@@ -115,25 +122,29 @@ namespace BusinessLogicLayer.Services
                 designViewModels[i].FirstImage = _mapper.Map<DesignImageViewModel>(design.DesignImages.FirstOrDefault());
             }
 
-            //return (designViewModels, totalCount);
             var result = (designViewModels, totalCount);
             _cache.Set(cacheKey, result, CacheDuration);
 
             return result;
         }
 
-        public async Task<(List<DesignViewModel> Designs, int TotalCount)> 
+        public async Task<(List<DesignViewModel> Designs, int TotalCount)>
             GetPagedDesignsAsync
             (
-            Guid? modelId, 
-            decimal? minPrice, 
-            decimal? maxPrice, 
-            int page, 
-            int pageSize, 
-            string? sortBy = null
+            Guid? modelId,
+            decimal? minPrice,
+            decimal? maxPrice,
+            int page,
+            int pageSize,
+            string? sortBy = null,
+            string? searchQuery = null
             )
         {
-            var cacheKey = $"{PagedDesignsCacheKey}_{modelId}_{minPrice}_{maxPrice}_{page}_{pageSize}_{sortBy}";
+            var cacheKey = $"{PagedDesignsCacheKey}" +
+                $"_{modelId}_{minPrice}" +
+                $"_{maxPrice}_{page}" +
+                $"_{pageSize}_{sortBy}" +
+                $"_{searchQuery}";
             if (_cache.TryGetValue(cacheKey, out (List<DesignViewModel> Designs, int TotalCount) cachedResult))
             {
                 return cachedResult;
@@ -141,13 +152,13 @@ namespace BusinessLogicLayer.Services
 
             var (designs, totalCount) = await _designRepository
                 .GetPagedDesignsAsync
-                (modelId, minPrice, maxPrice, page, pageSize, sortBy);
+                (modelId, minPrice, maxPrice, page, pageSize, sortBy, searchQuery);
             var designViewModels = _mapper.Map<List<DesignViewModel>>(designs);
 
             for (int i = 0; i < designs.Count; i++)
             {
                 var design = designs[i];
-                designViewModels[i].DesignName = 
+                designViewModels[i].DesignName =
                     $"{design.Model.Topic.Collection.CollectionName}" +
                     $"-{design.Model.Topic.TopicName}" +
                     $"-{design.Model.ModelName}" +

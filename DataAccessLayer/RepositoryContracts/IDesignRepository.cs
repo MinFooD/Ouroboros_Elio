@@ -12,8 +12,26 @@ namespace DataAccessLayer.RepositoryContracts
 		Task<Design?> GetDesignByIdAsync(Guid? designId);
 		Task<List<Design>?> GetAllDesignsAsync(Guid? modelId);
 		Task<bool> VisitCountUp(Guid designId);
-        Task<(List<Design> Designs, int TotalCount)> GetPagedDesignsAsync(Guid? modelId, int page, int pageSize, string? sortBy = null);
-        Task<(List<Design> Designs, int TotalCount)> GetPagedDesignsAsync(Guid? modelId, decimal? minPrice, decimal? maxPrice, int page, int pageSize, string? sortBy = null);
+        Task<(List<Design> Designs, int TotalCount)> 
+			GetPagedDesignsAsync
+			(
+			Guid? modelId, 
+			int page, 
+			int pageSize, 
+			string? sortBy = null, 
+			string? searchQuery = null
+			);
+        Task<(List<Design> Designs, int TotalCount)> 
+			GetPagedDesignsAsync
+			(
+			Guid? modelId, 
+			decimal? minPrice, 
+			decimal? maxPrice, 
+			int page, 
+			int pageSize, 
+			string? sortBy = null, 
+			string? searchQuery = null
+			);
         Task<List<Design>> GetTopOrderedDesignsAsync(int topCount);
     }
 }
