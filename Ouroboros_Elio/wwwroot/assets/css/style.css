@@ -5645,7 +5645,8 @@ button.li-btn {
 /*  22 - Components - Breadcrumb
 /*----------------------------------------*/
 .breadcrumb-area {
-    background-image: url("../images/breadcrumb/1.jpg");
+    /*background-image: url("");*/
+    background-image: url('../../img/1920x230px.jpg');
     background-repeat: no-repeat;
     background-position: center center;
     background-size: cover;
