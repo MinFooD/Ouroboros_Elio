@@ -1,21 +1,38 @@
-using System.Diagnostics;
+﻿using BusinessLogicLayer.Dtos.CategoryDtos;
+using BusinessLogicLayer.Dtos.DesignDtos;
+using BusinessLogicLayer.Dtos.ModelDtos;
+using BusinessLogicLayer.ServiceContracts;
+using BusinessLogicLayer.Services;
 using Microsoft.AspNetCore.Mvc;
 using Ouroboros_Elio.Models;
+using System.Diagnostics;
 
 namespace Ouroboros_Elio.Controllers
 {
     public class HomeController : Controller
     {
-        //private readonly ILogger<HomeController> _logger;
+        private readonly ICategoryService _categoryService;
+        private readonly IDesignService _designService;
+        private readonly IModelService _modelService;
 
-        //public HomeController(ILogger<HomeController> logger)
-        //{
-        //    _logger = logger;
-        //}
-
-        public IActionResult Index()
+        public HomeController(ICategoryService categoryService, IDesignService designService, IModelService modelService)
         {
-            return View();
+            _categoryService = categoryService;
+            _designService = designService;
+            _modelService = modelService;
+        }
+
+        public async Task<IActionResult> Index()
+        {
+            var model = new HomeIndexViewModel();
+            model.Models = await _modelService.GetAllActiveModelsAsync() ?? new List<ModelViewModel>();
+            model.Categories = await _categoryService.GetAllCategoriesAsync() ?? new List<CategoryViewModel>();
+            foreach (var category in model.Categories)
+            {
+                model.DesignsByCategory[category.CategoryId] = await _designService.GetDesignsByCategoryAsync(category.CategoryId) ?? new List<DesignViewModel>();
+            }
+            model.TopOrderedDesigns = await _designService.GetTopOrderedDesignsAsync(6) ?? new List<DesignViewModel>();
+            return View(model);
         }
 
         //public IActionResult Privacy()

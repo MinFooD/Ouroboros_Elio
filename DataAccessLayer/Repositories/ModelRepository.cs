@@ -17,9 +17,11 @@ namespace DataAccessLayer.Repositories
 		{
 			_context = context;
 		}
-		public async Task<List<Model>?> GetAllModelsAsync()
-		{
-			return await _context.Models.ToListAsync();
-		}
-	}
+        public async Task<List<Model>?> GetAllActiveModelsAsync()
+        {
+            return await _context.Models
+                .Where(m => m.IsActive)
+                .ToListAsync();
+        }
+    }
 }
