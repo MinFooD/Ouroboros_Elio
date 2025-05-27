@@ -40,6 +40,25 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="category-module hiraola-sidebar_categories">
+                                <div class="category-module_heading">
+                                    <h5>Mẫu sản phẩm</h5>
+                                </div>
+                                <div class="module-body">
+                                    <ul class="module-list_item">                                        
+                                        <li>
+                                            <a href="javascript:void(0)" class="model-filter @(ViewBag.ModelId == null ? "active" : "")" data-model-id="">Tất cả</a>
+                                            @if (ViewBag.ListModel != null)
+                                            {
+                                                foreach (var models in ViewBag.ListModel)
+                                                {
+                                                    <a href="javascript:void(0)" class="model-filter @(ViewBag.ModelId == models.ModelId ? "active" : "")" data-model-id="@models.ModelId">@models.ModelName</a>
+                                                }
+                                            }
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="col-lg-9 order-1 order-lg-2">
@@ -67,7 +86,6 @@
                                         <option value="1">Tất cả</option>
                                         <option value="2">Mới Nhất</option>
                                         <option value="3">Bán Chạy</option>
-                                        <option value="3">Đánh Giá</option>
                                     </select>
                                 </div>
                             </div>
@@ -180,14 +198,7 @@
                                                     </div>
                                                     <div class="add-actions">
                                                         <ul>
-                                                            <li>
-                                                                @* <a class="hiraola-add_cart"
-                                                                   asp-area="" asp-controller="Cart"
-                                                                   asp-action="AddToCart" asp-route-designId="@item.DesignId"
-                                                                   asp-route-quantity="1" asp-route-productType="0"
-                                                                   data-bs-toggle="tooltip"
-                                                                   data-placement="top"
-                                                                   title="Giỏ Hàng">Thêm</a> *@
+                                                            <li>                                                                
                                                                 <a class="hiraola-add_cart"
                                                                    href="javascript:void(0)"
                                                                    onclick="addToCart('@item.DesignId', 1, false)"
@@ -432,6 +443,55 @@
         // Gọi updateCartCount khi trang tải
         $(document).ready(function () {
             updateCartCount();
+        });
+
+        // Hàm lọc sản phẩm theo model
+        function filterByModel(modelId) {
+            $.ajax({
+                url: '/Product/ProductList',
+                type: 'GET',
+                data: {
+                    modelId: modelId,
+                    minPrice: $('#minPrice').val(),
+                    maxPrice: $('#maxPrice').val(),
+                    page: 1,
+                    pageSize: @ViewBag.PageSize
+                },
+                success: function (response) {
+                    // Cập nhật khu vực sản phẩm
+                    $('.shop-product-wrap').html($(response).find('.shop-product-wrap').html());
+                    // Cập nhật phân trang
+                    $('.hiraola-paginatoin-area').html($(response).find('.hiraola-paginatoin-area').html());
+                    // Cập nhật trạng thái active cho liên kết model
+                    $('.model-filter').removeClass('active');
+                    $(`.model-filter[data-model-id="${modelId}"]`).addClass('active');
+                    // Cập nhật URL trình duyệt mà không tải lại trang
+                    const url = new URL(window.location);
+                    if (modelId) {
+                        url.searchParams.set('modelId', modelId);
+                    } else {
+                        url.searchParams.delete('modelId');
+                    }
+                    window.history.pushState({}, '', url);
+                },
+                error: function () {
+                    Swal.fire({
+                        title: 'Lỗi',
+                        text: 'Không thể tải danh sách sản phẩm. Vui lòng thử lại.',
+                        icon: 'error',
+                        confirmButtonText: 'Đóng'
+                    });
+                }
+            });
+        }
+
+        // Gắn sự kiện click cho các liên kết model
+        $(document).ready(function () {
+            updateCartCount();
+            $('.model-filter').on('click', function () {
+                const modelId = $(this).data('model-id');
+                filterByModel(modelId);
+            });
         });
     </script>
 </body>
