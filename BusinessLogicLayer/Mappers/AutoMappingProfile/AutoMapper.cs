@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BusinessLogicLayer.Dtos.CartDtos;
+using BusinessLogicLayer.Dtos.CategoryDtos;
 using BusinessLogicLayer.Dtos.DesignDtos;
 using BusinessLogicLayer.Dtos.ModelDtos;
 using BusinessLogicLayer.Dtos.OrderDtos;
@@ -40,6 +41,8 @@ namespace BusinessLogicLayer.Mappers.AutoMappingProfile
 
 			CreateMap<Payment, PaymentViewModel>()
 				.ReverseMap();
-		}
+
+            CreateMap<Category, CategoryViewModel>();
+        }
 	}
 }

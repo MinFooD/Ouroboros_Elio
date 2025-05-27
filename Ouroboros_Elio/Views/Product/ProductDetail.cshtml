@@ -310,7 +310,7 @@
             $input.val(newVal); // Cập nhật giá trị mới vào input
         });
     });
-            function addToCart(designId) {
+    function addToCart(designId) {
         var quantity = parseInt($('.cart-plus-minus-box').val());
         if (quantity <= 0) {
             Swal.fire({
@@ -331,17 +331,27 @@
                 productType: false
             },
             success: function (response) {
-                if (response.success) {
-                    window.location.href = '/Cart/CartDetail?designId=' + designId;
-                } else {
-                    Swal.fire({
-                        title: 'Lỗi',
-                        text: response.message,
-                        icon: 'error',
-                        confirmButtonText: 'Đóng'
-                    });
-                }
-            },
+                    if (response.success) {
+                        Swal.fire({
+                            title: 'Thành công',
+                            text: 'Sản phẩm đã được thêm vào giỏ hàng!',
+                            icon: 'success',
+                            confirmButtonText: 'Đóng',
+                            customClass: {
+                                confirmButton: 'swal2-confirm'
+                            }
+                        });
+                        // Cập nhật số lượng giỏ hàng
+                        updateCartCount();
+                    } else {
+                        Swal.fire({
+                            title: 'Lỗi',
+                            text: response.message,
+                            icon: 'error',
+                            confirmButtonText: 'Đóng'
+                        });
+                    }
+                },
             error: function (xhr) {
                 if (xhr.status === 401) {
                     Swal.fire({

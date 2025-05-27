@@ -92,15 +92,6 @@
                                                     <div class="add-actions">
                                                         <ul>
                                                             <li>
-                                                                @* <a class="hiraola-add_cart"
-                                                                   asp-area="" asp-controller="Cart"
-                                                                   asp-action="AddToCart" asp-route-designId="@item.DesignId"
-                                                                   asp-route-quantity="1" asp-route-productType="0"
-                                                                   data-bs-toggle="tooltip"
-                                                                   data-placement="top"
-                                                                   title="Thêm">
-                                                                    <i class="ion-bag"></i>
-                                                                </a> *@
                                                                 <a class="hiraola-add_cart"
                                                                    href="javascript:void(0)"
                                                                    onclick="addToCart('@item.DesignId', 1, false)"
@@ -357,7 +348,7 @@
         }
     </style>
     <script>
-                function addToCart(designId, quantity, productType) {
+         function addToCart(designId, quantity, productType) {
             $.ajax({
                 url: '/Cart/AddToCart',
                 type: 'POST',
@@ -371,7 +362,17 @@
                 },
                 success: function (response) {
                     if (response.success) {
-                        window.location.href = '/Cart/CartDetail?designId=' + designId;
+                        Swal.fire({
+                            title: 'Thành công',
+                            text: 'Sản phẩm đã được thêm vào giỏ hàng!',
+                            icon: 'success',
+                            confirmButtonText: 'Đóng',
+                            customClass: {
+                                confirmButton: 'swal2-confirm'
+                            }
+                        });
+                        // Cập nhật số lượng giỏ hàng
+                        updateCartCount();
                     } else {
                         Swal.fire({
                             title: 'Lỗi',
@@ -410,5 +411,27 @@
                 }
             });
         }
+
+        function updateCartCount() {
+            $.ajax({
+                url: '/Cart/GetCartItemCount',
+                type: 'GET',
+                success: function (response) {
+                    if (response.success) {
+                        $('#cart-count').text(response.count);
+                    } else {
+                        $('#cart-count').text('0');
+                    }
+                },
+                error: function () {
+                    $('#cart-count').text('0');
+                }
+            });
+        }
+
+        // Gọi updateCartCount khi trang tải
+        $(document).ready(function () {
+            updateCartCount();
+        });
     </script>
 </body>

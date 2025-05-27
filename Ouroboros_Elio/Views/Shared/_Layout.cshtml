@@ -137,7 +137,10 @@
                                 <nav>
                                     <ul>
                                         <li class="dropdown-holder">
-                                            <a href="/Product/ProductList">Trang Chủ</a>
+                                            <a href="/Home/Index">Trang Chủ</a>
+                                        </li>
+                                        <li class="megamenu-holder">
+                                            <a href="/Product/ProductList">Cửa Hàng</a>                                           
                                         </li>
                                     </ul>
                                 </nav>
@@ -152,8 +155,12 @@
                                         </a>
                                     </li>
                                     <li>
-                                        <a asp-area="" asp-controller="Cart" asp-action="CartDetail" class="wishlist-btn">
+                                        @* <a asp-area="" asp-controller="Cart" asp-action="CartDetail" class="wishlist-btn">
                                             <i class="ion-bag"></i>
+                                        </a> *@
+                                        <a href="/Cart/CartDetail" title="Giỏ Hàng">
+                                            <i class="ion-bag"></i>
+                                            <span id="cart-count" class="cart-count">0</span>
                                         </a>
                                     </li>
                                 </ul>
@@ -358,6 +365,31 @@
 
             // Hiệu ứng fade cho particles khi tải trang
             $('#particles-js').css('opacity', 0).animate({ opacity: 1 }, 1000);
+        });
+    </script>
+    <!-- Thêm các script -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        function updateCartCount() {
+            $.ajax({
+                url: '/Cart/GetCartItemCount',
+                type: 'GET',
+                success: function (response) {
+                    if (response.success) {
+                        $('#cart-count').text(response.count);
+                    } else {
+                        $('#cart-count').text('0');
+                    }
+                },
+                error: function () {
+                    $('#cart-count').text('0');
+                }
+            });
+        }
+
+        // Gọi updateCartCount khi trang tải
+        $(document).ready(function () {
+            updateCartCount();
         });
     </script>
     @await RenderSectionAsync("Scripts", required: false)
