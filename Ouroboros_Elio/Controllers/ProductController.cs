@@ -1,12 +1,10 @@
 ﻿using BusinessLogicLayer.ServiceContracts;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 
-namespace Ouroboros_Elio.Controllers
+namespace Ouroboros_Elio.Controllers;
+
+public class ProductController : Controller
 {
-    public class ProductController : Controller
-    {
 		private readonly ILogger<ProductController> _logger;
 		private readonly IDesignService _designService;
 		private readonly IModelService _modelService;
@@ -18,27 +16,40 @@ namespace Ouroboros_Elio.Controllers
 			_modelService = modelService;
 		}
 
-        //[Authorize(Roles = "Admin,Manager,User")]
-        public async Task<IActionResult> ProductList(Guid? modelId, decimal? minPrice, decimal? maxPrice, int page = 1, int pageSize = 6)
-        {
-            var (designs, totalCount) = minPrice.HasValue || maxPrice.HasValue
-                ? await _designService.GetPagedDesignsAsync(modelId, minPrice, maxPrice, page, pageSize)
-                : await _designService.GetPagedDesignsAsync(modelId, page, pageSize);
+    public async Task<IActionResult> 
+		ProductList
+		(
+		Guid? modelId, 
+		decimal? minPrice, 
+		decimal? maxPrice, 
+		int page = 1, 
+		int pageSize = 6,
+        string? sortBy = null
+        )
+    {
+        var (designs, totalCount) = minPrice.HasValue || maxPrice.HasValue
+            ? await _designService
+			.GetPagedDesignsAsync
+			(modelId, minPrice, maxPrice, page, pageSize, sortBy)
+            : await _designService
+			.GetPagedDesignsAsync
+			(modelId, page, pageSize, sortBy);
 
-            ViewBag.ListModel = await _modelService.GetAllActiveModelsAsync();
-            ViewBag.Page = page;
-            ViewBag.PageSize = pageSize;
-            ViewBag.TotalCount = totalCount;
-            ViewBag.TotalPages = (int)Math.Ceiling((double)totalCount / pageSize);
-            ViewBag.ModelId = modelId;
-            ViewBag.MinPrice = minPrice;
-            ViewBag.MaxPrice = maxPrice;
+        ViewBag.ListModel = await _modelService.GetAllActiveModelsAsync();
+        ViewBag.Page = page;
+        ViewBag.PageSize = pageSize;
+        ViewBag.TotalCount = totalCount;
+        ViewBag.TotalPages = (int)Math.Ceiling((double)totalCount / pageSize);
+        ViewBag.ModelId = modelId;
+        ViewBag.MinPrice = minPrice;
+        ViewBag.MaxPrice = maxPrice;
+        ViewBag.SortBy = sortBy;
 
-            return View(designs);
-        }
+        return View(designs);
+    }
 
-        public async Task<IActionResult> ProductDetail(Guid designId)
-        {
+    public async Task<IActionResult> ProductDetail(Guid designId)
+    {
 			var design = await _designService.GetDesignByIdAsync(designId);
 			var result = await _designService.VisitCountUp(designId);
 			if(result == false)   
@@ -51,5 +62,4 @@ namespace Ouroboros_Elio.Controllers
 			}
 			return View(design);
 		}
-    }
 }

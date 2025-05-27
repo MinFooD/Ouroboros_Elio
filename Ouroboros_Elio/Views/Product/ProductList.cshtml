@@ -8,7 +8,7 @@
                 <div class="breadcrumb-content">
                     <h2>Cửa Hàng</h2>
                     <ul>
-                        <li><a href="index.html">Trang Chủ</a></li>
+                        <li><a href="/Home/Index">Trang Chủ</a></li>
                         <li class="active">Sản Phẩm</li>
                     </ul>
                 </div>
@@ -82,10 +82,10 @@
                             <div class="product-item-selection_area">
                                 <div class="product-short">
                                     <label class="select-label">Sắp Xếp:</label>
-                                    <select class="nice-select">
-                                        <option value="1">Tất cả</option>
-                                        <option value="2">Mới Nhất</option>
-                                        <option value="3">Bán Chạy</option>
+                                    <select class="nice-select sort-filter">
+                                        <option value="" selected="@(ViewBag.SortBy == null)">Tất cả</option>
+                                        <option value="newest" selected="@(ViewBag.SortBy == "newest")">Mới Nhất</option>
+                                        <option value="bestselling" selected="@(ViewBag.SortBy == "bestselling")">Bán Chạy</option>
                                     </select>
                                 </div>
                             </div>
@@ -243,7 +243,8 @@
                                                            asp-route-minPrice="@ViewBag.MinPrice"
                                                            asp-route-maxPrice="@ViewBag.MaxPrice"
                                                            asp-route-page="@(ViewBag.Page - 1)"
-                                                           asp-route-pageSize="@ViewBag.PageSize">
+                                                           asp-route-pageSize="@ViewBag.PageSize"
+                                                           asp-route-sortBy="@ViewBag.SortBy">
                                                             <i class="ion-ios-arrow-left"></i>
                                                         </a>
                                                     </li>
@@ -256,7 +257,8 @@
                                                            asp-route-minPrice="@ViewBag.MinPrice"
                                                            asp-route-maxPrice="@ViewBag.MaxPrice"
                                                            asp-route-page="@i"
-                                                           asp-route-pageSize="@ViewBag.PageSize">@i</a>
+                                                           asp-route-pageSize="@ViewBag.PageSize"
+                                                           asp-route-sortBy="@ViewBag.SortBy">@i</a>
                                                     </li>
                                                 }
                                                 @if (ViewBag.Page < ViewBag.TotalPages)
@@ -267,7 +269,8 @@
                                                            asp-route-minPrice="@ViewBag.MinPrice"
                                                            asp-route-maxPrice="@ViewBag.MaxPrice"
                                                            asp-route-page="@(ViewBag.Page + 1)"
-                                                           asp-route-pageSize="@ViewBag.PageSize">
+                                                           asp-route-pageSize="@ViewBag.PageSize"
+                                                           asp-route-sortBy="@ViewBag.SortBy">
                                                             <i class="ion-ios-arrow-right"></i>
                                                         </a>
                                                     </li>
@@ -440,22 +443,18 @@
             });
         }
 
-        // Gọi updateCartCount khi trang tải
-        $(document).ready(function () {
-            updateCartCount();
-        });
-
-        // Hàm lọc sản phẩm theo model
-        function filterByModel(modelId) {
+        // Hàm lọc sản phẩm
+        function filterProducts(modelId, sortBy, minPrice, maxPrice, page = 1) {
             $.ajax({
                 url: '/Product/ProductList',
                 type: 'GET',
                 data: {
                     modelId: modelId,
-                    minPrice: $('#minPrice').val(),
-                    maxPrice: $('#maxPrice').val(),
-                    page: 1,
-                    pageSize: @ViewBag.PageSize
+                    minPrice: minPrice || $('#minPrice').val(),
+                    maxPrice: maxPrice || $('#maxPrice').val(),
+                    page: page,
+                    pageSize: @ViewBag.PageSize,
+                    sortBy: sortBy
                 },
                 success: function (response) {
                     // Cập nhật khu vực sản phẩm
@@ -464,14 +463,30 @@
                     $('.hiraola-paginatoin-area').html($(response).find('.hiraola-paginatoin-area').html());
                     // Cập nhật trạng thái active cho liên kết model
                     $('.model-filter').removeClass('active');
-                    $(`.model-filter[data-model-id="${modelId}"]`).addClass('active');
-                    // Cập nhật URL trình duyệt mà không tải lại trang
+                    $(`.model-filter[data-model-id="${modelId || ''}"]`).addClass('active');
+                    // Cập nhật URL trình duyệt
                     const url = new URL(window.location);
                     if (modelId) {
                         url.searchParams.set('modelId', modelId);
                     } else {
                         url.searchParams.delete('modelId');
                     }
+                    if (sortBy) {
+                        url.searchParams.set('sortBy', sortBy);
+                    } else {
+                        url.searchParams.delete('sortBy');
+                    }
+                    if (minPrice) {
+                        url.searchParams.set('minPrice', minPrice);
+                    } else {
+                        url.searchParams.delete('minPrice');
+                    }
+                    if (maxPrice) {
+                        url.searchParams.set('maxPrice', maxPrice);
+                    } else {
+                        url.searchParams.delete('maxPrice');
+                    }
+                    url.searchParams.set('page', page);
                     window.history.pushState({}, '', url);
                 },
                 error: function () {
@@ -485,12 +500,31 @@
             });
         }
 
-        // Gắn sự kiện click cho các liên kết model
+        // Gắn sự kiện
         $(document).ready(function () {
             updateCartCount();
+
+            // Sự kiện lọc theo model
             $('.model-filter').on('click', function () {
                 const modelId = $(this).data('model-id');
-                filterByModel(modelId);
+                const sortBy = $('.sort-filter').val();
+                filterProducts(modelId, sortBy);
+            });
+
+            // Sự kiện lọc theo sắp xếp
+            $('.sort-filter').on('change', function () {
+                const sortBy = $(this).val();
+                const modelId = $('.model-filter.active').data('model-id') || '';
+                filterProducts(modelId, sortBy);
+            });
+
+            // Sự kiện lọc theo giá
+            $('#minPrice, #maxPrice').on('change', function () {
+                const minPrice = $('#minPrice').val();
+                const maxPrice = $('#maxPrice').val();
+                const modelId = $('.model-filter.active').data('model-id') || '';
+                const sortBy = $('.sort-filter').val();
+                filterProducts(modelId, sortBy, minPrice, maxPrice);
             });
         });
     </script>

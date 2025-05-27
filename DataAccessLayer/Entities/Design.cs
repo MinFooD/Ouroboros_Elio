@@ -16,6 +16,7 @@ public partial class Design
     public decimal CapitalExpense { get; set; }
 
     public string? Description { get; set; }
+    public DateTime CreatedAt { get; set; }
 
     public int VisitCount { get; set; }
     public int OrderCount { get; set; }

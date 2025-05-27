@@ -14,7 +14,14 @@ public class DesignRepository : IDesignRepository
         _context = context;
     }
 
-    public async Task<(List<Design> Designs, int TotalCount)> GetPagedDesignsAsync(Guid? modelId, int page, int pageSize)
+    public async Task<(List<Design> Designs, int TotalCount)> 
+        GetPagedDesignsAsync
+        (
+        Guid? modelId, 
+        int page, 
+        int pageSize,
+        string? sortBy = null
+        )
     {
         var query = _context.Designs
             .Include(d => d.Category)
@@ -27,9 +34,16 @@ public class DesignRepository : IDesignRepository
             query = query.Where(d => d.ModelId == modelId);
         }
 
+        // Áp dụng sắp xếp
+        query = sortBy switch
+        {
+            "newest" => query.OrderByDescending(d => d.CreatedAt),
+            "bestselling" => query.OrderByDescending(d => d.OrderCount),
+            _ => query.OrderBy(d => d.DesignId) // Mặc định sắp xếp theo DesignId
+        };
+
         int totalCount = await query.CountAsync();
         var designs = await query
-            .OrderBy(d => d.DesignId) // Sắp xếp theo DesignId để đảm bảo thứ tự nhất quán
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
             .ToListAsync();
@@ -37,7 +51,15 @@ public class DesignRepository : IDesignRepository
         return (designs, totalCount);
     }
 
-    public async Task<(List<Design> Designs, int TotalCount)> GetPagedDesignsAsync(Guid? modelId, decimal? minPrice, decimal? maxPrice, int page, int pageSize)
+    public async Task<(List<Design> Designs, int TotalCount)> 
+        GetPagedDesignsAsync
+        (
+        Guid? modelId, 
+        decimal? minPrice, 
+        decimal? maxPrice, 
+        int page, int pageSize,
+        string? sortBy = null
+        )
     {
         var query = _context.Designs
             .Include(d => d.Category)
@@ -60,9 +82,17 @@ public class DesignRepository : IDesignRepository
             query = query.Where(d => d.Price <= maxPrice.Value);
         }
 
+        // Áp dụng sắp xếp
+        query = sortBy switch
+        {
+            "newest" => query.OrderByDescending(d => d.CreatedAt),
+            "bestselling" => query.OrderByDescending(d => d.OrderCount),
+            _ => query.OrderBy(d => d.DesignId) // Mặc định sắp xếp theo DesignId
+        };
+
         int totalCount = await query.CountAsync();
         var designs = await query
-            .OrderBy(d => d.DesignId)
+            //.OrderBy(d => d.DesignId)
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
             .ToListAsync();
