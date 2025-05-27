@@ -92,15 +92,6 @@
                                                     <div class="add-actions">
                                                         <ul>
                                                             <li>
-                                                                @* <a class="hiraola-add_cart"
-                                                                   asp-area="" asp-controller="Cart"
-                                                                   asp-action="AddToCart" asp-route-designId="@item.DesignId"
-                                                                   asp-route-quantity="1" asp-route-productType="0"
-                                                                   data-bs-toggle="tooltip"
-                                                                   data-placement="top"
-                                                                   title="Thêm">
-                                                                    <i class="ion-bag"></i>
-                                                                </a> *@
                                                                 <a class="hiraola-add_cart"
                                                                    href="javascript:void(0)"
                                                                    onclick="addToCart('@item.DesignId', 1, false)"
