@@ -10,5 +10,6 @@ namespace DataAccessLayer.RepositoryContracts
 	public interface IOrderRepository
 	{
 		Task<Order?> CreateOrderFromCartAsync(Guid cartId, Guid userId);
-	}
+        Task<Order?> GetOrderByIdAsync(Guid orderId, Guid userId);
+    }
 }

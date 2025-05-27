@@ -108,4 +108,4 @@ namespace DataAccessLayer.Repositories;
 				.Include(d => d.Model).ThenInclude(m => m.Topic).ThenInclude(m => m.Collection)
 				.FirstOrDefaultAsync(d => d.DesignId == designId);
 		}
-	}
+}

@@ -1,193 +1,349 @@
 ﻿@model BusinessLogicLayer.Dtos.CartDtos.CartAndListCartItemViewModel
-<!doctype html>
-<html class="no-js" lang="en">
 
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Cart || Hiraola - Jewellery eCommerce Bootstrap 5 Template</title>
-    <meta name="robots" content="noindex, follow" />
-    <meta name="description" content="">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <!-- Favicon -->
-    <link rel="shortcut icon" type="image/x-icon" href="assets/images/favicon.ico">
+<style>
+    /* Tùy chỉnh SweetAlert2 để đồng bộ với giao diện website */
+    .swal2-popup {
+        font-family: 'Lato', sans-serif; /* Font chữ giống website */
+        background: #f4f4f4; /* Màu nền xám nhạt giống form */
+        color: #595959; /* Màu chữ xám giống nội dung */
+        border: 1px solid #e5e5e5; /* Viền giống các thành phần trên website */
+        border-radius: 8px; /* Bo góc nhẹ */
+    }
 
-    <!-- CSS
-    ============================================ -->
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="~/assets/css/bootstrap.min.css" />
-    <!-- Fontawesome -->
-    <link rel="stylesheet" href="~/assets/css/font-awesome.min.css" />
-    <!-- Fontawesome Star -->
-    <link rel="stylesheet" href="~/assets/css/fontawesome-stars.css" />
-    <!-- Ion Icon -->
-    <link rel="stylesheet" href="~/assets/css/ionicons.min.css" />
-    <!-- Slick CSS -->
-    <link rel="stylesheet" href="~/assets/css/slick.min.css" />
-    <!-- Animation -->
-    <link rel="stylesheet" href="~/assets/css/animate.min.css" />
-    <!-- jQuery Ui -->
-    <link rel="stylesheet" href="~/assets/css/jquery-ui.min.css" />
-    <!-- Nice Select -->
-    <link rel="stylesheet" href="~/assets/css/nice-select.min.css" />
-    <!-- Timecircles -->
-    <link rel="stylesheet" href="~/assets/css/timecircles.min.css" />
+    .swal2-title {
+        color: #333; /* Màu tiêu đề giống website */
+        font-size: 18px; /* Kích thước chữ tiêu đề */
+        font-weight: 700; /* Đậm giống h3, h4 */
+    }
 
-    <!-- Main Style CSS -->
-    <link rel="stylesheet" href="~/assets/css/style.css" />
-    <!-- <link rel="stylesheet" href="assets/css/style.min.css"> -->
+    .swal2-content {
+        color: #595959; /* Màu nội dung giống website */
+        font-size: 16px; /* Kích thước chữ nội dung */
+    }
 
-</head>
+    .swal2-confirm {
+        background-color: #cda557 !important; /* Nút "Xóa" màu vàng */
+        color: #fff !important; /* Chữ trắng */
+        border-radius: 3px !important; /* Bo góc giống hiraola-btn */
+        padding: 10px 20px !important; /* Kích thước giống nút */
+        font-size: 12px !important; /* Kích thước chữ */
+        text-transform: uppercase !important; /* Chữ in hoa */
+        transition: all 0.3s ease-in !important; /* Hiệu ứng chuyển đổi */
+    }
+
+    .swal2-cancel {
+        background-color: #595959 !important; /* Nút "Hủy" màu xám đậm */
+        color: #fff !important; /* Chữ trắng */
+        border-radius: 3px !important; /* Bo góc giống hiraola-btn */
+        padding: 10px 20px !important; /* Kích thước giống nút */
+        font-size: 12px !important; /* Kích thước chữ */
+        text-transform: uppercase !important; /* Chữ in hoa */
+        transition: all 0.3s ease-in !important; /* Hiệu ứng chuyển đổi */
+    }
+
+    .swal2-confirm:hover {
+        background-color: #d5b473 !important; /* Hover màu vàng nhạt hơn */
+    }
+
+    .swal2-cancel:hover {
+        background-color: #333 !important; /* Hover màu xám đậm hơn */
+    }
+
+    .swal2-icon.swal2-warning {
+        color: #cda557 !important; /* Màu biểu tượng cảnh báo */
+        border-color: #cda557 !important;
+    }
+
+    .swal2-icon.swal2-error {
+        color: #ea3a3c !important; /* Màu biểu tượng lỗi (đỏ) */
+        border-color: #ea3a3c !important;
+    }
+</style>
 
 <body class="template-color-1">
-
     <div class="main-wrapper">
-
-        <!-- Begin Hiraola's Breadcrumb Area -->
         <div class="breadcrumb-area">
             <div class="container">
                 <div class="breadcrumb-content">
-                    <h2>Other</h2>
+                    <h2>Giỏ Hàng</h2>
                     <ul>
-                        <li><a href="index.html">Home</a></li>
-                        <li class="active">Cart</li>
+                        <li><a href="/Product/ProductList">Danh sách</a></li>
+                        <li class="active">Giỏ Hàng</li>
                     </ul>
                 </div>
             </div>
         </div>
-        <!-- Hiraola's Breadcrumb Area End Here -->
-        <!-- Begin Hiraola's Cart Area -->
         <div class="hiraola-cart-area">
             <div class="container">
                 <div class="row">
                     <div class="col-12">
-                        @if (Model.cartItemsViewModel != null && Model.cartItemsViewModel.Any() && Model.cartItemsViewModel.Count != 0)
-                        {
-                            <form asp-area="" asp-controller="Order" asp-action="CreatePaymentLink" method="post">
-                                <div class="table-content table-responsive">
-                                    <table class="table">
-                                        <thead>
-                                            <tr>
-                                                <th class="hiraola-product-remove">remove</th>
-                                                <th class="hiraola-product-thumbnail">images</th>
-                                                <th class="cart-product-name">Product</th>
-                                                <th class="hiraola-product-price">Unit Price</th>
-                                                <th class="hiraola-product-quantity">Quantity</th>
-                                                <th class="hiraola-product-subtotal">Total</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-
-                                            @foreach (var item in Model.cartItemsViewModel)
+                        <form action="javascript:void(0)">
+                            <div class="table-content table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th class="hiraola-product-remove">Xóa</th>
+                                            <th class="hiraola-product-thumbnail">Ảnh</th>
+                                            <th class="cart-product-name">Sản Phẩm</th>
+                                            <th class="hiraola-product-price">Giá</th>
+                                            <th class="hiraola-product-quantity">Số Lượng</th>
+                                            <th class="hiraola-product-subtotal">Tổng</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @if (Model.cartItemsViewModel != null && Model.cartItemsViewModel.Any())
+                                        {
+                                            foreach (var item in Model.cartItemsViewModel)
                                             {
-                                                <tr>
-                                                    <td class="hiraola-product-remove">
-                                                        <a asp-area="" asp-controller="Cart" asp-action="UpdateCart"
-                                                        asp-route-designId="@item.DesignId" asp-route-quantity="0">
-                                                            <i class="fa fa-trash"
-                                                            title="Remove"></i>
-                                                        </a>
-                                                    </td>
-                                                    <td class="hiraola-product-thumbnail"><a href="javascript:void(0)"><img src="@item.Design.FirstImage.ImageUrl" alt="Hiraola's Cart Thumbnail" style="max-width:30%"></a></td>
-                                                    <td class="hiraola-product-name"><a href="javascript:void(0)">@item.Design.DesignName</a></td>
-                                                    <td class="hiraola-product-price"><span class="amount">@item.Price VND</span></td>
-                                                    <td class="quantity">
-                                                        <label>Quantity</label>
-                                                        <div class="cart-plus-minus">
-                                                            <input class="cart-plus-minus-box" value="1" type="text">
-                                                            <div class="dec qtybutton"><i class="fa fa-angle-down"></i></div>
-                                                            <div class="inc qtybutton"><i class="fa fa-angle-up"></i></div>
-                                                        </div>
-                                                    </td>
-                                                    <td class="product-subtotal"><span class="amount">$46.80</span></td>
-                                                </tr>
-                                            }
-                                        </tbody>
-                                    </table>
-                                </div>
-
-                                <input type="hidden" name="cartId" value="@Model.CartViewModel.CartId" />
-                                <input type="hidden" name="productName" value="Giỏ hàng #@Model.CartViewModel.CartId" />
-                                <input type="hidden" name="price" value="@Convert.ToInt32(Model.CartViewModel.Total ?? 0)" />
-                                <input type="hidden" name="description" value="Đơn hàng gồm @Model.cartItemsViewModel.Count SP" />
-                                <input type="hidden" name="cancelUrl" value="@($"https://localhost:7290/order/success?cartId={@Model.CartViewModel.CartId}")" />
-                                <input type="hidden" name="returnUrl" value="https://localhost:7290/checkout/success" />
-
-                                <div class="row">
-                                    <div class="col-12">
-                                        <div class="coupon-all">
-                                            <div class="coupon2">
-                                                <input class="button" name="update_cart" value="Update cart" type="submit">
-                                            </div>
-                                        </div>
+                                        <tr data-design-id="@item.DesignId">
+                                            <td class="hiraola-product-remove">
+                                                <a href="javascript:void(0)" onclick="removeFromCart('@item.DesignId')">
+                                                    <i class="fa fa-trash" title="Remove"></i>
+                                                </a>
+                                            </td>
+                                            <td class="hiraola-product-thumbnail">
+                                                <a href="javascript:void(0)">
+                                                    <img src="@item.Design.FirstImage.ImageUrl" alt="Hiraola's Cart Thumbnail" style="max-width:30%">
+                                                </a>
+                                            </td>
+                                            <td class="hiraola-product-name">
+                                                <a href="/Product/ProductDetail?designId=@item.DesignId" title="Xem chi tiết sản phẩm">@item.Design.DesignName</a>
+                                            </td>
+                                            <td class="hiraola-product-price">
+                                                <span class="amount">
+                                                    @String.Format(new System.Globalization.CultureInfo("vi-VN")
+                                                                                                        , "{0:N0}"
+                                                                                                        , item.Price) ₫
+                                                </span>
+                                            </td>
+                                            <td class="quantity">
+                                                <label>Số Lượng</label>
+                                                <div class="cart-plus-minus">
+                                                    <input class="cart-plus-minus-box" value="@item.Quantity" type="text" data-design-id="@item.DesignId" data-price="@item.Price">
+                                                    <div class="dec qtybutton"><i class="fa fa-angle-down"></i></div>
+                                                    <div class="inc qtybutton"><i class="fa fa-angle-up"></i></div>
+                                                </div>
+                                            </td>
+                                            <td class="product-subtotal">
+                                                <span class="amount" data-subtotal="@((item.Quantity * item.Price))">
+                                                    @String.Format(new System.Globalization.CultureInfo("vi-VN")
+                                                                                                        , "{0:N0}"
+                                                                                                        , (item.Quantity) * (item.Price)) ₫
+                                                </span>
+                                            </td>
+                                        </tr>
+                                                                                }
+                                        }
+                                        else
+                                        {
+                                            <tr>
+                                                <td colspan="6">Giỏ hàng trống</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-5 ml-auto">
+                                    <div class="cart-page-total">
+                                        <h2>Tất Cả</h2>
+                                        <ul>
+                                            <li>
+                                                Tổng
+                                                <span id="cart-total">
+                                                    @String.Format(new System.Globalization
+                                                                                                        .CultureInfo("vi-VN")
+                                                                                                        , "{0:N0}"
+                                                                                                        , Model.CartViewModel?.Total) ₫
+                                                </span>
+                                            </li>
+                                        </ul>
+                                        @if (Model.cartItemsViewModel != null && Model.cartItemsViewModel.Any())
+                                        {
+                                            <a href="/Checkout/PlaceOrder">Đặt Hàng</a>
+                                        }
                                     </div>
                                 </div>
-
-                                <div class="row">
-                                    <div class="col-md-5 ml-auto">
-                                        <div class="cart-page-total">
-                                            <h2>Cart totals</h2>
-                                            <ul>
-                                                <li>Total <span>$@Model.CartViewModel.Total</span></li>
-                                            </ul>
-                                            <button type="submit" id="create-payment-link-btn">Proceed to checkout</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </form>
-                        } else
-                        {
-                            <h3> Giỏ hàng trống nè !</h3>
-                        }
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- Hiraola's Cart Area End Here -->
-
     </div>
 
-    <!-- JS
-      ============================================ -->
-    <!-- jQuery JS -->
-    <script src="~/assets/js/vendor/jquery-3.6.0.min.js"></script>
-    <script src="~/assets/js/vendor/jquery-migrate-3.3.2.min.js"></script>
-    <!-- Modernizer JS -->
-    <script src="~/assets/js/vendor/modernizr-3.11.2.min.js"></script>
-    <!-- Bootstrap JS -->
-    <script src="~/assets/js/vendor/bootstrap.bundle.min.js"></script>
+    <script>
+        // Kiểm tra jQuery
+        if (typeof jQuery === 'undefined') {
+            console.error('jQuery không được tải!');
+        } else {
+            console.log('jQuery đã được tải, phiên bản:', jQuery.fn.jquery);
+        }
 
-    <!-- Slick Slider JS -->
-    <script src="~/assets/js/plugins/slick.min.js"></script>
-    <!-- Countdown JS -->
-    <script src="~/assets/js/plugins/countdown.min.js"></script>
-    <!-- Barrating JS -->
-    <script src="~/assets/js/plugins/jquery.barrating.min.js"></script>
-    <!-- Counterup JS -->
-    <script src="~/assets/js/plugins/jquery.counterup.min.js"></script>
-    <!-- Waypoints -->
-    <script src="~/assets/js/plugins/waypoints.min.js"></script>
-    <!-- Nice Select JS -->
-    <script src="~/assets/js/plugins/jquery.nice-select.min.js"></script>
-    <!-- Sticky Sidebar JS -->
-    <script src="~/assets/js/plugins/jquery.sticky-sidebar.js"></script>
-    <!-- Jquery-ui JS -->
-    <script src="~/assets/js/plugins/jquery-ui.min.js"></script>
-    <!-- Scroll Top JS -->
-    <script src="~/assets/js/plugins/scroll-top.min.js"></script>
-    <!-- Theia Sticky Sidebar JS -->
-    <script src="~/assets/js/plugins/theia-sticky-sidebar.min.js"></script>
-    <!-- ElevateZoom JS -->
-    <script src="~/assets/js/plugins/jquery.elevateZoom-3.0.8.min.js"></script>
-    <!-- Timecircles JS -->
-    <script src="~/assets/js/plugins/timecircles.min.js"></script>
-    <!-- Mailchimp Ajax JS -->
-    <script src="~/assets/js/plugins/mailchimp-ajax.js"></script>
+        $(document).ready(function () {
+            let isUpdating = false;
 
-    <!-- Main JS -->
-    <script src="~/assets/js/main.js"></script>
-    <!-- <script src="assets/js/main.min.js"></script> -->
+            // Gắn sự kiện click cho .qtybutton
+            $('.qtybutton').off('click').on('click', function () {
+                console.log('Sự kiện click .qtybutton được kích hoạt');
+                if (isUpdating) {
+                    console.log('Đang xử lý, bỏ qua click');
+                    return;
+                }
 
+                var $button = $(this);
+                var $input = $button.parent().find('input');
+                var oldValue = parseInt($input.val()) || 1;
+                var newVal;
+
+                if ($button.hasClass('inc')) {
+                    newVal = oldValue + 1;
+                } else {
+                    newVal = oldValue > 1 ? oldValue - 1 : 1;
+                }
+
+                console.log('Cập nhật số lượng từ', oldValue, 'thành', newVal);
+                $input.val(newVal);
+                var designId = $input.data('design-id');
+                console.log('designId:', designId);
+                updateQuantity(designId, newVal, $input);
+            });
+
+            // Gắn sự kiện change cho input
+            $('.cart-plus-minus-box').off('change').on('change', function () {
+                console.log('Sự kiện change .cart-plus-minus-box được kích hoạt');
+                if (isUpdating) {
+                    console.log('Đang xử lý, bỏ qua change');
+                    return;
+                }
+
+                var $input = $(this);
+                var quantity = parseInt($input.val());
+                var designId = $input.data('design-id');
+                console.log('designId:', designId, 'quantity:', quantity);
+                updateQuantity(designId, quantity, $input);
+            });
+        });
+
+                function updateQuantity(designId, quantity, $input) {
+            if (isNaN(quantity) || quantity <= 0) {
+                console.log('Số lượng không hợp lệ:', quantity);
+                alert("Số lượng phải lớn hơn 0");
+                $input.val(1);
+                return;
+            }
+
+            console.log('Gửi AJAX request: designId=', designId, 'quantity=', quantity);
+            isUpdating = true;
+            $.ajax({
+                url: '/Cart/UpdateCart',
+                type: 'POST',
+                data: {
+                    designId: designId,
+                    quantity: quantity
+                },
+                headers: {
+                    'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
+                },
+                success: function (response) {
+                    console.log('AJAX success:', response);
+                    if (response.success) {
+                        var price = parseFloat($input.data('price'));
+                        var subtotal = quantity * price;
+
+                        // Định dạng số với dấu chấm làm phân cách hàng nghìn
+                        var formattedSubtotal = subtotal.toLocaleString('vi-VN', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+
+                        $input.closest('tr').find('.product-subtotal .amount')
+                            .text(formattedSubtotal + ' ₫')
+                            .data('subtotal', subtotal);
+
+                        var total = 0;
+                        $('.product-subtotal .amount').each(function () {
+                            total += parseFloat($(this).data('subtotal'));
+                        });
+
+                        // Định dạng tổng với dấu chấm
+                        var formattedTotal = total.toLocaleString('vi-VN', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+                        $('#cart-total').text(formattedTotal + ' ₫');
+
+                        // Cập nhật số lượng giỏ hàng
+                        updateCartCount();
+                    } else {
+                        console.log('Lỗi từ server:', response.message);
+                        Swal.fire({
+                            title: 'Lỗi',
+                            text: response.message,
+                            icon: 'error',
+                            confirmButtonText: 'Đóng'
+                        });
+                        $input.val($input.data('original-value') || 1);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error('AJAX error:', status, error, xhr.responseText);
+                    alert("Có lỗi xảy ra khi cập nhật số lượng.");
+                    $input.val($input.data('original-value') || 1);
+                },
+                complete: function () {
+                    isUpdating = false;
+                    console.log('AJAX complete');
+                }
+            });
+        }
+                function removeFromCart(designId) {
+            Swal.fire({
+                title: 'Xác nhận xóa',
+                text: 'Bạn có chắc muốn xóa sản phẩm này khỏi giỏ hàng không?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Xóa',
+                cancelButtonText: 'Hủy',
+                customClass: {
+                    confirmButton: 'swal2-confirm',
+                    cancelButton: 'swal2-cancel'
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    console.log('Gửi AJAX request xóa: designId=', designId);
+                    $.ajax({
+                        url: '/Cart/UpdateCart',
+                        type: 'POST',
+                        data: {
+                            designId: designId,
+                            quantity: 0
+                        },
+                        headers: {
+                            'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
+                        },
+                        success: function (response) {
+                            console.log('AJAX success (xóa):', response);
+                            if (response.success) {
+                                window.location.reload();
+                                // Cập nhật số lượng giỏ hàng
+                                updateCartCount();
+                            } else {
+                                Swal.fire({
+                                    title: 'Lỗi',
+                                    text: response.message,
+                                    icon: 'error',
+                                    confirmButtonText: 'Đóng'
+                                });
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            console.error('AJAX error (xóa):', status, error, xhr.responseText);
+                            Swal.fire({
+                                title: 'Lỗi',
+                                text: 'Có lỗi xảy ra khi xóa sản phẩm khỏi giỏ hàng.',
+                                icon: 'error',
+                                confirmButtonText: 'Đóng'
+                            });
+                        }
+                    });
+                }
+            });
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>
-
-</html>

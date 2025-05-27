@@ -18,7 +18,7 @@ namespace Ouroboros_Elio.Controllers
 			_cartService = cartService;
 		}
 
-		public async Task<IActionResult> CartDetail()
+		public async Task<IActionResult> CartDetail(Guid? designId)
         {
             var currentUser = HttpContext.User;
 			var userId = _userManager.GetUserId(currentUser);
@@ -33,38 +33,88 @@ namespace Ouroboros_Elio.Controllers
 					CartViewModel = await _cartService.GetCartByUserIdAsync(Guid.Parse(userId)),
 					cartItemsViewModel = await _cartService.GetCartItemsByUserIdAsync(Guid.Parse(userId))
 				};
-				return View(cartAndCartItems);
+
+                ViewBag.designId = designId;
+
+                return View(cartAndCartItems);
 			}
         }
 
-		public async Task<IActionResult> UpdateCart(Guid designId, int quantity)
-		{
-			var currentUser = HttpContext.User;
-			var userId = _userManager.GetUserId(currentUser);
-			if (userId == null)
-			{
-				return RedirectToAction("Register", "Auth");
-			}
-			else
-			{
-				var result = await _cartService.UpdateQuantity(Guid.Parse(userId), designId, quantity);
-				return RedirectToAction("CartDetail");
-			}
-		}
+        public async Task<IActionResult> UpdateCart(Guid designId, int quantity)
+        {
+            var currentUser = HttpContext.User;
+            var userId = _userManager.GetUserId(currentUser);
+            if (userId == null)
+            {
+                return Json(new { success = false, message = "Vui lòng đăng nhập." });
+            }
 
-		public async Task<IActionResult> AddToCart(Guid designId, int quantity, bool productType)
-		{
-			var currentUser = HttpContext.User;
-			var userId = _userManager.GetUserId(currentUser);
-			if (userId == null)
-			{
-				return RedirectToAction("Register", "Auth");
-			}
-			else
-			{
-				var result = await _cartService.AddToCart(Guid.Parse(userId), designId, quantity, productType);
-				return RedirectToAction("CartDetail");
-			}
-		}
-	}
+            try
+            {
+                var result = await _cartService.UpdateQuantity(Guid.Parse(userId), designId, quantity);
+                if (result == true)
+                {
+                    return Json(new { success = true });
+                }
+                return Json(new { success = false, message = "Không tìm thấy sản phẩm trong giỏ hàng." });
+            }
+            catch (Exception ex)
+            {
+                // Log lỗi nếu cần
+                return Json(new { success = false, message = "Có lỗi xảy ra khi cập nhật số lượng." });
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddToCart(Guid designId, int quantity, bool productType)
+        {
+            var currentUser = HttpContext.User;
+            var userId = _userManager.GetUserId(currentUser);
+
+            if (userId == null)
+            {
+                Response.StatusCode = 401; // Trả về mã trạng thái 401
+                return Json(new { success = false, message = "Vui lòng đăng nhập." });
+                //return RedirectToAction("Login", "Auth");
+            }
+
+            try
+            {
+                var result = await _cartService.AddToCart(Guid.Parse(userId), designId, quantity, productType);
+                if (result)
+                {
+                    return Json(new { success = true });
+                }
+                return Json(new { success = false, message = "Không thể thêm sản phẩm vào giỏ hàng." });
+            }
+            catch (Exception ex)
+            {
+                // Log lỗi nếu cần
+                return Json(new { success = false, message = "Có lỗi xảy ra khi thêm sản phẩm." });
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetCartItemCount()
+        {
+            var currentUser = HttpContext.User;
+            var userId = _userManager.GetUserId(currentUser);
+
+            if (userId == null)
+            {
+                return Json(new { success = false, count = 0 });
+            }
+
+            try
+            {
+                var cartItems = await _cartService.GetCartItemsByUserIdAsync(Guid.Parse(userId));
+                var count = cartItems?.Sum(item => item.Quantity) ?? 0;
+                return Json(new { success = true, count = count });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, count = 0 });
+            }
+        }
+    }
 }

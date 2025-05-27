@@ -61,7 +61,7 @@ namespace BusinessLogicLayer.Services
 			var collectionName = design.Model.Topic.Collection.CollectionName;
 			var designViewModel = _mapper.Map<DesignViewModel>(design);
 			designViewModel.FirstImage = _mapper.Map<DesignImageViewModel>(design.DesignImages.FirstOrDefault());
-			designViewModel.DesignName = $"{collectionName}-{topicName}-{modelName}-{categoryName}";
+			designViewModel.DesignName = $"{collectionName} - {topicName} - {modelName}";
 			designViewModel.CollectionName = collectionName;
 			designViewModel.ModelName = modelName;
 			designViewModel.TopicName = topicName;
@@ -110,6 +110,31 @@ namespace BusinessLogicLayer.Services
             }
 
             return (designViewModels, totalCount);
+        }
+
+        public async Task<List<DesignViewModel>?> GetDesignsByCategoryAsync(Guid categoryId)
+        {
+            var designs = await _designRepository.GetAllDesignsAsync(null);
+            if (designs == null)
+            {
+                return null;
+            }
+
+            var filteredDesigns = designs.Where(d => d.CategoryId == categoryId).ToList();
+            var designViewModels = _mapper.Map<List<DesignViewModel>>(filteredDesigns);
+
+            for (int i = 0; i < filteredDesigns.Count; i++)
+            {
+                var design = filteredDesigns[i];
+                designViewModels[i].DesignName = $"{design.Model.Topic.Collection.CollectionName}-{design.Model.Topic.TopicName}-{design.Model.ModelName}-{design.Category.CategoryName}";
+                designViewModels[i].CollectionName = design.Model.Topic.Collection.CollectionName;
+                designViewModels[i].ModelName = design.Model.ModelName;
+                designViewModels[i].TopicName = design.Model.Topic.TopicName;
+                designViewModels[i].CategoryName = design.Category.CategoryName;
+                designViewModels[i].FirstImage = _mapper.Map<DesignImageViewModel>(design.DesignImages.FirstOrDefault());
+            }
+
+            return designViewModels;
         }
     }
 }

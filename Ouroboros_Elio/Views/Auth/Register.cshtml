@@ -3,10 +3,9 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<section class="container py-5 position-relative">
-    <!-- Hình nền động Particles -->
-    <div id="particles-js" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;"></div>
+<link href="~/css/register.css" rel="stylesheet" />
 
+<section class="container py-5 position-relative">
     <!-- Breadcrumb -->
     <nav aria-label="breadcrumb" class="mb-4">
         <ol class="breadcrumb">
@@ -41,7 +40,8 @@
                     <h3 class="mb-0">Đăng nhập</h3>
                 </div>
                 <div class="card-body p-4">
-                    @using (Html.BeginForm("Login", "Auth", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                    @using (Html.BeginForm("Login", "Auth", FormMethod.Post, 
+                    new { @class = "form-horizontal", role = "form", novalidate = "novalidate" }))
                     {
                         @Html.AntiForgeryToken()
                         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
@@ -49,7 +49,14 @@
                         <div class="form-group mb-3">
                             <div class="input-group">
                                 <span class="input-group-text"><i class="fas fa-envelope"></i></span>
-                                @Html.TextBoxFor(m => m.Login.Gmail, new { @class = "form-control", placeholder = "Nhập email của bạn", required = "required", type = "email", @aria_label = "Email Address" })
+                                @Html.TextBoxFor(m => m.Login.Gmail, new { 
+                                    @class = "form-control", 
+                                    placeholder = "Nhập email của bạn", 
+                                    required = "required", 
+                                    type = "email", 
+                                    @aria_label = "Email Address",
+                                    Value = Context.Request.Cookies["RememberedEmail"] // Tự động điền email từ cookie
+                                })
                             </div>
                             @Html.ValidationMessageFor(m => m.Login.Gmail, "", new { @class = "text-danger" })
                         </div>
@@ -57,14 +64,16 @@
                         <div class="form-group mb-3">
                             <div class="input-group">
                                 <span class="input-group-text"><i class="fas fa-lock"></i></span>
-                                @Html.PasswordFor(m => m.Login.Password, new { @class = "form-control", placeholder = "Nhập mật khẩu", required = "required", @aria_label = "Password" })
+                                @Html.PasswordFor(m => m.Login.Password, new { @class = "form-control", placeholder = "Nhập mật khẩu", 
+                                required = "required", @aria_label = "Password" })
                             </div>
                             @Html.ValidationMessageFor(m => m.Login.Password, "", new { @class = "text-danger" })
                         </div>
 
                         <div class="form-group d-flex justify-content-between align-items-center mb-3">
                             <div class="form-check">
-                                @Html.CheckBoxFor(m => m.Login.RememberMe, new { @class = "form-check-input" })
+                                 @Html.CheckBoxFor(m => m.Login.RememberMe, new { @class = "form-check-input", 
+                                 @checked = Context.Request.Cookies["RememberedEmail"] != null ? "checked" : null })
                                 @Html.LabelFor(m => m.Login.RememberMe, "Ghi nhớ tôi", new { @class = "form-check-label" })
                             </div>
                             <a href="@Url.Action("ForgotPassword", "Account")" class="text-primary" aria-label="Quên mật khẩu">
@@ -93,7 +102,8 @@
                     <h3 class="mb-0">Đăng ký</h3>
                 </div>
                 <div class="card-body p-4">
-                    @using (Html.BeginForm("RegisterAndSendMail", "Auth", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                    @using (Html.BeginForm("RegisterAndSendMail", "Auth", FormMethod.Post, 
+                    new { @class = "form-horizontal", role = "form", novalidate = "novalidate" }))
                     {
                         @Html.AntiForgeryToken()
                         @Html.ValidationSummary(true, "", new { @class = "text-danger" })                        
@@ -141,48 +151,9 @@
 @section Scripts {
     <!-- Thêm Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@400;500&display=swap" rel="stylesheet">
-    <!-- Thêm Particles.js từ CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        $(document).ready(function () {
-            // Khởi tạo Particles.js
-            particlesJS('particles-js', {
-                particles: {
-                    number: { value: 60, density: { enable: true, value_area: 800 } },
-                    color: { value: ['#ff6b6b', '#4ecdc4', '#f7b731'] },
-                    shape: { type: ['circle', 'star'], stroke: { width: 0 } },
-                    opacity: { value: 0.6, random: true, anim: { enable: false } },
-                    size: { value: 3, random: true, anim: { enable: false } },
-                    line_linked: { enable: true, distance: 120, color: '#ffffff', opacity: 0.3, width: 1 },
-                    move: {
-                        enable: true,
-                        speed: 1.5,
-                        direction: 'none',
-                        random: true,
-                        straight: false,
-                        out_mode: 'out',
-                        bounce: false
-                    }
-                },
-                interactivity: {
-                    detect_on: 'canvas',
-                    events: {
-                        onhover: { enable: true, mode: 'grab' },
-                        onclick: { enable: true, mode: 'push' },
-                        resize: true
-                    },
-                    modes: {
-                        grab: { distance: 140, line_linked: { opacity: 0.7 } },
-                        push: { particles_nb: 3 }
-                    }
-                },
-                retina_detect: true
-            });
-
-            // Hiệu ứng fade cho particles khi tải trang
-            $('#particles-js').css('opacity', 0).animate({ opacity: 1 }, 1000);
-
+         $(document).ready(function () {
             // Thêm hiệu ứng animate khi focus vào input
             $('input').on('focus', function () {
                 $(this).addClass('animated pulse');
@@ -208,111 +179,3 @@
         });
     </script>
 }
-
-<style>
-    body {
-        background: #ffffff;
-        min-height: 100vh;
-        font-family: 'Poppins', Arial, sans-serif;
-        color: #333333;
-    }
-    .card {
-        max-width: 500px;
-        margin: 0 auto;
-        border-radius: 0; /* Góc nhọn */
-        border: 1px solid #e8e8e8; /* Viền mỏng */
-        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
-        background: #ffffff;
-        position: relative;
-        z-index: 1;
-    }
-    .card-header {
-        padding: 1.5rem;
-        border-bottom: none;
-        border-radius: 0; /* Góc nhọn */
-    }
-    .card-header h3 {
-        font-family: 'Playfair Display', Georgia, serif;
-        font-size: 1.75rem;
-        font-weight: 700;
-        color: #ffffff;
-    }
-    .form-label {
-        font-family: 'Poppins', Arial, sans-serif;
-        font-size: 1rem;
-        font-weight: 500;
-        color: #333333;
-    }
-    .form-control, .btn, .form-check-label, .text-primary {
-        font-family: 'Poppins', Arial, sans-serif;
-        font-size: 0.95rem;
-        font-weight: 400;
-    }
-    .form-control {
-        border-radius: 0; /* Góc nhọn */
-    }
-    .form-control::placeholder {
-        font-family: 'Poppins', Arial, sans-serif;
-        font-style: italic;
-        color: #6c757d;
-    }
-    .text-danger {
-        font-family: 'Poppins', Arial, sans-serif;
-        font-size: 0.85rem;
-        font-style: italic;
-        font-weight: 400;
-    }
-    .form-group {
-        margin-bottom: 1.5rem;
-    }
-    .input-group-text {
-        background-color: #f8f9fa;
-        border-color: #e8e8e8;
-        font-family: 'Poppins', Arial, sans-serif;
-        font-size: 0.95rem;
-        border-radius: 0; /* Góc nhọn */
-    }
-    .btn {
-        border-radius: 0; /* Góc nhọn */
-    }
-    .btn-primary {
-        background-color: #15A45A;
-        border-color: #15A45A;
-        color: #ffffff;
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-    .btn-primary:hover {
-        background-color: #9ECEA4;
-        border-color: #9ECEA4;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    }
-    .btn-success {
-        background-color: #28a745;
-        border-color: #28a745;
-        color: #ffffff;
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-    .btn-success:hover {
-        background-color: #28a745;
-        border-color: #28a745;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    }
-    .toggle-form {
-        color: #15A45A;
-        border-color: #15A45A;
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-    .toggle-form:hover {
-            background-color: #9ECEA4;
-        color: #ffffff !important;
-            border-color: #9ECEA4;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    }
-    .form-control:focus {
-        border-color: #1b6ec2;
-        box-shadow: 0 0 0 0.25rem rgba(27, 110, 194, 0.25);
-    }
-</style>

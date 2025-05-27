@@ -10,4 +10,5 @@ public interface IDesignService
     Task<bool> VisitCountUp(Guid designId);
     Task<(List<DesignViewModel> Designs, int TotalCount)> GetPagedDesignsAsync(Guid? modelId, int page, int pageSize);
     Task<(List<DesignViewModel> Designs, int TotalCount)> GetPagedDesignsAsync(Guid? modelId, decimal? minPrice, decimal? maxPrice, int page, int pageSize);
+    Task<List<DesignViewModel>?> GetDesignsByCategoryAsync(Guid categoryId);
 }

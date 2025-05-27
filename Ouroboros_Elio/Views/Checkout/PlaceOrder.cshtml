@@ -1,0 +1,145 @@
+﻿@model Ouroboros_Elio.Models.CheckoutViewModel
+
+<body class="template-color-1">    
+
+    <div class="main-wrapper">
+
+        <!-- Begin Hiraola's Breadcrumb Area -->
+        <div class="breadcrumb-area">
+            <div class="container">
+                <div class="breadcrumb-content">
+                    <h2>Khác</h2>
+                    <ul>
+                        <li><a href="/Product/ProductList">Danh Sách</a></li>
+                        <li><a href="/Cart/CartDetail">Giỏ Hàng</a></li>
+                        <li class="active">Đặt Hàng</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- Hiraola's Breadcrumb Area End Here -->
+        <!-- Begin Hiraola's Checkout Area -->
+        <div class="checkout-area">
+            <div class="container">
+                @if (TempData["Error"] != null)
+                {
+                    <div class="alert alert-danger">
+                        @TempData["Error"]
+                    </div>
+                }
+                @* <validation-summary class="alert alert-danger" /> *@
+
+                <form asp-action="PlaceOrder" asp-controller="Checkout" method="post">
+                    <div class="row">
+                        <div class="col-lg-6 col-12">
+                            <div class="checkbox-form">
+                                <h3>Thông Tin</h3>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="checkout-form-list">
+                                            <label>Tên <span class="required">*</span></label>
+                                            <input asp-for="FirstName" value="@Model.FirstName" />
+                                            <span asp-validation-for="FirstName" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="checkout-form-list">
+                                            <label>Họ <span class="required">*</span></label>
+                                            <input asp-for="LastName" value="@Model.LastName" />
+                                            <span asp-validation-for="LastName" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="checkout-form-list">
+                                            <label>Địa Chỉ <span class="required">*</span></label>
+                                            <input asp-for="Address" required value="@Model.Address" />
+                                            <span asp-validation-for="Address" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="checkout-form-list">
+                                            <label>Gmail <span class="required">*</span></label>
+                                            <input asp-for="Email" type="email" required value="@Model.Email" />
+                                            <span asp-validation-for="Email" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="checkout-form-list">
+                                            <label>Số Điện Thoại <span class="required">*</span></label>
+                                            <input asp-for="PhoneNumber" type="text" required value="@Model.PhoneNumber" />
+                                            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-12">
+                            <div class="your-order">
+                                <h3>Đơn Hàng</h3>
+                                <div class="your-order-table table-responsive">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th class="cart-product-name">Sản Phẩm</th>
+                                                <th class="cart-product-total">Tổng</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @if (Model.CartItems != null && Model.CartItems.Any())
+                                            {
+                                                foreach (var item in Model.CartItems)
+                                                {
+                                                    <tr class="cart_item">
+                                                        <td class="cart-product-name">
+                                                            @item.Design.DesignName<strong class="product-quantity"> × @item.Quantity</strong>
+                                                        </td>
+                                                        <td class="cart-product-total">
+                                                            <span class="amount">
+                                                                @String.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:N0}", item.Quantity * item.Price) đ
+                                                            </span>
+                                                        </td>
+                                                    </tr>
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <tr>
+                                                    <td colspan="2">Giỏ hàng trống</td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                        <tfoot>
+                                            <tr class="order-total">
+                                                <th>Tổng Đơn Hàng</th>
+                                                <td>
+                                                    <strong>
+                                                        <span class="amount">
+                                                            @String.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:N0}", Model.TotalAmount) đ
+                                                        </span>
+                                                    </strong>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                                @if (Model.CartItems != null && Model.CartItems.Any())
+                                {
+                                    <div class="order-button-payment">
+                                        <input value="Thanh Toán" type="submit" class="hiraola-btn">
+                                    </div>
+                                }
+                                @* <div class="order-button-payment">
+                                    <input value="Thanh Toán" type="submit">
+                                </div> *@
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- Hiraola's Checkout Area End Here -->
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.12/jquery.validate.unobtrusive.min.js"></script>
+
+</body>
