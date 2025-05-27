@@ -9,6 +9,6 @@ namespace DataAccessLayer.RepositoryContracts
 {
 	public interface IModelRepository
 	{
-		Task<List<Model>?> GetAllModelsAsync();
-	}
+        Task<List<Model>?> GetAllActiveModelsAsync();
+    }
 }

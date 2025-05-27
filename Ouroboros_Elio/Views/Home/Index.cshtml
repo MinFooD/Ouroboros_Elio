@@ -1,5 +1,6 @@
-﻿@using BusinessLogicLayer.Dtos.DesignDtos
+﻿@model Ouroboros_Elio.Models.HomeIndexViewModel
 @using System.Linq
+
 
 <body class="template-color-1">
     <div class="main-wrapper">                
@@ -9,145 +10,23 @@
                     <div class="col grid-half order-md-2 order-lg-1">
                         <div class="category-menu">
                             <div class="category-heading">
-                                <h2 class="categories-toggle"><span>Shop by categories</span></h2>
+                                <h2 class="categories-toggle"><span>Mẫu sản phẩm</span></h2>
                             </div>
                             <div id="cate-toggle" class="category-menu-list">
                                 <ul>
-                                    <li class="right-menu"><a href="#">Hand Harness</a>
-                                        <ul class="cat-mega-menu">
-                                            <li class="right-menu cat-mega-title">
-                                                <a href="#">Habitant Morbi</a>
-                                                <ul>
-                                                    <li><a href="shop-left-sidebar.html">Habitant Morbi</a></li>
-                                                    <li><a href="shop-left-sidebar.html">Office chair</a></li>
-                                                    <li><a href="shop-left-sidebar.html">Purus Lacus</a></li>
-                                                    <li><a href="shop-left-sidebar.html">Sagittis Blandit</a></li>
-                                                </ul>
+                                    @if (Model.Models != null && Model.Models.Any())
+                                    {
+                                        foreach (var models in Model.Models)
+                                        {
+                                            <li>
+                                                <a asp-controller="Product" asp-action="ProductList" asp-route-modelId="@models.ModelId">@models.ModelName</a>
                                             </li>
-                                            <li class="right-menu cat-mega-title">
-                                                <a href="#">Purus Lacus</a>
-                                                <ul>
-                                                    <li><a href="shop-left-sidebar.html">Magna Pellentesq</a></li>
-                                                    <li><a href="shop-left-sidebar.html">Molestie Tortor</a></li>
-                                                    <li><a href="shop-left-sidebar.html">Vehicula Element</a></li>
-                                                    <li><a href="shop-left-sidebar.html">Volutpat Diam</a></li>
-                                                </ul>
-                                            </li>
-                                            <li class="right-menu cat-mega-title">
-                                                <a href="#">Office chair</a>
-                                                <ul>
-                                                    <li><a href="shop-left-sidebar.html">Bibendum Cursus</a></li>
-                                                    <li><a href="shop-left-sidebar.html">Dignissim Turpis</a></li>
-                                                    <li><a href="shop-left-sidebar.html">Dining room</a></li>
-                                                    <li><a href="shop-left-sidebar.html">Egestas Ultricies</a></li>
-                                                </ul>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                    <li class="right-menu"><a href="#">Maang Tika</a>
-                                        <ul class="cat-mega-menu cat-mega-menu-2">
-                                            <li class="right-menu cat-mega-title">
-                                                <a href="#">Cameras</a>
-                                                <ul>
-                                                    <li><a href="shop-left-sidebar.html">Cords and Cables</a></li>
-                                                    <li><a href="shop-left-sidebar.html">gps accessories</a></li>
-                                                    <li><a href="shop-left-sidebar.html">Microphones</a></li>
-                                                    <li><a href="shop-left-sidebar.html">Wireless Transmitters</a></li>
-                                                </ul>
-                                            </li>
-                                            <li class="right-menu cat-mega-title">
-                                                <a href="#">Audio</a>
-                                                <ul>
-                                                    <li><a href="shop-left-sidebar.html">Other Accessories</a></li>
-                                                    <li><a href="shop-left-sidebar.html">Portable Audio</a></li>
-                                                    <li><a href="shop-left-sidebar.html">Satellite Radio</a></li>
-                                                    <li><a href="shop-left-sidebar.html">Visual Accessories</a></li>
-                                                </ul>
-                                            </li>
-                                            <li class="right-menu cat-mega-title">
-                                                <a href="#">Cell Phones</a>
-                                                <ul>
-                                                    <li><a href="shop-left-sidebar.html">Xail</a></li>
-                                                    <li><a href="shop-left-sidebar.html">Chamcham Galaxy</a></li>
-                                                    <li><a href="shop-left-sidebar.html">SIM Cards</a></li>
-                                                    <li><a href="shop-left-sidebar.html">Prepaid Cell Phones</a></li>
-                                                </ul>
-                                            </li>
-                                            <li class="right-menu cat-mega-title">
-                                                <a href="#">TV & Video</a>
-                                                <ul>
-                                                    <li><a href="shop-left-sidebar.html">4K Ultra HDTVs</a></li>
-                                                    <li><a href="shop-left-sidebar.html">All TVs</a></li>
-                                                    <li><a href="shop-left-sidebar.html">Refurbished TVs</a></li>
-                                                    <li><a href="shop-left-sidebar.html">TV Accessories</a></li>
-                                                </ul>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                    <li class="right-menu"><a href="#">Toe Rings</a>
-                                        <ul class="cat-mega-menu cat-mega-menu-3">
-                                            <li class="right-menu cat-mega-title">
-                                                <a href="#">Sagittis Blandit</a>
-                                                <ul>
-                                                    <li><a href="shop-left-sidebar.html">adipiscing elit</a></li>
-                                                    <li><a href="shop-left-sidebar.html">consectetur adip</a></li>
-                                                    <li><a href="shop-left-sidebar.html">erat et est</a></li>
-                                                    <li><a href="shop-left-sidebar.html">molestie velit</a></li>
-                                                </ul>
-                                            </li>
-                                            <li class="right-menu cat-mega-title">
-                                                <a href="#">Accessories</a>
-                                                <ul>
-                                                    <li><a href="shop-left-sidebar.html">Habitant Morbi</a></li>
-                                                    <li><a href="shop-left-sidebar.html">Office chair</a></li>
-                                                    <li><a href="shop-left-sidebar.html">Purus Lacus</a></li>
-                                                    <li><a href="shop-left-sidebar.html">Sagittis Blandit</a></li>
-                                                </ul>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                    <li class="right-menu"><a href="#">Traditional Earrings</a>
-                                        <ul class="cat-mega-menu">
-                                            <li class="right-menu cat-mega-title">
-                                                <a href="#">Accessories</a>
-                                                <ul>
-                                                    <li><a href="shop-left-sidebar.html">Habitant Morbi</a></li>
-                                                    <li><a href="shop-left-sidebar.html">Office chair</a></li>
-                                                    <li><a href="shop-left-sidebar.html">Purus Lacus</a></li>
-                                                    <li><a href="shop-left-sidebar.html">Sagittis Blandit</a></li>
-                                                </ul>
-                                            </li>
-                                            <li class="right-menu cat-mega-title">
-                                                <a href="#">Purus Lacus</a>
-                                                <ul>
-                                                    <li><a href="shop-left-sidebar.html">Magna Pellentesq</a></li>
-                                                    <li><a href="shop-left-sidebar.html">Molestie Tortor</a></li>
-                                                    <li><a href="shop-left-sidebar.html">Vehicula Element</a></li>
-                                                    <li><a href="shop-left-sidebar.html">Volutpat Diam</a></li>
-                                                </ul>
-                                            </li>
-                                            <li class="right-menu cat-mega-title">
-                                                <a href="#">Office chair</a>
-                                                <ul>
-                                                    <li><a href="shop-left-sidebar.html">Bibendum Cursus</a></li>
-                                                    <li><a href="shop-left-sidebar.html">Dignissim Turpis</a></li>
-                                                    <li><a href="shop-left-sidebar.html">Dining room</a></li>
-                                                    <li><a href="shop-left-sidebar.html">Egestas Ultricies</a></li>
-                                                </ul>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                    <li><a href="#">Kada Cum Bracelet</a></li>
-                                    <li><a href="#">Exquisite Rings</a></li>
-                                    <li><a href="#">Necklaces</a></li>
-                                    <li><a href="#">Foot Harness</a></li>
-                                    <li><a href="#">Braid Jewels</a></li>
-                                    <li class="rx-child"><a href="#">Anklet – Epitome Of Culture</a></li>
-                                    <li class="rx-child"><a href="#">Graceful Armlet</a></li>
-                                    <li class="rx-parent">
-                                        <a class="rx-default">More Categories</a>
-                                        <a class="rx-show">Collapse</a>
-                                    </li>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <li><a href="#">Không có mẫu sản phẩm nào</a></li>
+                                    }
                                 </ul>
                             </div>
                         </div>
@@ -164,7 +43,7 @@
                                             <h3>Surface Studio 2022</h3>
                                             <h4>Starting at <span>£1599.00</span></h4>
                                             <div class="hiraola-btn-ps_left slide-btn">
-                                                <a class="hiraola-btn" href="shop-left-sidebar.html">Shopping Now</a>
+                                                <a class="hiraola-btn" href="/Product/ProductList">cửa hàng</a>
                                             </div>
                                         </div>
                                         <div class="slider-progress"></div>
@@ -180,7 +59,7 @@
                                             <h3>Pro+ Obsidian</h3>
                                             <h4>Starting at <span>£809.00</span></h4>
                                             <div class="hiraola-btn-ps_left slide-btn">
-                                                <a class="hiraola-btn" href="shop-left-sidebar.html">Shopping Now</a>
+                                                <a class="hiraola-btn" href="/Product/ProductList">cửa hàng</a>
                                             </div>
                                         </div>
                                         <div class="slider-progress"></div>
@@ -194,7 +73,7 @@
                                             <h3>Surface Studio 2022</h3>
                                             <h4>Starting at <span>£1599.00</span></h4>
                                             <div class="hiraola-btn-ps_left slide-btn">
-                                                <a class="hiraola-btn" href="shop-left-sidebar.html">Shopping Now</a>
+                                                <a class="hiraola-btn" href="/Product/ProductList">cửa hàng</a>
                                             </div>
                                         </div>
                                         <div class="slider-progress"></div>
@@ -253,62 +132,59 @@
                     </div>
                     <div class="col-lg-12">
                         <div class="hiraola-product_slider">
-                            @{
-                                var topOrderedDesigns = ViewBag.TopOrderedDesigns as List<DesignViewModel> ?? new List<DesignViewModel>();
-                                if (topOrderedDesigns.Any())
+                            @if (Model.TopOrderedDesigns != null && Model.TopOrderedDesigns.Any())
+                            {
+                                foreach (var item in Model.TopOrderedDesigns)
                                 {
-                                    foreach (var item in topOrderedDesigns)
-                                    {
-                                        <div class="slide-item">
-                                            <div class="single_product">
-                                                <div class="product-img">
-                                                    <a asp-controller="Product" asp-action="ProductDetail" asp-route-id="@item.DesignId">
-                                                        <img class="primary-img" src="@item.FirstImage.ImageUrl" alt="Hiraola's Product Image">
-                                                        <img class="secondary-img" src="@item.FirstImage.ImageUrl" alt="Hiraola's Product Image">
-                                                    </a>
-                                                    <span class="sticker">Hot</span>
-                                                    <div class="add-actions">
-                                                        <ul>
-                                                            <li>
-                                                                <a class="hiraola-add_cart" href="javascript:void(0)" onclick="addToCart('@item.DesignId', 1, false)" data-bs-toggle="tooltip" data-placement="top" title="Thêm vào giỏ hàng">
-                                                                    <i class="ion-bag"></i>
-                                                                </a>
-                                                            </li>
-                                                            <li class="quick-view-btn" data-bs-toggle="modal" data-bs-target="#exampleModalCenter">
-                                                                <a asp-controller="Product" asp-action="ProductDetail" asp-route-id="@item.DesignId" data-bs-toggle="tooltip" data-placement="top" title="Xem nhanh">
-                                                                    <i class="ion-eye"></i>
-                                                                </a>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
+                                    <div class="slide-item">
+                                        <div class="single_product">
+                                            <div class="product-img">
+                                                <a asp-controller="Product" asp-action="ProductDetail" asp-route-designId="@item.DesignId">
+                                                    <img class="primary-img" src="@item.FirstImage.ImageUrl" alt="Hiraola's Product Image">
+                                                    <img class="secondary-img" src="@item.FirstImage.ImageUrl" alt="Hiraola's Product Image">
+                                                </a>
+                                                <span class="sticker">Hot</span>
+                                                <div class="add-actions">
+                                                    <ul>
+                                                        <li>
+                                                            <a class="hiraola-add_cart" href="javascript:void(0)" onclick="addToCart('@item.DesignId', 1, false)" data-bs-toggle="tooltip" data-placement="top" title="Thêm vào giỏ hàng">
+                                                                <i class="ion-bag"></i>
+                                                            </a>
+                                                        </li>
+                                                        <li class="quick-view-btn" data-bs-toggle="modal" data-bs-target="#exampleModalCenter">
+                                                            <a asp-controller="Product" asp-action="ProductDetail" asp-route-designId="@item.DesignId" data-bs-toggle="tooltip" data-placement="top" title="Xem nhanh">
+                                                                <i class="ion-eye"></i>
+                                                            </a>
+                                                        </li>
+                                                    </ul>
                                                 </div>
-                                                <div class="hiraola-product_content">
-                                                    <div class="product-desc_info">
-                                                        <h6>
-                                                            <a class="product-name" asp-controller="Product" asp-action="ProductDetail" asp-route-id="@item.DesignId">@item.DesignName</a>
-                                                        </h6>
-                                                        <div class="price-box">
-                                                            <span class="new-price">@item.Price VND</span>
-                                                        </div>
-                                                        <div class="rating-box">
-                                                            <ul>
-                                                                <li><i class="fa fa-star-of-david"></i></li>
-                                                                <li><i class="fa fa-star-of-david"></i></li>
-                                                                <li><i class="fa fa-star-of-david"></i></li>
-                                                                <li><i class="fa fa-star-of-david"></i></li>
-                                                                <li class="silver-color"><i class="fa fa-star-of-david"></i></li>
-                                                            </ul>
-                                                        </div>
+                                            </div>
+                                            <div class="hiraola-product_content">
+                                                <div class="product-desc_info">
+                                                    <h6>
+                                                        <a class="product-name" asp-controller="Product" asp-action="ProductDetail" asp-route-designId="@item.DesignId">@item.DesignName</a>
+                                                    </h6>
+                                                    <div class="price-box">
+                                                        <span class="new-price">@item.Price.ToString("N0") VND</span>
+                                                    </div>
+                                                    <div class="rating-box">
+                                                        <ul>
+                                                            <li><i class="fa fa-star-of-david"></i></li>
+                                                            <li><i class="fa fa-star-of-david"></i></li>
+                                                            <li><i class="fa fa-star-of-david"></i></li>
+                                                            <li><i class="fa fa-star-of-david"></i></li>
+                                                            <li class="silver-color"><i class="fa fa-star-of-david"></i></li>
+                                                        </ul>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    }
+                                    </div>
                                 }
-                                else
-                                {
-                                    <p>Không có sản phẩm nào được đặt hàng.</p>
-                                }
+                            }
+                            else
+                            {
+                                <p>Không có sản phẩm nào được đặt hàng.</p>
                             }
                         </div>
                     </div>
@@ -323,15 +199,15 @@
                     <div class="col-lg-12">
                         <div class="static-banner-image">
                             <div class="static-banner-content">
-                                <p><span>-25% Off</span>This Week</p>
+                                <p><span>-25% Off</span> This Week</p>
                                 <h2>Featured Product</h2>
                                 <h3>Meito Accessories 2022</h3>
                                 <p class="schedule">
                                     Starting at
-                                    <span> £1209.00</span>
+                                    <span>£1209.00</span>
                                 </p>
                                 <div class="hiraola-btn-ps_left">
-                                    <a href="shop-left-sidebar.html" class="hiraola-btn">Shopping Now</a>
+                                    <a href="/Product/ProductList" class="hiraola-btn">cửa hàng</a>
                                 </div>
                             </div>
                         </div>
@@ -350,13 +226,10 @@
                                 <h4>SẢN PHẨM</h4>
                             </div>
                             <ul class="nav product-menu">
-                               @*  <li><a class="active" data-bs-toggle="tab" href="#necklaces"><span>Vòng tay</span></a></li>
-                                <li><a data-bs-toggle="tab" href="#earrings"><span>Dây chuyền</span></a></li>
-                                <li><a data-bs-toggle="tab" href="#bracelet"><span>Phụ kiện</span></a></li> *@
-                                @if (ViewBag.Categories != null)
+                                @if (Model.Categories != null && Model.Categories.Any())
                                 {
                                     var isFirst = true;
-                                    foreach (var category in ViewBag.Categories)
+                                    foreach (var category in Model.Categories)
                                     {
                                         <li>
                                             <a class="@(isFirst ? "active" : "")" data-bs-toggle="tab" href="#category-@category.CategoryId">
@@ -369,75 +242,74 @@
                             </ul>
                         </div>
                         <div class="tab-content hiraola-tab_content">
-                            @if (ViewBag.Categories != null)
+                            @if (Model.Categories != null && Model.Categories.Any())
                             {
                                 var isFirst = true;
-                                foreach (var category in ViewBag.Categories)
+                                foreach (var category in Model.Categories)
                                 {
                                     <div id="category-@category.CategoryId" class="tab-pane @(isFirst ? "active show" : "")" role="tabpanel">
                                         <div class="hiraola-product-tab_slider-2">
-                                            @{
-                                                var designs = ViewBag.DesignsByCategory != null && ViewBag.DesignsByCategory.ContainsKey(category.CategoryId)
-                                                ? (List<DesignViewModel>)ViewBag.DesignsByCategory[category.CategoryId]
-                                                : new List<DesignViewModel>();
-                                                if (designs.Any())
+                                            @if (Model.DesignsByCategory != null && Model.DesignsByCategory.ContainsKey(category.CategoryId) && Model.DesignsByCategory[category.CategoryId].Any())
+                                            {
+                                                foreach (var item in Model.DesignsByCategory[category.CategoryId].Take(6))
                                                 {
-                                                    foreach (var item in designs.Take(6)) // Limit to 6 products per tab
-                                                    {
-                                                        <div class="slide-item">
-                                                            <div class="single_product">
-                                                                <div class="product-img">
-                                                                    <a asp-controller="Product" asp-action="ProductDetail" asp-route-designId="@item.DesignId">
-                                                                        <img class="primary-img" src="@item.FirstImage.ImageUrl" alt="Hiraola's Product Image">
-                                                                        <img class="secondary-img" src="@item.FirstImage.ImageUrl" alt="Hiraola's Product Image">
-                                                                    </a>
-                                                                    <div class="add-actions">
-                                                                        <ul>
-                                                                            <li>
-                                                                                <a class="hiraola-add_cart" href="javascript:void(0)" onclick="addToCart('@item.DesignId', 1, false)" data-bs-toggle="tooltip" data-placement="top" title="Add To Cart">
-                                                                                    <i class="ion-bag"></i>
-                                                                                </a>
-                                                                            </li>
-                                                                            <li class="quick-view-btn" data-bs-toggle="modal" data-bs-target="#exampleModalCenter">
-                                                                                <a asp-controller="Product" asp-action="ProductDetail" asp-route-designId="@item.DesignId" data-bs-toggle="tooltip" data-placement="top" title="Quick View">
-                                                                                    <i class="ion-eye"></i>
-                                                                                </a>
-                                                                            </li>
-                                                                        </ul>
-                                                                    </div>
+                                                    <div class="slide-item">
+                                                        <div class="single_product">
+                                                            <div class="product-img">
+                                                                <a asp-controller="Product" asp-action="ProductDetail" asp-route-designId="@item.DesignId">
+                                                                    <img class="primary-img" src="@item.FirstImage.ImageUrl" alt="Hiraola's Product Image">
+                                                                    <img class="secondary-img" src="@item.FirstImage.ImageUrl" alt="Hiraola's Product Image">
+                                                                </a>
+                                                                <div class="add-actions">
+                                                                    <ul>
+                                                                        <li>
+                                                                            <a class="hiraola-add_cart" href="javascript:void(0)" onclick="addToCart('@item.DesignId', 1, false)" data-bs-toggle="tooltip" data-placement="top" title="Thêm vào giỏ hàng">
+                                                                                <i class="ion-bag"></i>
+                                                                            </a>
+                                                                        </li>
+                                                                        <li class="quick-view-btn" data-bs-toggle="modal" data-bs-target="#exampleModalCenter">
+                                                                            <a asp-controller="Product" asp-action="ProductDetail" asp-route-designId="@item.DesignId" data-bs-toggle="tooltip" data-placement="top" title="Xem nhanh">
+                                                                                <i class="ion-eye"></i>
+                                                                            </a>
+                                                                        </li>
+                                                                    </ul>
                                                                 </div>
-                                                                <div class="hiraola-product_content">
-                                                                    <div class="product-desc_info">
-                                                                        <h6>
-                                                                            <a class="product-name" asp-controller="Product" asp-action="ProductDetail" asp-route-designId="@item.DesignId">@item.DesignName</a>
-                                                                        </h6>
-                                                                        <div class="price-box">
-                                                                            <span class="new-price">@item.Price VND</span>
-                                                                        </div>
-                                                                        <div class="rating-box">
-                                                                            <ul>
-                                                                                <li><i class="fa fa-star-of-david"></i></li>
-                                                                                <li><i class="fa fa-star-of-david"></i></li>
-                                                                                <li><i class="fa fa-star-of-david"></i></li>
-                                                                                <li><i class="fa fa-star-of-david"></i></li>
-                                                                                <li class="silver-color"><i class="fa fa-star-of-david"></i></li>
-                                                                            </ul>
-                                                                        </div>
+                                                            </div>
+                                                            <div class="hiraola-product_content">
+                                                                <div class="product-desc_info">
+                                                                    <h6>
+                                                                        <a class="product-name" asp-controller="Product" asp-action="ProductDetail" asp-route-designId="@item.DesignId">@item.DesignName</a>
+                                                                    </h6>
+                                                                    <div class="price-box">
+                                                                        <span class="new-price">@item.Price.ToString("N0") VND</span>
+                                                                    </div>
+                                                                    <div class="rating-box">
+                                                                        <ul>
+                                                                            <li><i class="fa fa-star-of-david"></i></li>
+                                                                            <li><i class="fa fa-star-of-david"></i></li>
+                                                                            <li><i class="fa fa-star-of-david"></i></li>
+                                                                            <li><i class="fa fa-star-of-david"></i></li>
+                                                                            <li class="silver-color"><i class="fa fa-star-of-david"></i></li>
+                                                                        </ul>
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    }
+                                                    </div>
                                                 }
-                                                else
-                                                {
-                                                    <p>Không có sản phẩm nào trong danh mục này.</p>
-                                                }
+                                            }
+                                            else
+                                            {
+                                                <p>Không có sản phẩm nào trong danh mục này.</p>
                                             }
                                         </div>
                                     </div>
                                     isFirst = false;
                                 }
+                            }
+                            else
+                            {
+                                <p>Không có danh mục sản phẩm nào.</p>
                             }
                         </div>
                     </div>
@@ -449,11 +321,10 @@
         <div class="hiraola-banner_area-2">
             <div class="container">
                 <div class="row">
-
                 </div>
             </div>
         </div>
-                
+
         <!-- Begin Hiraola's Modal Area -->
         <div class="modal fade modal-wrapper" id="exampleModalCenter">
             <div class="modal-dialog modal-dialog-centered" role="document">
@@ -474,16 +345,16 @@
                                     "asNavFor": ".sp-img_slider-nav"
                                 }'>
                                         <div class="single-slide red">
-                                            <img src="assets/images/single-product/large-size/1.jpg" alt="Hiraola's Product Image">
+                                            <img src="~/assets/images/single-product/large-size/1.jpg" alt="Hiraola's Product Image">
                                         </div>
                                         <div class="single-slide orange">
-                                            <img src="assets/images/single-product/large-size/2.jpg" alt="Hiraola's Product Image">
+                                            <img src="~/assets/images/single-product/large-size/2.jpg" alt="Hiraola's Product Image">
                                         </div>
                                         <div class="single-slide brown">
-                                            <img src="assets/images/single-product/large-size/3.jpg" alt="Hiraola's Product Image">
+                                            <img src="~/assets/images/single-product/large-size/3.jpg" alt="Hiraola's Product Image">
                                         </div>
                                         <div class="single-slide umber">
-                                            <img src="assets/images/single-product/large-size/4.jpg" alt="Hiraola's Product Image">
+                                            <img src="~/assets/images/single-product/large-size/4.jpg" alt="Hiraola's Product Image">
                                         </div>
                                     </div>
                                     <div class="sp-img_slider-nav slick-slider-nav hiraola-slick-slider arrow-type-two" data-slick-options='{
@@ -498,16 +369,16 @@
                                         {"breakpoint":321, "settings": {"slidesToShow": 2}}
                                     ]'>
                                         <div class="single-slide red">
-                                            <img src="assets/images/single-product/small-size/1.jpg" alt="Hiraola's Product Thumnail">
+                                            <img src="~/assets/images/single-product/small-size/1.jpg" alt="Hiraola's Product Thumnail">
                                         </div>
                                         <div class="single-slide orange">
-                                            <img src="assets/images/single-product/small-size/2.jpg" alt="Hiraola's Product Thumnail">
+                                            <img src="~/assets/images/single-product/small-size/2.jpg" alt="Hiraola's Product Thumnail">
                                         </div>
                                         <div class="single-slide brown">
-                                            <img src="assets/images/single-product/small-size/3.jpg" alt="Hiraola's Product Thumnail">
+                                            <img src="~/assets/images/single-product/small-size/3.jpg" alt="Hiraola's Product Thumnail">
                                         </div>
                                         <div class="single-slide umber">
-                                            <img src="assets/images/single-product/small-size/4.jpg" alt="Hiraola's Product Thumnail">
+                                            <img src="~/assets/images/single-product/small-size/4.jpg" alt="Hiraola's Product Thumnail">
                                         </div>
                                     </div>
                                 </div>

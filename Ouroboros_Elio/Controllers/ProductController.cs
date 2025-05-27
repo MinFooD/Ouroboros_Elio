@@ -25,7 +25,7 @@ namespace Ouroboros_Elio.Controllers
                 ? await _designService.GetPagedDesignsAsync(modelId, minPrice, maxPrice, page, pageSize)
                 : await _designService.GetPagedDesignsAsync(modelId, page, pageSize);
 
-            ViewBag.ListModel = await _modelService.GetAllModelsAsync();
+            ViewBag.ListModel = await _modelService.GetAllActiveModelsAsync();
             ViewBag.Page = page;
             ViewBag.PageSize = pageSize;
             ViewBag.TotalCount = totalCount;

@@ -1,6 +1,8 @@
 ﻿using BusinessLogicLayer.Dtos.CategoryDtos;
 using BusinessLogicLayer.Dtos.DesignDtos;
+using BusinessLogicLayer.Dtos.ModelDtos;
 using BusinessLogicLayer.ServiceContracts;
+using BusinessLogicLayer.Services;
 using Microsoft.AspNetCore.Mvc;
 using Ouroboros_Elio.Models;
 using System.Diagnostics;
@@ -11,36 +13,26 @@ namespace Ouroboros_Elio.Controllers
     {
         private readonly ICategoryService _categoryService;
         private readonly IDesignService _designService;
+        private readonly IModelService _modelService;
 
-        public HomeController(ICategoryService categoryService, IDesignService designService)
+        public HomeController(ICategoryService categoryService, IDesignService designService, IModelService modelService)
         {
             _categoryService = categoryService;
             _designService = designService;
+            _modelService = modelService;
         }
 
         public async Task<IActionResult> Index()
         {
-            // Get list of categories
-            var categories = await _categoryService.GetAllCategoriesAsync();
-            ViewBag.Categories = categories ?? new List<CategoryViewModel>();
-
-            // Get designs by category
-            var designsByCategory = new Dictionary<Guid, List<DesignViewModel>>();
-            if (categories != null)
+            var model = new HomeIndexViewModel();
+            model.Models = await _modelService.GetAllActiveModelsAsync() ?? new List<ModelViewModel>();
+            model.Categories = await _categoryService.GetAllCategoriesAsync() ?? new List<CategoryViewModel>();
+            foreach (var category in model.Categories)
             {
-                foreach (var category in categories)
-                {
-                    var designs = await _designService.GetDesignsByCategoryAsync(category.CategoryId);
-                    designsByCategory[category.CategoryId] = designs ?? new List<DesignViewModel>();
-                }
+                model.DesignsByCategory[category.CategoryId] = await _designService.GetDesignsByCategoryAsync(category.CategoryId) ?? new List<DesignViewModel>();
             }
-            ViewBag.DesignsByCategory = designsByCategory;
-
-            // Get top ordered designs
-            var topOrderedDesigns = await _designService.GetTopOrderedDesignsAsync(6); // Limit to 6 products
-            ViewBag.TopOrderedDesigns = topOrderedDesigns ?? new List<DesignViewModel>();
-
-            return View();
+            model.TopOrderedDesigns = await _designService.GetTopOrderedDesignsAsync(6) ?? new List<DesignViewModel>();
+            return View(model);
         }
 
         //public IActionResult Privacy()
