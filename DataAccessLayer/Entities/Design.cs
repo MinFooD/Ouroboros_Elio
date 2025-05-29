@@ -12,6 +12,7 @@ public partial class Design
     public Guid CategoryId { get; set; }
 
     public decimal Price { get; set; }
+    public int StockQuantity { get; set; }
 
     public decimal CapitalExpense { get; set; }
 

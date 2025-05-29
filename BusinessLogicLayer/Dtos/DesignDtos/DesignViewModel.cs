@@ -18,7 +18,9 @@ namespace BusinessLogicLayer.Dtos.DesignDtos
 
 		public decimal Price { get; set; }
 
-		public decimal CapitalExpense { get; set; }
+        public int StockQuantity { get; set; }
+
+        public decimal CapitalExpense { get; set; }
 
 		public string? Description { get; set; }
 
