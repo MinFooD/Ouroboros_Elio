@@ -151,6 +151,9 @@
                                                         <div class="price-box">
                                                             <span class="new-price">@item.Price VND</span>
                                                         </div>
+                                                        <div class="stock-info">
+                                                            <span>Còn lại: @item.StockQuantity</span>
+                                                        </div>
                                                         <div class="rating-box">
                                                             <ul>
                                                                 <li><i class="fa fa-star-of-david"></i></li>
@@ -389,7 +392,7 @@
                     if (response.success) {
                         Swal.fire({
                             title: 'Thành công',
-                            text: 'Sản phẩm đã được thêm vào giỏ hàng!',
+                            text: response.message,
                             icon: 'success',
                             confirmButtonText: 'Đóng',
                             customClass: {
@@ -403,7 +406,10 @@
                             title: 'Lỗi',
                             text: response.message,
                             icon: 'error',
-                            confirmButtonText: 'Đóng'
+                            confirmButtonText: 'Đóng',
+                            customClass: {
+                                confirmButton: 'swal2-confirm'
+                            }
                         });
                     }
                 },
@@ -430,7 +436,10 @@
                             title: 'Lỗi',
                             text: 'Có lỗi xảy ra, vui lòng thử lại.',
                             icon: 'error',
-                            confirmButtonText: 'Đóng'
+                            confirmButtonText: 'Đóng',
+                            customClass: {
+                                confirmButton: 'swal2-confirm'
+                            }
                         });
                     }
                 }

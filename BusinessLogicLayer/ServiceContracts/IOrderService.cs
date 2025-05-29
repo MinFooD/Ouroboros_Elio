@@ -1,15 +1,10 @@
 ﻿using BusinessLogicLayer.Dtos.OrderDtos;
 using DataAccessLayer.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace BusinessLogicLayer.ServiceContracts
+namespace BusinessLogicLayer.ServiceContracts;
+
+public interface IOrderService
 {
-	public interface IOrderService
-	{
-		Task<OrderViewModel?> CreateOrderFromCartAsync(Guid cartId, Guid userId);
-	}
+    Task<(OrderViewModel? Order, string Message)> CreateOrderFromCartAsync(Guid cartId, Guid userId);
+    Task<Order?> GetOrderByIdAsync(Guid orderId, Guid userId);
 }

@@ -12,7 +12,7 @@ namespace BusinessLogicLayer.ServiceContracts
 	{
 		Task<List<CartItemViewModel>?> GetCartItemsByUserIdAsync(Guid userId);
 		Task<CartViewModel> GetCartByUserIdAsync(Guid userId);
-		Task<bool> AddToCart(Guid userId, Guid designId, int quantity, bool productType);
-		Task<bool?> UpdateQuantity(Guid userId, Guid designId, int quantity);
+		Task<(bool Success, string Message)> AddToCart(Guid userId, Guid designId, int quantity, bool productType);
+		Task<(bool? Success, string Message)> UpdateQuantity(Guid userId, Guid designId, int quantity);
 	}
 }
