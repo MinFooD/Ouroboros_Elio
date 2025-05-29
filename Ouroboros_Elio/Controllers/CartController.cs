@@ -1,5 +1,6 @@
 ﻿using BusinessLogicLayer.Dtos.CartDtos;
 using BusinessLogicLayer.ServiceContracts;
+using BusinessLogicLayer.Services;
 using DataAccessLayer.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -11,11 +12,13 @@ public class CartController : Controller
 {
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly ICartService _cartService;
+    private readonly IDesignService _designService;
 
-    public CartController(UserManager<ApplicationUser> userManager, ICartService cartService)
+    public CartController(UserManager<ApplicationUser> userManager, ICartService cartService, IDesignService designService)
     {
         _userManager = userManager;
         _cartService = cartService;
+        _designService = designService;
     }
 
     public async Task<IActionResult> CartDetail(Guid? designId)
@@ -47,6 +50,13 @@ public class CartController : Controller
         if (userId == null)
         {
             return Json(new { success = false, message = "Vui lòng đăng nhập." });
+        }
+
+        // Kiểm tra tồn kho trước khi cập nhật
+        var design = await _designService.GetDesignByIdAsync(designId);
+        if (design != null && quantity > design.StockQuantity)
+        {
+            return Json(new { success = false, message = $"Chỉ còn {design.StockQuantity} sản phẩm trong kho." });
         }
 
         var (success, message) = await _cartService.UpdateQuantity(Guid.Parse(userId), designId, quantity);
@@ -97,6 +107,29 @@ public class CartController : Controller
         catch (Exception ex)
         {
             return Json(new { success = false, count = 0 });
+        }
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetCartItemQuantity(Guid designId)
+    {
+        var currentUser = HttpContext.User;
+        var userId = _userManager.GetUserId(currentUser);
+
+        if (userId == null)
+        {
+            return Json(new { success = false, quantity = 0 });
+        }
+
+        try
+        {
+            var cartItems = await _cartService.GetCartItemsByUserIdAsync(Guid.Parse(userId));
+            var quantity = cartItems?.FirstOrDefault(item => item.DesignId == designId)?.Quantity ?? 0;
+            return Json(new { success = true, quantity = quantity });
+        }
+        catch (Exception)
+        {
+            return Json(new { success = false, quantity = 0 });
         }
     }
 }

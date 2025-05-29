@@ -27,12 +27,12 @@
                                 </div>
                                 <div class="price-filter">
                                     <div class="price-inputs">
-                                        <label><strong>Giá tối thiểu</strong>: </label>
+                                        <label><strong>Giá tối thiểu:</strong> </label>
                                         <div class="input-wrapper">
                                             <input type="number" id="minPrice" name="minPrice" placeholder="Giá tối thiểu" min="0" value="@ViewBag.MinPrice" />
                                             <span class="error-message" id="minPriceError"></span>
                                         </div>
-                                        <label><strong>Giá tối đa</strong>: </label>
+                                        <label><strong>Giá tối đa:</strong> </label>
                                         <div class="input-wrapper">
                                             <input type="number" id="maxPrice" name="maxPrice" placeholder="Giá tối đa" min="0" value="@ViewBag.MaxPrice" />
                                             <span class="error-message" id="maxPriceError"></span>
@@ -45,7 +45,7 @@
                                     <h5>Mẫu sản phẩm</h5>
                                 </div>
                                 <div class="module-body">
-                                    <ul class="module-list_item">                                        
+                                    <ul class="module-list_item">
                                         <li>
                                             <a href="javascript:void(0)" class="model-filter @(ViewBag.ModelId == null ? "active" : "")" data-model-id="">Tất cả</a>
                                             @if (ViewBag.ListModel != null)
@@ -81,22 +81,15 @@
                             </div>
                             <div class="product-item-selection_area">
                                 <div class="product-short">
-                                    <label class="select-label">Sắp Xếp:</label>
+                                    <label class="select-label">Sắp xếp theo:</label>
                                     <select class="nice-select sort-filter">
                                         <option value="" selected="@(ViewBag.SortBy == null)">Tất cả</option>
-                                        <option value="newest" selected="@(ViewBag.SortBy == "newest")">Mới Nhất</option>
-                                        <option value="bestselling" selected="@(ViewBag.SortBy == "bestselling")">Bán Chạy</option>
+                                        <option value="newest" selected="@(ViewBag.SortBy == "newest")">Mới nhất</option>
+                                        <option value="bestselling" selected="@(ViewBag.SortBy == "bestselling")">Bán chạy</option>
                                     </select>
                                 </div>
                             </div>
                         </div>
-
-                        @* @if (!string.IsNullOrWhiteSpace(ViewBag.SearchQuery))
-                        {
-                            <div class="search-info">
-                                <p>Kết quả tìm kiếm cho: <strong>@ViewBag.SearchQuery</strong></p>
-                            </div>
-                        } *@
 
                         <div class="shop-product-wrap grid gridview-3 row">
                             @if (Model != null && Model.Any())
@@ -115,32 +108,6 @@
                                                              src="@item.FirstImage.ImageUrl"
                                                              alt="Hiraola's Product Image" />
                                                     </a>
-                                                    <div class="add-actions">
-                                                        <ul>
-                                                            <li>
-                                                                <a class="hiraola-add_cart"
-                                                                   href="javascript:void(0)"
-                                                                   onclick="addToCart('@item.DesignId', 1, false)"
-                                                                   data-bs-toggle="tooltip"
-                                                                   data-placement="top"
-                                                                   title="Thêm">
-                                                                    <i class="ion-bag"></i>
-                                                                </a>
-                                                            </li>
-                                                            <li class="quick-view-btn"
-                                                                data-bs-toggle="modal"
-                                                                data-bs-target="#exampleModalCenter">
-                                                                <a asp-controller="Product"
-                                                                   asp-action="ProductDetail"
-                                                                   asp-route-designId="@item.DesignId"
-                                                                   data-bs-toggle="tooltip"
-                                                                   data-placement="top"
-                                                                   title="Xem">
-                                                                    <i class="ion-eye"></i>
-                                                                </a>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
                                                 </div>
                                                 <div class="hiraola-product_content">
                                                     <div class="product-desc_info">
@@ -151,9 +118,6 @@
                                                         <div class="price-box">
                                                             <span class="new-price">@item.Price VND</span>
                                                         </div>
-                                                        <div class="stock-info">
-                                                            <span>Còn lại: @item.StockQuantity</span>
-                                                        </div>
                                                         <div class="rating-box">
                                                             <ul>
                                                                 <li><i class="fa fa-star-of-david"></i></li>
@@ -161,7 +125,7 @@
                                                                 <li><i class="fa fa-star-of-david"></i></li>
                                                                 <li><i class="fa fa-star-of-david"></i></li>
                                                                 <li class="silver-color">
-                                                                    <i class="fa fa-star-of-david"></i>
+                                                                    <i class="fa fa-star"></i>
                                                                 </li>
                                                             </ul>
                                                         </div>
@@ -172,7 +136,7 @@
                                         <div class="list-slide_item">
                                             <div class="single_product">
                                                 <div class="product-img">
-                                                    <a href="single-product.html">
+                                                    <a asp-area="" asp-controller="Product" asp-action="ProductDetail" asp-route-designId="@item.DesignId">
                                                         <img class="primary-img"
                                                              src="@item.FirstImage.ImageUrl"
                                                              alt="Hiraola's Product Image" />
@@ -194,7 +158,7 @@
                                                                 <li><i class="fa fa-star-of-david"></i></li>
                                                                 <li><i class="fa fa-star-of-david"></i></li>
                                                                 <li class="silver-color">
-                                                                    <i class="fa fa-star-of-david"></i>
+                                                                    <i class="fa fa-star"></i>
                                                                 </li>
                                                             </ul>
                                                         </div>
@@ -202,36 +166,8 @@
                                                             <span class="new-price">@item.Price VND</span>
                                                         </div>
                                                         <div class="product-short_desc">
-                                                            <p>
-                                                                @item.Description
-                                                            </p>
+                                                            <p>@item.Description</p>
                                                         </div>
-                                                    </div>
-                                                    <div class="add-actions">
-                                                        <ul>
-                                                            <li>                                                                
-                                                                <a class="hiraola-add_cart"
-                                                                   href="javascript:void(0)"
-                                                                   onclick="addToCart('@item.DesignId', 1, false)"
-                                                                   data-bs-toggle="tooltip"
-                                                                   data-placement="top"
-                                                                   title="Giỏ Hàng">
-                                                                    Thêm
-                                                                </a>
-                                                            </li>
-                                                            <li class="quick-view-btn"
-                                                                data-bs-toggle="modal"
-                                                                data-bs-target="#exampleModalCenter">
-                                                                <a asp-controller="Product"
-                                                                   asp-action="ProductDetail"
-                                                                   asp-route-designId="@item.DesignId"
-                                                                   data-bs-toggle="tooltip"
-                                                                   data-placement="top"
-                                                                   title="Xem">
-                                                                    <i class="ion-eye"></i>
-                                                                </a>
-                                                            </li>
-                                                        </ul>
                                                     </div>
                                                 </div>
                                             </div>
@@ -261,7 +197,7 @@
                                                         </a>
                                                     </li>
                                                 }
-                                                @for (int i = 1; i <= ViewBag.TotalPages; i++)
+                                                @for (var i = 1; i <= ViewBag.TotalPages; i++)
                                                 {
                                                     <li class="@(i == ViewBag.Page ? "active" : "")">
                                                         <a asp-action="ProductList"
@@ -315,68 +251,73 @@
     <!-- Thêm SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    <!-- CSS tùy chỉnh cho SweetAlert2 -->
+    <!-- CSS tùy chỉnh cho SweetAlert2 và nút ẩn -->
     <style>
-        /* Tùy chỉnh SweetAlert2 để đồng bộ với giao diện website */
         .swal2-popup {
-            font-family: 'Lato', sans-serif; /* Font chữ giống website */
-            background: #f4f4f4; /* Màu nền xám nhạt giống form */
-            color: #595959; /* Màu chữ xám giống nội dung */
-            border: 1px solid #e5e5e5; /* Viền giống các thành phần trên website */
-            border-radius: 8px; /* Bo góc nhẹ */
+            font-family: 'Lato', sans-serif;
+            background: #f4f4f4;
+            color: #595959;
+            border: 1px solid #e5e5e5;
+            border-radius: 8px;
         }
 
         .swal2-title {
-            color: #333; /* Màu tiêu đề giống website */
-            font-size: 18px; /* Kích thước chữ tiêu đề */
-            font-weight: 700; /* Đậm giống h3, h4 */
+            color: #333;
+            font-size: 18px;
+            font-weight: 700;
         }
 
         .swal2-content {
-            color: #595959; /* Màu nội dung giống website */
-            font-size: 16px; /* Kích thước chữ nội dung */
+            color: #595959;
+            font-size: 16px;
         }
 
         .swal2-confirm {
-            background-color: #cda557 !important; /* Nút "Xác nhận" màu vàng */
-            color: #fff !important; /* Chữ trắng */
-            border-radius: 3px !important; /* Bo góc giống hiraola-btn */
-            padding: 10px 20px !important; /* Kích thước giống nút */
-            font-size: 12px !important; /* Kích thước chữ */
-            text-transform: uppercase !important; /* Chữ in hoa */
-            transition: all 0.3s ease-in !important; /* Hiệu ứng chuyển đổi */
+            background-color: #cda557 !important;
+            color: #fff !important;
+            border-radius: 3px !important;
+            padding: 10px 20px !important;
+            font-size: 12px !important;
+            text-transform: uppercase !important;
+            transition: all 0.3s ease-in !important;
         }
 
         .swal2-cancel {
-            background-color: #595959 !important; /* Nút "Hủy" màu xám đậm */
-            color: #fff !important; /* Chữ trắng */
-            border-radius: 3px !important; /* Bo góc giống hiraola-btn */
-            padding: 10px 20px !important; /* Kích thước giống nút */
-            font-size: 12px !important; /* Kích thước chữ */
-            text-transform: uppercase !important; /* Chữ in hoa */
-            transition: all 0.3s ease-in !important; /* Hiệu ứng chuyển đổi */
+            background-color: #595959 !important;
+            color: #fff !important;
+            border-radius: 3px !important;
+            padding: 10px 20px !important;
+            font-size: 12px !important;
+            text-transform: uppercase !important;
+            transition: all 0.3s ease-in !important;
         }
 
         .swal2-confirm:hover {
-            background-color: #d5b473 !important; /* Hover màu vàng nhạt hơn */
+            background-color: #d5b473 !important;
         }
 
         .swal2-cancel:hover {
-            background-color: #333 !important; /* Hover màu xám đậm hơn */
+            background-color: #333 !important;
         }
 
         .swal2-icon.swal2-warning {
-            color: #cda557 !important; /* Màu biểu tượng cảnh báo */
+            color: #cda557 !important;
             border-color: #cda557 !important;
         }
 
         .swal2-icon.swal2-error {
-            color: #ea3a3c !important; /* Màu biểu tượng lỗi (đỏ) */
+            color: #ea3a3c !important;
             border-color: #ea3a3c !important;
         }
+
+        /* Ẩn nút khi hết hàng */
+        .out-of-stock .hiraola-add_cart {
+            display: none !important;
+        }
     </style>
+
     <script>
-         function addToCart(designId, quantity, productType) {
+        function addToCart(designId, quantity, productType) {
             $.ajax({
                 url: '/Cart/AddToCart',
                 type: 'POST',
@@ -399,8 +340,8 @@
                                 confirmButton: 'swal2-confirm'
                             }
                         });
-                        // Cập nhật số lượng giỏ hàng
                         updateCartCount();
+                        updateStockQuantity(designId);
                     } else {
                         Swal.fire({
                             title: 'Lỗi',
@@ -463,7 +404,37 @@
             });
         }
 
-        // Hàm lọc sản phẩm
+        function updateStockQuantity(designId) {
+            $.ajax({
+                url: '/Product/GetStockQuantity',
+                type: 'GET',
+                data: { designId: designId },
+                success: function (response) {
+                    if (response.success) {
+                        const addAction = $(`.add-actions[data-product-id="${designId}"]`);
+                        if (response.stockQuantity === 0) {
+                            addAction.addClass('out-of-stock');
+                        } else {
+                            addAction.removeClass('out-of-stock');
+                        }
+                    }
+                },
+                error: function () {
+                    console.error('Không thể cập nhật trạng thái tồn kho.');
+                }
+            });
+        }
+
+        function initializeStockStatus() {
+            $('.add-actions').each(function () {
+                const designId = $(this).data('product-id');
+                const stock = parseInt($(this).data('stock'));
+                if (stock === 0) {
+                    $(this).addClass('out-of-stock');
+                }
+            });
+        }
+
         function filterProducts(modelId, sortBy, minPrice, maxPrice, page = 1, searchQuery = null) {
             $.ajax({
                 url: '/Product/ProductList',
@@ -474,17 +445,14 @@
                     maxPrice: maxPrice || $('#maxPrice').val(),
                     page: page,
                     pageSize: @ViewBag.PageSize,
-                    sortBy: sortBy
+                    sortBy: sortBy,
+                    searchQuery: searchQuery
                 },
                 success: function (response) {
-                    // Cập nhật khu vực sản phẩm
                     $('.shop-product-wrap').html($(response).find('.shop-product-wrap').html());
-                    // Cập nhật phân trang
                     $('.hiraola-paginatoin-area').html($(response).find('.hiraola-paginatoin-area').html());
-                    // Cập nhật trạng thái active cho liên kết model
                     $('.model-filter').removeClass('active');
                     $(`.model-filter[data-model-id="${modelId || ''}"]`).addClass('active');
-                    // Cập nhật URL trình duyệt
                     const url = new URL(window.location);
                     if (modelId) {
                         url.searchParams.set('modelId', modelId);
@@ -514,37 +482,54 @@
                     url.searchParams.set('page', page);
                     window.history.pushState({}, '', url);
                     $('.nice-select').niceSelect('update');
+                    initializeStockStatus();
                 },
                 error: function () {
                     Swal.fire({
                         title: 'Lỗi',
                         text: 'Không thể tải danh sách sản phẩm. Vui lòng thử lại.',
                         icon: 'error',
-                        confirmButtonText: 'Đóng'
+                        confirmButtonText: 'Đóng',
+                        customClass: {
+                            confirmButton: 'swal2-confirm'
+                        }
                     });
                 }
             });
         }
 
-        // Gắn sự kiện
         $(document).ready(function () {
             updateCartCount();
+            initializeStockStatus();
 
-            // Sự kiện lọc theo model
+            // Hiển thị thông báo thanh toán thành công
+            @if (TempData["SuccessMessage"] != null)
+            {
+                    <text>
+                        Swal.fire({
+                            title: 'Thành công',
+                            text: '@TempData["SuccessMessage"]',
+                            icon: 'success',
+                            confirmButtonText: 'Đóng',
+                            customClass: {
+                                confirmButton: 'swal2-confirm'
+                            }
+                        });
+                    </text>
+            }
+
             $('.model-filter').on('click', function () {
                 const modelId = $(this).data('model-id');
                 const sortBy = $('.sort-filter').val();
                 filterProducts(modelId, sortBy);
             });
 
-            // Sự kiện lọc theo sắp xếp
             $('.sort-filter').on('change', function () {
                 const sortBy = $(this).val();
                 const modelId = $('.model-filter.active').data('model-id') || '';
                 filterProducts(modelId, sortBy);
             });
 
-            // Sự kiện lọc theo giá
             $('#minPrice, #maxPrice').on('change', function () {
                 const minPrice = $('#minPrice').val();
                 const maxPrice = $('#maxPrice').val();

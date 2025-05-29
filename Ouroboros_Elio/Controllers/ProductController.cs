@@ -5,36 +5,36 @@ namespace Ouroboros_Elio.Controllers;
 
 public class ProductController : Controller
 {
-		private readonly ILogger<ProductController> _logger;
-		private readonly IDesignService _designService;
-		private readonly IModelService _modelService;
+    private readonly ILogger<ProductController> _logger;
+    private readonly IDesignService _designService;
+    private readonly IModelService _modelService;
 
-		public ProductController(ILogger<ProductController> logger, IDesignService designService, IModelService modelService)
-		{
-			_logger = logger;
-			_designService = designService;
-			_modelService = modelService;
-		}
+    public ProductController(ILogger<ProductController> logger, IDesignService designService, IModelService modelService)
+    {
+        _logger = logger;
+        _designService = designService;
+        _modelService = modelService;
+    }
 
-    public async Task<IActionResult> 
-		ProductList
-		(
-		Guid? modelId, 
-		decimal? minPrice, 
-		decimal? maxPrice, 
-		int page = 1, 
-		int pageSize = 6,
+    public async Task<IActionResult>
+        ProductList
+        (
+        Guid? modelId,
+        decimal? minPrice,
+        decimal? maxPrice,
+        int page = 1,
+        int pageSize = 6,
         string? sortBy = null,
         string? searchQuery = null
         )
     {
         var (designs, totalCount) = minPrice.HasValue || maxPrice.HasValue
             ? await _designService
-			.GetPagedDesignsAsync
-			(modelId, minPrice, maxPrice, page, pageSize, sortBy, searchQuery)
+            .GetPagedDesignsAsync
+            (modelId, minPrice, maxPrice, page, pageSize, sortBy, searchQuery)
             : await _designService
-			.GetPagedDesignsAsync
-			(modelId, page, pageSize, sortBy, searchQuery);
+            .GetPagedDesignsAsync
+            (modelId, page, pageSize, sortBy, searchQuery);
 
         ViewBag.ListModel = await _modelService.GetAllActiveModelsAsync();
         ViewBag.Page = page;
@@ -52,16 +52,27 @@ public class ProductController : Controller
 
     public async Task<IActionResult> ProductDetail(Guid designId)
     {
-			var design = await _designService.GetDesignByIdAsync(designId);
-			var result = await _designService.VisitCountUp(designId);
-			if(result == false)   
-			{
-				return NotFound();
-			}
-			if (design == null)
-			{
-				return NotFound();
-			}
-			return View(design);
-		}
+        var design = await _designService.GetDesignByIdAsync(designId);
+        var result = await _designService.VisitCountUp(designId);
+        if (result == false)
+        {
+            return NotFound();
+        }
+        if (design == null)
+        {
+            return NotFound();
+        }
+        return View(design);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetStockQuantity(Guid designId)
+    {
+        var design = await _designService.GetDesignByIdAsync(designId);
+        if (design == null)
+        {
+            return Json(new { success = false, stockQuantity = 0 });
+        }
+        return Json(new { success = true, stockQuantity = design.StockQuantity });
+    }
 }

@@ -1,11 +1,5 @@
 ﻿@model BusinessLogicLayer.Dtos.DesignDtos.DesignViewModel
 
-<style>
-    .qty-cart_btn {
-        cursor: pointer; /* Hiển thị con trỏ dạng bàn tay khi trỏ chuột vào */
-    }
-</style>
-
 <body class="template-color-1">
     <div class="main-wrapper">
         <!-- Begin Hiraola's Breadcrumb Area -->
@@ -33,31 +27,6 @@
                                          data-zoom-image="@Model.FirstImage.ImageUrl"
                                          alt="Hiraola's Product Image" />
                                 </div>
-                                <div id="gallery" class="sp-img_slider">
-                                    <a class="active" data-image="~/assets/images/single-product/large-size/1.jpg" data-zoom-image="assets/images/single-product/large-size/1.jpg">
-                                        <img src="~/assets/images/single-product/small-size/1.jpg" alt="Hiraola's Product Image">
-                                    </a>
-                                    <a class="active" data-image="~/assets/images/single-product/large-size/1.jpg" data-zoom-image="assets/images/single-product/large-size/1.jpg">
-                                        <img src="~/assets/images/single-product/small-size/1.jpg" alt="Hiraola's Product Image">
-                                    </a>
-                                    <a class="active" data-image="~/assets/images/single-product/large-size/1.jpg" data-zoom-image="assets/images/single-product/large-size/1.jpg">
-                                        <img src="~/assets/images/single-product/small-size/1.jpg" alt="Hiraola's Product Image">
-                                    </a>
-                                    <a class="active" data-image="~/assets/images/single-product/large-size/1.jpg" data-zoom-image="assets/images/single-product/large-size/1.jpg">
-                                        <img src="~/assets/images/single-product/small-size/1.jpg" alt="Hiraola's Product Image">
-                                    </a>
-                                    @if (Model.DesignImages != null && Model.DesignImages.Any())
-                                    {
-                                        foreach (var item in Model.DesignImages)
-                                        {
-                                            <a data-image="@item.ImageUrl"
-                                               data-zoom-image="@item.ImageUrl">
-                                                <img src="@item.ImageUrl"
-                                                     alt="Hiraola's Product Image" />
-                                            </a>
-                                        }
-                                    }
-                                </div>
                             </div>
                         </div>
                         <div class="col-lg-7 col-md-7">
@@ -65,7 +34,6 @@
                                 <div class="sp-heading">
                                     <h5><a href="#">@Model.DesignName</a></h5>
                                 </div>
-                                @* <span class="reference">Reference: demo_1</span> *@
                                 <div class="rating-box">
                                     <ul>
                                         <li><i class="fa fa-star-of-david"></i></li>
@@ -77,11 +45,11 @@
                                 </div>
                                 <div class="sp-essential_stuff">
                                     <ul>
-                                        <li>Giá: <a href="#"><span>@Model.Price VND</span></a></li>
-                                        <li>Bộ Sưu Tập <a href="#">@Model.CollectionName</a></li>
-                                        <li>Chủ Đề: <a href="#">@Model.TopicName</a></li>
-                                        <li>Mẫu: <a href="#">@Model.ModelName</a></li>
-                                        <li>Lượt Xem: <a href="#">@Model.VisitCount</a></li>
+                                        <li>Giá: <span>@Model.Price VND</span></li>
+                                        <li>Bộ Sưu Tập: <span>@Model.CollectionName</span></li>
+                                        <li>Chủ Đề: <span>@Model.TopicName</span></li>
+                                        <li>Mẫu: <span>@Model.ModelName</span></li>
+                                        <li>Lượt Xem: <span>@Model.VisitCount</span></li>
                                     </ul>
                                 </div>
                                 <div class="quantity">
@@ -92,14 +60,16 @@
                                         <div class="inc qtybutton"><i class="fa fa-angle-up"></i></div>
                                     </div>
                                 </div>
-                                <div class="qty-btn_area">
+                                <div class="qty-btn_area" data-product-id="@Model.DesignId" data-stock="@Model.StockQuantity" data-cart-quantity="0">
                                     <ul>
-                                        <li><a class="qty-cart_btn" onclick="addToCart('@Model.DesignId')">Giỏ Hàng</a></li>
+                                        <li>
+                                            <button class="qty-cart_btn" onclick="addToCart('@Model.DesignId')">Giỏ Hàng</button>
+                                        </li>
                                     </ul>
                                 </div>
                                 <div class="hiraola-tag-line">
                                     <h6>Loại:</h6>
-                                    <a href="#">@Model.CategoryName</a>
+                                    <span>@Model.CategoryName</span>
                                 </div>
                                 <div class="hiraola-social_link">
                                     <ul>
@@ -109,7 +79,7 @@
                                             </a>
                                         </li>
                                         <li class="instagram">
-                                            <a href="https://rss.com" data-bs-toggle="tooltip" target="_blank" title="Instagram">
+                                            <a href="https://www.instagram.com" data-bs-toggle="tooltip" target="_blank" title="Instagram">
                                                 <i class="fab fa-instagram"></i>
                                             </a>
                                         </li>
@@ -127,7 +97,7 @@
             <div class="container">
                 <div class="row">
                     <div class="col-lg-12">
-                        <div class="sp-product-tab_nav ">
+                        <div class="sp-product-tab_nav">
                             <div class="product-tab">
                                 <ul class="nav product-menu">
                                     <li>
@@ -139,76 +109,71 @@
                             <div class="tab-content hiraola-tab_content">
                                 <div id="description" class="tab-pane active show" role="tabpanel">
                                     <div class="product-description">
-                                        <ul>
-                                            @Model.Description
-                                        </ul>
+                                        @Model.Description
                                     </div>
                                 </div>
                                 <div id="reviews" class="tab-pane" role="tabpanel">
-                                    <div class="tab-pane active" id="tab-review">
-                                        <form class="form-horizontal" id="form-review">
-                                            <div id="review">
-                                                <table class="table table-striped table-bordered">
-                                                    <tbody>
-                                                        <tr>
-                                                            <td style="width: 50%;"><strong>Customer</strong></td>
-                                                            <td class="text-right">25/04/2022</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td colspan="2">
-                                                                <p>Good product! Thank you very much</p>
-                                                                <div class="rating-box">
-                                                                    <ul>
-                                                                        <li><i class="fa fa-star-of-david"></i></li>
-                                                                        <li><i class="fa fa-star-of-david"></i></li>
-                                                                        <li><i class="fa fa-star-of-david"></i></li>
-                                                                        <li><i class="fa fa-star-of-david"></i></li>
-                                                                        <li><i class="fa fa-star-of-david"></i></li>
-                                                                    </ul>
-                                                                </div>
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
+                                    <form class="form-horizontal" id="form-review">
+                                        <div id="review">
+                                            <table class="table table-striped table-bordered">
+                                                <tbody>
+                                                    <tr>
+                                                        <td style="width: 50%;"><strong>Khách hàng</strong></td>
+                                                        <td class="text-right">25/04/2022</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="2">
+                                                            <p>Sản phẩm tốt! Cảm ơn rất nhiều</p>
+                                                            <div class="rating-box">
+                                                                <ul>
+                                                                    <li><i class="fa fa-star-of-david"></i></li>
+                                                                    <li><i class="fa fa-star-of-david"></i></li>
+                                                                    <li><i class="fa fa-star-of-david"></i></li>
+                                                                    <li><i class="fa fa-star-of-david"></i></li>
+                                                                    <li><i class="fa fa-star-of-david"></i></li>
+                                                                </ul>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <h2>Viết đánh giá</h2>
+                                        <div class="form-group required">
+                                            <div class="col-sm-12 p-0">
+                                                <label>Email của bạn <span class="required">*</span></label>
+                                                <input class="review-input" type="email" name="con_email" id="con_email" required>
                                             </div>
-                                            <h2>Write a review</h2>
-                                            <div class="form-group required">
-                                                <div class="col-sm-12 p-0">
-                                                    <label>Your Email <span class="required">*</span></label>
-                                                    <input class="review-input" type="email" name="con_email" id="con_email" required>
+                                        </div>
+                                        <div class="form-group required second-child">
+                                            <div class="col-sm-12 p-0">
+                                                <label class="control-label">Chia sẻ ý kiến của bạn</label>
+                                                <textarea class="review-textarea" name="con_message" id="con_message"></textarea>
+                                                <div class="help-block">
+                                                    <span class="text-danger">Lưu ý:</span> HTML không được chuyển đổi.
                                                 </div>
                                             </div>
-                                            <div class="form-group required second-child">
-                                                <div class="col-sm-12 p-0">
-                                                    <label class="control-label">Share your opinion</label>
-                                                    <textarea class="review-textarea" name="con_message" id="con_message"></textarea>
-                                                    <div class="help-block">
-                                                        <span class="text-danger">Note:</span> HTML is not
-                                                        translated!
-                                                    </div>
+                                        </div>
+                                        <div class="form-group last-child required">
+                                            <div class="col-sm-12 p-0">
+                                                <div class="your-opinion">
+                                                    <label>Đánh giá của bạn</label>
+                                                    <span>
+                                                        <select class="star-rating">
+                                                            <option value="1">1</option>
+                                                            <option value="2">2</option>
+                                                            <option value="3">3</option>
+                                                            <option value="4">4</option>
+                                                            <option value="5">5</option>
+                                                        </select>
+                                                    </span>
                                                 </div>
                                             </div>
-                                            <div class="form-group last-child required">
-                                                <div class="col-sm-12 p-0">
-                                                    <div class="your-opinion">
-                                                        <label>Your Rating</label>
-                                                        <span>
-                                                            <select class="star-rating">
-                                                                <option value="1">1</option>
-                                                                <option value="2">2</option>
-                                                                <option value="3">3</option>
-                                                                <option value="4">4</option>
-                                                                <option value="5">5</option>
-                                                            </select>
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                                <div class="hiraola-btn-ps_right">
-                                                    <a href="javascript:void(0)" class="hiraola-btn hiraola-btn_dark">Continue</a>
-                                                </div>
+                                            <div class="hiraola-btn-ps_right">
+                                                <a href="javascript:void(0)" class="hiraola-btn hiraola-btn_dark">Tiếp tục</a>
                                             </div>
-                                        </form>
-                                    </div>
+                                        </div>
+                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -219,118 +184,240 @@
         <!-- Hiraola's Single Product Tab Area End Here -->
         <!-- Begin Hiraola's Product Area Two -->
         <div class="hiraola-product_area hiraola-product_area-2 ">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-12">
-                    </div>
-                </div>
-            </div>
         </div>
         <!-- Hiraola's Product Area Two End Here -->
     </div>
     <!-- Thêm SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    <!-- CSS tùy chỉnh cho SweetAlert2 -->
+    <!-- CSS tùy chỉnh cho SweetAlert2 và nút hết hàng -->
     <style>
-        /* Tùy chỉnh SweetAlert2 để đồng bộ với giao diện website */
         .swal2-popup {
-            font-family: 'Lato', sans-serif; /* Font chữ giống website */
-            background: #f4f4f4; /* Màu nền xám nhạt giống form */
-            color: #595959; /* Màu chữ xám giống nội dung */
-            border: 1px solid #e5e5e5; /* Viền giống các thành phần trên website */
-            border-radius: 8px; /* Bo góc nhẹ */
+            font-family: 'Lato', sans-serif;
+            background: #f4f4f4;
+            color: #595959;
+            border: 1px solid #e5e5e5;
+            border-radius: 8px;
         }
 
         .swal2-title {
-            color: #333; /* Màu tiêu đề giống website */
-            font-size: 18px; /* Kích thước chữ tiêu đề */
-            font-weight: 700; /* Đậm giống h3, h4 */
+            color: #333;
+            font-size: 18px;
+            font-weight: 700;
         }
 
         .swal2-content {
-            color: #595959; /* Màu nội dung giống website */
-            font-size: 16px; /* Kích thước chữ nội dung */
+            color: #595959;
+            font-size: 16px;
         }
 
         .swal2-confirm {
-            background-color: #cda557 !important; /* Nút "Xác nhận" màu vàng */
-            color: #fff !important; /* Chữ trắng */
-            border-radius: 3px !important; /* Bo góc giống hiraola-btn */
-            padding: 10px 20px !important; /* Kích thước giống nút */
-            font-size: 12px !important; /* Kích thước chữ */
-            text-transform: uppercase !important; /* Chữ in hoa */
-            transition: all 0.3s ease-in !important; /* Hiệu ứng chuyển đổi */
+            background-color: #cda557 !important;
+            color: #fff !important;
+            border-radius: 3px !important;
+            padding: 10px 20px !important;
+            font-size: 12px !important;
+            text-transform: uppercase !important;
+            transition: all 0.3s ease-in !important;
         }
 
         .swal2-cancel {
-            background-color: #595959 !important; /* Nút "Hủy" màu xám đậm */
-            color: #fff !important; /* Chữ trắng */
-            border-radius: 3px !important; /* Bo góc giống hiraola-btn */
-            padding: 10px 20px !important; /* Kích thước giống nút */
-            font-size: 12px !important; /* Kích thước chữ */
-            text-transform: uppercase !important; /* Chữ in hoa */
-            transition: all 0.3s ease-in !important; /* Hiệu ứng chuyển đổi */
+            background-color: #595959 !important;
+            color: #fff !important;
+            border-radius: 3px !important;
+            padding: 10px 20px !important;
+            font-size: 12px !important;
+            text-transform: uppercase !important;
+            transition: all 0.3s ease-in !important;
         }
 
         .swal2-confirm:hover {
-            background-color: #d5b473 !important; /* Hover màu vàng nhạt hơn */
+            background-color: #d5b473 !important;
         }
 
         .swal2-cancel:hover {
-            background-color: #333 !important; /* Hover màu xám đậm hơn */
+            background-color: #333 !important;
         }
 
         .swal2-icon.swal2-warning {
-            color: #cda557 !important; /* Màu biểu tượng cảnh báo */
+            color: #cda557 !important;
             border-color: #cda557 !important;
         }
 
         .swal2-icon.swal2-error {
-            color: #ea3a3c !important; /* Màu biểu tượng lỗi (đỏ) */
+            color: #ea3a3c !important;
             border-color: #ea3a3c !important;
         }
-    </style>
-</body>
-<script>
-    $(document).ready(function () {
-        // Gắn sự kiện click cho các nút tăng/giảm số lượng
-        $('.qtybutton').on('click', function () {
-            var $button = $(this);
-            var $input = $button.parent().find('input.cart-plus-minus-box');
-            var oldValue = parseInt($input.val()) || 1;
-            var newVal;
 
-            if ($button.hasClass('inc')) {
-                newVal = oldValue + 1; // Tăng số lượng
-            } else {
-                newVal = oldValue > 1 ? oldValue - 1 : 1; // Giảm số lượng, nhưng không nhỏ hơn 1
-            }
-
-            $input.val(newVal); // Cập nhật giá trị mới vào input
-        });
-    });
-    function addToCart(designId) {
-        var quantity = parseInt($('.cart-plus-minus-box').val());
-        if (quantity <= 0) {
-            Swal.fire({
-                title: 'Lỗi',
-                text: 'Vui lòng chọn số lượng lớn hơn 0',
-                icon: 'error',
-                confirmButtonText: 'Đóng'
-            });
-            return;
+        /* Làm mờ và vô hiệu hóa nút khi hết hàng */
+        .out-of-stock .qty-cart_btn {
+            opacity: 0.5 !important;
+            pointer-events: none !important;
+            cursor: not-allowed !important;
+            background-color: #ccc !important;
+            border-color: #ccc !important;
         }
 
-        $.ajax({
-            url: '/Cart/AddToCart',
-            type: 'POST',
-            data: {
-                designId: designId,
-                quantity: quantity,
-                productType: false
-            },
-            success: function (response) {
+        .qty-cart_btn {
+            cursor: pointer;
+            padding: 10px 20px;
+            background-color: #cda557;
+            color: #fff;
+            border: none;
+            border-radius: 3px;
+            text-transform: uppercase;
+            font-size: 12px;
+            transition: all 0.3s ease-in;
+        }
+
+            .qty-cart_btn:hover:not(:disabled) {
+                background-color: #d5b473;
+            }
+    </style>
+
+    <script>
+        $(document).ready(function () {
+            initializeStockStatus();
+
+            // Gắn sự kiện click cho các nút tăng/giảm số lượng
+            $('.qtybutton').on('click', function () {
+                var $button = $(this);
+                var $input = $button.parent().find('input.cart-plus-minus-box');
+                var oldValue = parseInt($input.val()) || 1;
+                var newVal;
+
+                if ($button.hasClass('inc')) {
+                    newVal = oldValue + 1;
+                } else {
+                    newVal = oldValue > 1 ? oldValue - 1 : 1;
+                }
+
+                $input.val(newVal);
+            });
+        });
+
+        function initializeStockStatus() {
+            const qtyArea = $('.qty-btn_area');
+            const stock = parseInt(qtyArea.data('stock'));
+            const cartButton = qtyArea.find('.qty-cart_btn');
+
+            // Lấy số lượng trong giỏ hàng để khởi tạo
+            $.ajax({
+                url: '/Cart/GetCartItemQuantity',
+                type: 'GET',
+                data: { designId: qtyArea.data('product-id') },
+                success: function (response) {
+                    if (response.success) {
+                        qtyArea.data('cart-quantity', response.quantity);
+                        if (stock <= response.quantity) {
+                            qtyArea.addClass('out-of-stock');
+                            cartButton.prop('disabled', true).text('Hết hàng');
+                        } else {
+                            qtyArea.removeClass('out-of-stock');
+                            cartButton.prop('disabled', false).text('Giỏ Hàng');
+                        }
+                    }
+                },
+                error: function () {
+                    console.error('Không thể lấy số lượng trong giỏ hàng.');
+                }
+            });
+        }
+
+        function updateCartQuantityAndStock(designId) {
+            const qtyArea = $('.qty-btn_area');
+            const stock = parseInt(qtyArea.data('stock'));
+            const cartButton = qtyArea.find('.qty-cart_btn');
+
+            $.ajax({
+                url: '/Cart/GetCartItemQuantity',
+                type: 'GET',
+                data: { designId: designId },
+                success: function (response) {
+                    if (response.success) {
+                        qtyArea.data('cart-quantity', response.quantity);
+                        if (stock <= response.quantity) {
+                            qtyArea.addClass('out-of-stock');
+                            cartButton.prop('disabled', true).text('Hết hàng');
+                        } else {
+                            qtyArea.removeClass('out-of-stock');
+                            cartButton.prop('disabled', false).text('Giỏ Hàng');
+                        }
+                    }
+                },
+                error: function () {
+                    console.error('Không thể cập nhật số lượng trong giỏ hàng.');
+                }
+            });
+        }
+
+        function addToCart(designId) {
+            const qtyArea = $('.qty-btn_area');
+            const cartButton = qtyArea.find('.qty-cart_btn');
+            const stock = parseInt(qtyArea.data('stock'));
+            const cartQuantity = parseInt(qtyArea.data('cart-quantity')) || 0;
+            let quantity = parseInt($('.cart-plus-minus-box').val()) || 0;
+
+            if (cartButton.prop('disabled')) {
+                return; // Không thực hiện nếu nút bị vô hiệu hóa
+            }
+
+            if (quantity <= 0) {
+                Swal.fire({
+                    title: 'Lỗi',
+                    text: 'Vui lòng chọn số lượng lớn hơn 0',
+                    icon: 'error',
+                    confirmButtonText: 'Đóng',
+                    customClass: {
+                        confirmButton: 'swal2-confirm'
+                    }
+                });
+                return;
+            }
+
+            // Tính số lượng tối đa có thể thêm
+            const maxAddable = stock - cartQuantity;
+            if (cartQuantity + quantity > stock) {
+                if (maxAddable <= 0) {
+                    Swal.fire({
+                        title: 'Thông báo',
+                        text: `Hàng này chỉ còn ${stock} và bạn đã thêm vào giỏ hàng với số lượng tối đa.`,
+                        icon: 'warning',
+                        confirmButtonText: 'Đóng',
+                        customClass: {
+                            confirmButton: 'swal2-confirm'
+                        }
+                    });
+                    qtyArea.addClass('out-of-stock');
+                    cartButton.prop('disabled', true).text('Hết hàng');
+                    return;
+                }
+
+                // Thêm số lượng tối đa còn lại
+                quantity = maxAddable;
+                Swal.fire({
+                    title: 'Thông báo',
+                    text: `Hàng này chỉ còn ${stock} và đã được thêm ${quantity} vào giỏ hàng với số lượng tối đa.`,
+                    icon: 'warning',
+                    confirmButtonText: 'Đóng',
+                    customClass: {
+                        confirmButton: 'swal2-confirm'
+                    }
+                });
+            }
+
+            $.ajax({
+                url: '/Cart/AddToCart',
+                type: 'POST',
+                data: {
+                    designId: designId,
+                    quantity: quantity,
+                    productType: false
+                },
+                headers: {
+                    'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
+                },
+                success: function (response) {
                     if (response.success) {
                         Swal.fire({
                             title: 'Thành công',
@@ -341,75 +428,68 @@
                                 confirmButton: 'swal2-confirm'
                             }
                         });
-                        // Cập nhật số lượng giỏ hàng
                         updateCartCount();
+                        updateCartQuantityAndStock(designId);
                     } else {
                         Swal.fire({
                             title: 'Lỗi',
                             text: response.message,
                             icon: 'error',
-                            confirmButtonText: 'Đóng'
+                            confirmButtonText: 'Đóng',
+                            customClass: {
+                                confirmButton: 'swal2-confirm'
+                            }
                         });
                     }
                 },
-            error: function (xhr) {
-                if (xhr.status === 401) {
-                    Swal.fire({
-                        title: 'Yêu cầu đăng nhập',
-                        text: 'Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng.',
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonText: 'Đăng nhập',
-                        cancelButtonText: 'Đóng',
-                        customClass: {
-                            confirmButton: 'swal2-confirm',
-                            cancelButton: 'swal2-cancel'
-                        }
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            window.location.href = '/Auth/Register';
-                        }
-                    });
-                } else {
-                    Swal.fire({
-                        title: 'Lỗi',
-                        text: 'Có lỗi xảy ra, vui lòng thử lại.',
-                        icon: 'error',
-                        confirmButtonText: 'Đóng'
-                    });
+                error: function (xhr) {
+                    if (xhr.status === 401) {
+                        Swal.fire({
+                            title: 'Yêu cầu đăng nhập',
+                            text: 'Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng.',
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonText: 'Đăng nhập',
+                            cancelButtonText: 'Đóng',
+                            customClass: {
+                                confirmButton: 'swal2-confirm',
+                                cancelButton: 'swal2-cancel'
+                            }
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.href = '/Auth/Register';
+                            }
+                        });
+                    } else {
+                        Swal.fire({
+                            title: 'Lỗi',
+                            text: 'Có lỗi xảy ra, vui lòng thử lại.',
+                            icon: 'error',
+                            confirmButtonText: 'Đóng',
+                            customClass: {
+                                confirmButton: 'swal2-confirm'
+                            }
+                        });
+                    }
                 }
-            }
-        });
-    }
-    // function addToCart(designId) {
-    //     var quantity = parseInt($('.cart-plus-minus-box').val());
-    //     if (quantity <= 0) {
-    //         alert("Vui lòng chọn số lượng lớn hơn 0");
-    //         return;
-    //     }
+            });
+        }
 
-    //     $.ajax({
-    //         url: '/Cart/AddToCart',
-    //         type: 'POST',
-    //         data: {
-    //             designId: designId,
-    //             quantity: quantity,
-    //             productType: false
-    //         },
-    //         success: function (response) {
-    //             if (response.success) {
-    //                window.location.href = '/Cart/CartDetail?designId=' + designId;
-    //             } else {
-    //                 alert(response.message);
-    //             }
-    //         },
-    //         error: function (xhr) {
-    //             if (xhr.status === 401) {
-    //                 window.location.href = '/Auth/Login';
-    //             } else {
-    //                 alert("Có lỗi xảy ra, vui lòng thử lại.");
-    //             }
-    //         }
-    //     });
-    // }
-</script>
+        function updateCartCount() {
+            $.ajax({
+                url: '/Cart/GetCartItemCount',
+                type: 'GET',
+                success: function (response) {
+                    if (response.success) {
+                        $('#cart-count').text(response.count);
+                    } else {
+                        $('#cart-count').text('0');
+                    }
+                },
+                error: function () {
+                    $('#cart-count').text('0');
+                }
+            });
+        }
+    </script>
+</body>

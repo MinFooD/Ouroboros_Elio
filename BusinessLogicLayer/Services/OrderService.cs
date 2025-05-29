@@ -24,9 +24,9 @@ public class OrderService : IOrderService
         return (orderViewModel, message);
     }
 
-    public async Task<Order?> GetOrderByIdAsync(Guid orderId, Guid userId)
+    public async Task<OrderViewModel?> GetOrderByIdAsync(Guid orderId, Guid userId)
     {
         var order = await _orderRepository.GetOrderByIdAsync(orderId, userId);
-        return order;
+        return _mapper.Map<OrderViewModel>(order);
     }
 }

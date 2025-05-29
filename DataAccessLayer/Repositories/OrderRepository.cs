@@ -32,6 +32,12 @@ public class OrderRepository : IOrderRepository
             if (cart == null || cart.CartItems == null || !cart.CartItems.Any())
                 return (null, "Giỏ hàng trống hoặc không tồn tại.");
 
+            // Kiểm tra và khóa tồn kho
+            var designIds = cart.CartItems.Select(ci => ci.DesignId).ToList();
+            var designs = await _context.Designs
+                .Where(d => designIds.Contains(d.DesignId))
+                .ToListAsync();
+
             // Kiểm tra tồn kho cho tất cả sản phẩm
             foreach (var item in cart.CartItems)
             {
@@ -87,10 +93,10 @@ public class OrderRepository : IOrderRepository
             await transaction.CommitAsync();
             return (order, "Tạo đơn hàng thành công.");
         }
-        catch (Exception)
+        catch (Exception ex)
         {
             await transaction.RollbackAsync();
-            return (null, "Có lỗi xảy ra khi tạo đơn hàng.");
+            return (null, $"Có lỗi xảy ra khi tạo đơn hàng: {ex.Message}");
         }
     }
 
