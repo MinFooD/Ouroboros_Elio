@@ -32,7 +32,6 @@ namespace BusinessLogicLayer.Services
 			var claims = new List<Claim>();
 
 			claims.Add(new Claim(ClaimTypes.Email, user.Email));
-			claims.Add(new Claim(ClaimTypes.MobilePhone, user.PhoneNumber));
 			claims.Add(new Claim(ClaimTypes.Name, user.UserName));
 			claims.Add(new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()));
 			foreach (var role in roles)

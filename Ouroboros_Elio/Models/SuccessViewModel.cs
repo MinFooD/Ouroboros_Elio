@@ -7,7 +7,7 @@ public class SuccessViewModel
     public string LastName { get; set; }
     public string Address { get; set; }
     public string Email { get; set; }
-    public string PhoneNumber { get; set; }
+    public int PhoneNumber { get; set; }
 
     // Thông tin đơn hàng
     public Guid OrderId { get; set; }

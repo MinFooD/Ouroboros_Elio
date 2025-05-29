@@ -24,8 +24,8 @@ public class CheckoutViewModel
     public string Email { get; set; }
 
     [Required(ErrorMessage = "Vui lòng nhập số Điện Thoại")]
-    [Phone(ErrorMessage = "Số điện thoại không hợp lệ.")]
-    public string PhoneNumber { get; set; }
+    //[Phone(ErrorMessage = "Số điện thoại không hợp lệ.")]
+    public int PhoneNumber { get; set; }
 
     // Thông tin giỏ hàng
     public List<CartItemViewModel> CartItems { get; set; }

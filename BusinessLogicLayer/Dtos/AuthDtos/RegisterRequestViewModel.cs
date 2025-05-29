@@ -1,29 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace BusinessLogicLayer.Dtos.AuthDtos
+namespace BusinessLogicLayer.Dtos.AuthDtos;
+
+public class RegisterRequestViewModel
 {
-	public class RegisterRequestViewModel
-	{
-		[DataType(DataType.EmailAddress)]
-		public string Gmail { get; set; }
-		[Required]
-		[DataType(DataType.Password)]
-		public string Password { get; set; }
-		[Required]
-		[DataType(DataType.Password)]
-		public string ConfirmPassword { get; set; }
-		[StringLength(50)]
-		public string UserName { get; set; }
+    [Required(ErrorMessage = "Username is required.")]
+    [RegularExpression("^[a-zA-Z0-9]+$", ErrorMessage = "Username can only contain letters or digits.")]
+    [StringLength(50, MinimumLength = 3, ErrorMessage = "Username must be between 3 and 50 characters.")]
+    public string UserName { get; set; }
 
-		[StringLength(10)]
-		public string Phone { get; set; }
+    [DataType(DataType.EmailAddress)]
+    public string Gmail { get; set; }
 
-		[StringLength(255)]
-		public string Address { get; set; }
-	}
+    [Required]
+    [DataType(DataType.Password)]
+    public string Password { get; set; }
+
+    [Required]
+    [DataType(DataType.Password)]
+    public string ConfirmPassword { get; set; }
 }

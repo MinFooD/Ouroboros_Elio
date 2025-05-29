@@ -124,19 +124,17 @@ namespace Ouroboros_Elio.Controllers
 			}
 
 			// Kiểm tra nếu số điện thoại đã tồn tại
-			user = await _userManager.Users.FirstOrDefaultAsync(u => u.PhoneNumber == registerRequestViewModel.Phone);
-			if (user != null)
-			{
-				ModelState.AddModelError("Phone", "Phone number already exists.");
-				return View("Register", model);
-			}
+			//user = await _userManager.Users.FirstOrDefaultAsync(u => u.PhoneNumber == registerRequestViewModel.Phone);
+			//if (user != null)
+			//{
+			//	ModelState.AddModelError("Phone", "Phone number already exists.");
+			//	return View("Register", model);
+			//}
 
 			var identityUser = new ApplicationUser
 			{
-				UserName = registerRequestViewModel.UserName,
-				Email = registerRequestViewModel.Gmail,
-				PhoneNumber = registerRequestViewModel.Phone,
-				Address = registerRequestViewModel.Address,
+                UserName = registerRequestViewModel.UserName,
+                Email = registerRequestViewModel.Gmail,
 				RegistrationDate = DateTime.UtcNow,
 				EmailConfirmed = false,
 				VerificationToken = Guid.NewGuid().ToString(), // Tạo token xác thực email
