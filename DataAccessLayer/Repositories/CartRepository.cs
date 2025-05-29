@@ -95,7 +95,8 @@ public class CartRepository : ICartRepository
     public async Task<(bool? Success, string Message)> UpdateQuantity(Guid userId, Guid designId, int quantity)
     {
         var cart = await _context.Carts
-                .FirstOrDefaultAsync(c => c.UserId == userId);
+            .AsNoTracking() // Tối ưu hiệu suất
+            .FirstOrDefaultAsync(c => c.UserId == userId);
 
         if (cart == null)
         {
@@ -103,6 +104,7 @@ public class CartRepository : ICartRepository
         }
 
         var cartItem = await _context.CartItems
+            .AsNoTracking()
             .FirstOrDefaultAsync(ci => ci.CartId == cart.CartId && ci.DesignId == designId);
 
         if (cartItem == null)
@@ -110,23 +112,24 @@ public class CartRepository : ICartRepository
             return (false, "Sản phẩm không có trong giỏ hàng.");
         }
 
+        var design = await _context.Designs
+            .AsNoTracking()
+            .Select(d => new { d.DesignId, d.StockQuantity }) // Chỉ lấy các trường cần thiết
+            .FirstOrDefaultAsync(d => d.DesignId == designId);
+
+        if (design == null)
+        {
+            return (false, "Sản phẩm không tồn tại.");
+        }
+
+        if (quantity > 0 && design.StockQuantity < quantity)
+        {
+            return (false, $"Chỉ còn {design.StockQuantity} sản phẩm trong kho.");
+        }
+
         using var transaction = await _context.Database.BeginTransactionAsync();
         try
         {
-            var design = await _context.Designs
-                .AsNoTracking()
-                .FirstOrDefaultAsync(d => d.DesignId == designId);
-
-            if (design == null)
-            {
-                return (false, "Sản phẩm không tồn tại.");
-            }
-
-            if (quantity > 0 && design.StockQuantity < quantity)
-            {
-                return (false, $"Chỉ còn {design.StockQuantity} sản phẩm trong kho.");
-            }
-
             if (quantity <= 0)
             {
                 _context.CartItems.Remove(cartItem);
@@ -134,6 +137,7 @@ public class CartRepository : ICartRepository
             else
             {
                 cartItem.Quantity = quantity;
+                _context.CartItems.Update(cartItem);
             }
 
             await _context.SaveChangesAsync();

@@ -52,19 +52,20 @@ public class CartController : Controller
             return Json(new { success = false, message = "Vui lòng đăng nhập." });
         }
 
-        // Kiểm tra tồn kho trước khi cập nhật
+        // Kiểm tra tồn kho
         var design = await _designService.GetDesignByIdAsync(designId);
         if (design != null && quantity > design.StockQuantity)
         {
-            return Json(new { success = false, message = $"Chỉ còn {design.StockQuantity} sản phẩm trong kho." });
+            return Json(new
+            {
+                success = false,
+                message = $"Chỉ còn {design.StockQuantity} sản phẩm trong kho.",
+                stockQuantity = design.StockQuantity
+            });
         }
 
         var (success, message) = await _cartService.UpdateQuantity(Guid.Parse(userId), designId, quantity);
-        if (success == true)
-        {
-            return Json(new { success = true, message = message });
-        }
-        return Json(new { success = false, message = message });
+        return Json(new { success, message });
     }
 
     [HttpPost]
