@@ -194,13 +194,8 @@
         $(document).ready(function () {
             let isUpdating = false;
 
-            // Hàm cập nhật tổng giá trị giỏ hàng
-            function updateCartTotal() {
-                let total = 0;
-                $('.product-subtotal .amount').each(function () {
-                    var subtotal = parseFloat($(this).data('subtotal')) || 0;
-                    total += subtotal;
-                });
+            // Hàm cập nhật tổng giá trị giỏ hàng từ dữ liệu backend
+            function updateCartTotal(total) {
                 var formattedTotal = total.toLocaleString('vi-VN', { minimumFractionDigits: 0 });
                 $('#cart-total').text(formattedTotal + ' ₫');
             }
@@ -213,7 +208,7 @@
                     success: function (response) {
                         if (response.success) {
                             console.log('Cập nhật số lượng giỏ hàng:', response.count);
-                            // Cập nhật UI nếu cần (ví dụ: badge giỏ hàng)
+                            // Cập nhật badge giỏ hàng nếu cần
                         }
                     }
                 });
@@ -246,7 +241,7 @@
                 }
 
                 $input.val(newVal);
-                $input.data('original-value', oldValue); // Lưu giá trị ban đầu
+                $input.data('original-value', oldValue);
                 updateQuantity($input.data('design-id'), newVal, $input);
             });
 
@@ -281,7 +276,7 @@
                     return;
                 }
 
-                $input.data('original-value', quantity); // Cập nhật giá trị ban đầu
+                $input.data('original-value', quantity);
                 updateQuantity($input.data('design-id'), quantity, $input);
             }, 300));
 
@@ -309,7 +304,7 @@
                                 .text(formattedSubtotal + ' ₫')
                                 .data('subtotal', subtotal);
 
-                            updateCartTotal();
+                            updateCartTotal(response.cartTotal); // Sử dụng tổng từ backend
                             updateCartCount();
                         } else {
                             Swal.fire({
@@ -318,7 +313,6 @@
                                 icon: 'error',
                                 confirmButtonText: 'Đóng'
                             });
-                            // Khôi phục số lượng và subtotal ban đầu
                             var originalValue = parseInt($input.data('original-value')) || 1;
                             $input.val(originalValue);
                             var originalSubtotal = originalValue * price;
@@ -326,17 +320,16 @@
                             $input.closest('tr').find('.product-subtotal .amount')
                                 .text(formattedOriginalSubtotal + ' ₫')
                                 .data('subtotal', originalSubtotal);
-                            updateCartTotal();
+                            updateCartTotal(response.cartTotal || 0);
                         }
                     },
-                    error: function (xhr, status, error) {
+                    error: function () {
                         Swal.fire({
                             title: 'Lỗi',
                             text: 'Có lỗi xảy ra khi cập nhật số lượng.',
                             icon: 'error',
                             confirmButtonText: 'Đóng'
                         });
-                        // Khôi phục số lượng và subtotal ban đầu
                         var originalValue = parseInt($input.data('original-value')) || 1;
                         $input.val(originalValue);
                         var originalSubtotal = originalValue * price;
@@ -344,7 +337,7 @@
                         $input.closest('tr').find('.product-subtotal .amount')
                             .text(formattedOriginalSubtotal + ' ₫')
                             .data('subtotal', originalSubtotal);
-                        updateCartTotal();
+                        updateCartTotal(0);
                     },
                     complete: function () {
                         isUpdating = false;
@@ -353,7 +346,7 @@
             }
 
             // Hàm xóa sản phẩm khỏi giỏ hàng
-            function removeFromCart(designId) {
+            window.removeFromCart = function(designId) {
                 Swal.fire({
                     title: 'Xác nhận xóa',
                     text: 'Bạn có chắc muốn xóa sản phẩm này khỏi giỏ hàng không?',
@@ -364,10 +357,10 @@
                     customClass: {
                         confirmButton: 'swal2-confirm',
                         cancelButton: 'swal2-cancel'
-                    }
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        $.ajax({
+                    },
+                    showLoaderOnConfirm: true,
+                    preConfirm: () => {
+                        return $.ajax({
                             url: '/Cart/UpdateCart',
                             type: 'POST',
                             data: {
@@ -376,28 +369,33 @@
                             },
                             headers: {
                                 'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
-                            },
-                            success: function (response) {
-                                if (response.success) {
-                                    window.location.reload();
-                                    updateCartCount();
-                                } else {
-                                    Swal.fire({
-                                        title: 'Lỗi',
-                                        text: response.message,
-                                        icon: 'error',
-                                        confirmButtonText: 'Đóng'
-                                    });
-                                }
-                            },
-                            error: function () {
-                                Swal.fire({
-                                    title: 'Lỗi',
-                                    text: 'Có lỗi xảy ra khi xóa sản phẩm.',
-                                    icon: 'error',
-                                    confirmButtonText: 'Đóng'
-                                });
                             }
+                        }).then(response => {
+                            if (!response.success) {
+                                throw new Error(response.message);
+                            }
+                            return response;
+                        }).catch(error => {
+                            Swal.showValidationMessage(`Lỗi: ${error.message || 'Có lỗi xảy ra khi xóa sản phẩm.'}`);
+                        });
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Xóa dòng sản phẩm khỏi bảng
+                        $(`tr[data-design-id="${designId}"]`).remove();
+                        // Cập nhật tổng giỏ hàng
+                        updateCartTotal(result.value.cartTotal);
+                        updateCartCount();
+                        // Kiểm tra nếu giỏ hàng trống
+                        if ($('.table tbody tr').length === 0) {
+                            $('.table tbody').append('<tr><td colspan="6">Giỏ hàng trống</td></tr>');
+                            $('.cart-page-total a').remove(); // Xóa nút đặt hàng
+                        }
+                        Swal.fire({
+                            title: 'Thành công',
+                            text: 'Sản phẩm đã được xóa khỏi giỏ hàng.',
+                            icon: 'success',
+                            confirmButtonText: 'Đóng'
                         });
                     }
                 });

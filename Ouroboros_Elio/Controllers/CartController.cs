@@ -65,7 +65,10 @@ public class CartController : Controller
         }
 
         var (success, message) = await _cartService.UpdateQuantity(Guid.Parse(userId), designId, quantity);
-        return Json(new { success, message });
+        var cart = await _cartService.GetCartByUserIdAsync(Guid.Parse(userId));
+        decimal cartTotal = cart?.Total ?? 0;
+
+        return Json(new { success, message, cartTotal });
     }
 
     [HttpPost]

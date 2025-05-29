@@ -95,8 +95,7 @@ public class CartRepository : ICartRepository
     public async Task<(bool? Success, string Message)> UpdateQuantity(Guid userId, Guid designId, int quantity)
     {
         var cart = await _context.Carts
-            .AsNoTracking() // Tối ưu hiệu suất
-            .FirstOrDefaultAsync(c => c.UserId == userId);
+            .FirstOrDefaultAsync(c => c.UserId == userId); // Loại bỏ AsNoTracking để cập nhật trực tiếp
 
         if (cart == null)
         {
@@ -104,7 +103,6 @@ public class CartRepository : ICartRepository
         }
 
         var cartItem = await _context.CartItems
-            .AsNoTracking()
             .FirstOrDefaultAsync(ci => ci.CartId == cart.CartId && ci.DesignId == designId);
 
         if (cartItem == null)
@@ -112,19 +110,21 @@ public class CartRepository : ICartRepository
             return (false, "Sản phẩm không có trong giỏ hàng.");
         }
 
-        var design = await _context.Designs
-            .AsNoTracking()
-            .Select(d => new { d.DesignId, d.StockQuantity }) // Chỉ lấy các trường cần thiết
-            .FirstOrDefaultAsync(d => d.DesignId == designId);
-
-        if (design == null)
+        if (quantity > 0)
         {
-            return (false, "Sản phẩm không tồn tại.");
-        }
+            var design = await _context.Designs
+                .Select(d => new { d.DesignId, d.StockQuantity })
+                .FirstOrDefaultAsync(d => d.DesignId == designId);
 
-        if (quantity > 0 && design.StockQuantity < quantity)
-        {
-            return (false, $"Chỉ còn {design.StockQuantity} sản phẩm trong kho.");
+            if (design == null)
+            {
+                return (false, "Sản phẩm không tồn tại.");
+            }
+
+            if (design.StockQuantity < quantity)
+            {
+                return (false, $"Chỉ còn {design.StockQuantity} sản phẩm trong kho.");
+            }
         }
 
         using var transaction = await _context.Database.BeginTransactionAsync();
@@ -143,12 +143,12 @@ public class CartRepository : ICartRepository
             await _context.SaveChangesAsync();
             await UpdateCartTotalAsync(cart.CartId);
             await transaction.CommitAsync();
-            return (true, "Cập nhật số lượng thành công.");
+            return (true, quantity <= 0 ? "Xóa sản phẩm thành công." : "Cập nhật số lượng thành công.");
         }
-        catch (Exception)
+        catch (Exception ex)
         {
             await transaction.RollbackAsync();
-            return (false, "Có lỗi xảy ra khi cập nhật số lượng.");
+            return (false, $"Có lỗi xảy ra khi cập nhật số lượng: {ex.Message}");
         }
     }
 
@@ -156,10 +156,12 @@ public class CartRepository : ICartRepository
     {
         var cart = await _context.Carts.FirstOrDefaultAsync(c => c.CartId == cartId);
         if (cart == null) return;
+
         cart.Total = await _context.CartItems
             .Where(ci => ci.CartId == cartId)
-            .SumAsync(ci => (ci.Quantity ?? 0) * (ci.Price ?? 0));
+            .SumAsync(ci => ci.Quantity * ci.Price);
 
+        _context.Carts.Update(cart);
         await _context.SaveChangesAsync();
     }
 
