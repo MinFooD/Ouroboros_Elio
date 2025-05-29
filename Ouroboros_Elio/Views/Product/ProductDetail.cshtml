@@ -55,7 +55,7 @@
                                 <div class="quantity">
                                     <label>Số Lượng</label>
                                     <div class="cart-plus-minus">
-                                        <input class="cart-plus-minus-box" value="1" type="text">
+                                        <input class="cart-plus-minus-box" value="1" type="text" data-max-quantity="@Model.StockQuantity">
                                         <div class="dec qtybutton"><i class="fa fa-angle-down"></i></div>
                                         <div class="inc qtybutton"><i class="fa fa-angle-up"></i></div>
                                     </div>
@@ -275,15 +275,36 @@
             }
     </style>
 
+    <!-- Cập nhật phần quantity input -->
+    <div class="quantity">
+        <label>Số Lượng</label>
+        <div class="cart-plus-minus">
+            <input class="cart-plus-minus-box" value="1" type="text" data-max-quantity="@Model.StockQuantity">
+            <div class="dec qtybutton"><i class="fa fa-angle-down"></i></div>
+            <div class="inc qtybutton"><i class="fa fa-angle-up"></i></div>
+        </div>
+    </div>
+
+    <!-- Cập nhật JavaScript -->
     <script>
         $(document).ready(function () {
             initializeStockStatus();
 
-            // Gắn sự kiện click cho các nút tăng/giảm số lượng
+            // Hàm debounce
+            function debounce(func, wait) {
+                let timeout;
+                return function (...args) {
+                    clearTimeout(timeout);
+                    timeout = setTimeout(() => func.apply(this, args), wait);
+                };
+            }
+
+            // Gắn sự kiện click cho nút tăng/giảm
             $('.qtybutton').on('click', function () {
                 var $button = $(this);
                 var $input = $button.parent().find('input.cart-plus-minus-box');
                 var oldValue = parseInt($input.val()) || 1;
+                var maxQuantity = parseInt($input.data('max-quantity')) || Infinity;
                 var newVal;
 
                 if ($button.hasClass('inc')) {
@@ -292,8 +313,52 @@
                     newVal = oldValue > 1 ? oldValue - 1 : 1;
                 }
 
+                if (newVal > maxQuantity) {
+                    Swal.fire({
+                        title: 'Lỗi',
+                        text: `Sản phẩm này chỉ còn ${maxQuantity} trong kho.`,
+                        icon: 'error',
+                        confirmButtonText: 'Đóng',
+                        customClass: { confirmButton: 'swal2-confirm' }
+                    });
+                    return;
+                }
+
                 $input.val(newVal);
             });
+
+            // Gắn sự kiện change cho input số lượng
+            $('.cart-plus-minus-box').on('change', debounce(function () {
+                var $input = $(this);
+                var quantity = parseInt($input.val()) || 1;
+                var maxQuantity = parseInt($input.data('max-quantity')) || Infinity;
+
+                if (quantity <= 0) {
+                    Swal.fire({
+                        title: 'Lỗi',
+                        text: 'Số lượng phải lớn hơn 0.',
+                        icon: 'error',
+                        confirmButtonText: 'Đóng',
+                        customClass: { confirmButton: 'swal2-confirm' }
+                    });
+                    $input.val(1);
+                    return;
+                }
+
+                if (quantity > maxQuantity) {
+                    Swal.fire({
+                        title: 'Lỗi',
+                        text: `Sản phẩm này chỉ còn ${maxQuantity} trong kho.`,
+                        icon: 'error',
+                        confirmButtonText: 'Đóng',
+                        customClass: { confirmButton: 'swal2-confirm' }
+                    });
+                    $input.val(maxQuantity);
+                    return;
+                }
+
+                $input.val(quantity);
+            }, 300));
         });
 
         function initializeStockStatus() {
@@ -301,7 +366,6 @@
             const stock = parseInt(qtyArea.data('stock'));
             const cartButton = qtyArea.find('.qty-cart_btn');
 
-            // Lấy số lượng trong giỏ hàng để khởi tạo
             $.ajax({
                 url: '/Cart/GetCartItemQuantity',
                 type: 'GET',
@@ -309,13 +373,7 @@
                 success: function (response) {
                     if (response.success) {
                         qtyArea.data('cart-quantity', response.quantity);
-                        if (stock <= response.quantity) {
-                            qtyArea.addClass('out-of-stock');
-                            cartButton.prop('disabled', true).text('Hết hàng');
-                        } else {
-                            qtyArea.removeClass('out-of-stock');
-                            cartButton.prop('disabled', false).text('Giỏ Hàng');
-                        }
+                        updateStockStatus(stock, response.quantity);
                     }
                 },
                 error: function () {
@@ -324,10 +382,26 @@
             });
         }
 
+        function updateStockStatus(stock, cartQuantity) {
+            const qtyArea = $('.qty-btn_area');
+            const cartButton = qtyArea.find('.qty-cart_btn');
+            const $input = $('.cart-plus-minus-box');
+            const maxAddable = stock - cartQuantity;
+
+            if (stock <= cartQuantity || maxAddable <= 0) {
+                qtyArea.addClass('out-of-stock');
+                cartButton.prop('disabled', true).text('Hết hàng');
+                $input.data('max-quantity', 0).prop('disabled', true);
+            } else {
+                qtyArea.removeClass('out-of-stock');
+                cartButton.prop('disabled', false).text('Giỏ Hàng');
+                $input.data('max-quantity', maxAddable).prop('disabled', false);
+            }
+        }
+
         function updateCartQuantityAndStock(designId) {
             const qtyArea = $('.qty-btn_area');
             const stock = parseInt(qtyArea.data('stock'));
-            const cartButton = qtyArea.find('.qty-cart_btn');
 
             $.ajax({
                 url: '/Cart/GetCartItemQuantity',
@@ -336,13 +410,7 @@
                 success: function (response) {
                     if (response.success) {
                         qtyArea.data('cart-quantity', response.quantity);
-                        if (stock <= response.quantity) {
-                            qtyArea.addClass('out-of-stock');
-                            cartButton.prop('disabled', true).text('Hết hàng');
-                        } else {
-                            qtyArea.removeClass('out-of-stock');
-                            cartButton.prop('disabled', false).text('Giỏ Hàng');
-                        }
+                        updateStockStatus(stock, response.quantity);
                     }
                 },
                 error: function () {
@@ -359,7 +427,7 @@
             let quantity = parseInt($('.cart-plus-minus-box').val()) || 0;
 
             if (cartButton.prop('disabled')) {
-                return; // Không thực hiện nếu nút bị vô hiệu hóa
+                return;
             }
 
             if (quantity <= 0) {
@@ -368,42 +436,27 @@
                     text: 'Vui lòng chọn số lượng lớn hơn 0',
                     icon: 'error',
                     confirmButtonText: 'Đóng',
-                    customClass: {
-                        confirmButton: 'swal2-confirm'
-                    }
+                    customClass: { confirmButton: 'swal2-confirm' }
                 });
                 return;
             }
 
-            // Tính số lượng tối đa có thể thêm
             const maxAddable = stock - cartQuantity;
-            if (cartQuantity + quantity > stock) {
+            let adjusted = false;
+
+            if (quantity > maxAddable) {
                 if (maxAddable <= 0) {
                     Swal.fire({
-                        title: 'Thông báo',
-                        text: `Hàng này chỉ còn ${stock} và bạn đã thêm vào giỏ hàng với số lượng tối đa.`,
+                        title: 'Hết hàng',
+                        text: `Sản phẩm này đã hết hàng hoặc bạn đã thêm số lượng tối đa (${stock}).`,
                         icon: 'warning',
                         confirmButtonText: 'Đóng',
-                        customClass: {
-                            confirmButton: 'swal2-confirm'
-                        }
+                        customClass: { confirmButton: 'swal2-confirm' }
                     });
-                    qtyArea.addClass('out-of-stock');
-                    cartButton.prop('disabled', true).text('Hết hàng');
                     return;
                 }
-
-                // Thêm số lượng tối đa còn lại
                 quantity = maxAddable;
-                Swal.fire({
-                    title: 'Thông báo',
-                    text: `Hàng này chỉ còn ${stock} và đã được thêm ${quantity} vào giỏ hàng với số lượng tối đa.`,
-                    icon: 'warning',
-                    confirmButtonText: 'Đóng',
-                    customClass: {
-                        confirmButton: 'swal2-confirm'
-                    }
-                });
+                adjusted = true;
             }
 
             $.ajax({
@@ -419,26 +472,33 @@
                 },
                 success: function (response) {
                     if (response.success) {
-                        Swal.fire({
-                            title: 'Thành công',
-                            text: 'Sản phẩm đã được thêm vào giỏ hàng!',
-                            icon: 'success',
-                            confirmButtonText: 'Đóng',
-                            customClass: {
-                                confirmButton: 'swal2-confirm'
-                            }
-                        });
+                        if (adjusted) {
+                            Swal.fire({
+                                title: 'Thông báo',
+                                text: `Sản phẩm chỉ còn ${stock} trong kho. Đã thêm ${quantity} vào giỏ hàng.`,
+                                icon: 'warning',
+                                confirmButtonText: 'Đóng',
+                                customClass: { confirmButton: 'swal2-confirm' }
+                            });
+                        } else {
+                            Swal.fire({
+                                title: 'Thành công',
+                                text: 'Sản phẩm đã được thêm vào giỏ hàng!',
+                                icon: 'success',
+                                confirmButtonText: 'Đóng',
+                                customClass: { confirmButton: 'swal2-confirm' }
+                            });
+                        }
                         updateCartCount();
                         updateCartQuantityAndStock(designId);
+                        $('.cart-plus-minus-box').val(1); // Reset số lượng về 1 sau khi thêm
                     } else {
                         Swal.fire({
                             title: 'Lỗi',
                             text: response.message,
                             icon: 'error',
                             confirmButtonText: 'Đóng',
-                            customClass: {
-                                confirmButton: 'swal2-confirm'
-                            }
+                            customClass: { confirmButton: 'swal2-confirm' }
                         });
                     }
                 },
@@ -466,9 +526,7 @@
                             text: 'Có lỗi xảy ra, vui lòng thử lại.',
                             icon: 'error',
                             confirmButtonText: 'Đóng',
-                            customClass: {
-                                confirmButton: 'swal2-confirm'
-                            }
+                            customClass: { confirmButton: 'swal2-confirm' }
                         });
                     }
                 }
