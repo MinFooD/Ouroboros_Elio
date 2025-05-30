@@ -61,14 +61,16 @@ public class CheckoutController : Controller
                 {
                     if (designViewModel.StockQuantity < item.Quantity)
                     {
+                        // Cập nhật số lượng trong giỏ hàng
                         await _cartRepository.UpdateQuantity(userGuid, item.DesignId, designViewModel.StockQuantity);
-                        TempData["Error"] = $"Số lượng sản phẩm {designViewModel.DesignName} đã được điều chỉnh còn {designViewModel.StockQuantity} do tồn kho thay đổi.";
+                        TempData["StockWarning"] = $"Số lượng sản phẩm {designViewModel.DesignName} đã được điều chỉnh còn {designViewModel.StockQuantity} do tồn kho thay đổi.";
                         return RedirectToAction("CartDetail", "Cart");
                     }
                     if (designViewModel.StockQuantity == 0)
                     {
+                        // Xóa sản phẩm khỏi giỏ hàng
                         await _cartRepository.UpdateQuantity(userGuid, item.DesignId, 0);
-                        TempData["Error"] = $"Sản phẩm {designViewModel.DesignName} đã hết hàng và được xóa khỏi giỏ hàng.";
+                        TempData["StockWarning"] = $"Sản phẩm {designViewModel.DesignName} đã hết hàng và được xóa khỏi giỏ hàng.";
                         return RedirectToAction("CartDetail", "Cart");
                     }
                     cartItemViewModels.Add(new CartItemViewModel

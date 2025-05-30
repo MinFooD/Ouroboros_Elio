@@ -75,6 +75,12 @@
         </div>
         <div class="hiraola-cart-area">
             <div class="container">
+                @if (TempData["StockWarning"] != null)
+                {
+                    <div class="alert alert-warning" id="stock-warning">
+                        @TempData["StockWarning"]
+                    </div>
+                }
                 @if (TempData["Warning"] != null)
                 {
                     <div class="alert alert-warning">
@@ -192,6 +198,17 @@
 
         $(document).ready(function () {
             let isUpdating = false;
+
+            // Hiển thị thông báo StockWarning từ TempData bằng SweetAlert2
+            var stockWarning = $('#stock-warning').text().trim();
+            if (stockWarning) {
+                Swal.fire({
+                    title: 'Cảnh báo',
+                    text: stockWarning,
+                    icon: 'warning',
+                    confirmButtonText: 'Đóng'
+                });
+            }
 
             // Hàm cập nhật tổng giá trị giỏ hàng từ dữ liệu backend
             function updateCartTotal(total) {
