@@ -16,7 +16,7 @@ namespace BusinessLogicLayer.Dtos.CartDtos
 
 		public bool ProductType { get; set; }
 
-		public Guid? DesignId { get; set; }
+		public Guid DesignId { get; set; }
 
 		public Guid? CustomBraceletId { get; set; }
 

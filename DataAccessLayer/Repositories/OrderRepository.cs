@@ -38,15 +38,12 @@ public class OrderRepository : IOrderRepository
                 .Where(d => designIds.Contains(d.DesignId))
                 .ToListAsync();
 
-            // Kiểm tra tồn kho cho tất cả sản phẩm
+            // Kiểm tra tồn kho
             foreach (var item in cart.CartItems)
             {
-                var design = await _context.Designs
-                    .FirstOrDefaultAsync(d => d.DesignId == item.DesignId);
-
+                var design = designs.FirstOrDefault(d => d.DesignId == item.DesignId);
                 if (design == null)
                     return (null, $"Sản phẩm {item.DesignId} không tồn tại.");
-
                 if (design.StockQuantity < item.Quantity)
                     return (null, $"Sản phẩm xxx chỉ còn {design.StockQuantity} trong kho.");
             }
@@ -73,15 +70,21 @@ public class OrderRepository : IOrderRepository
 
             await _context.Orders.AddAsync(order);
 
-            // Giảm tồn kho
+            // Giảm tồn kho với optimistic locking
             foreach (var item in cart.CartItems)
             {
-                var design = await _context.Designs
-                    .FirstOrDefaultAsync(d => d.DesignId == item.DesignId);
-
+                var design = designs.FirstOrDefault(d => d.DesignId == item.DesignId);
                 if (design != null)
                 {
-                    design.StockQuantity -= item.Quantity;
+                    var updatedRows = await _context.Designs
+                        .Where(d => d.DesignId == item.DesignId && d.StockQuantity >= item.Quantity)
+                        .ExecuteUpdateAsync(s => s.SetProperty(d => d.StockQuantity, d => d.StockQuantity - item.Quantity));
+
+                    if (updatedRows == 0)
+                    {
+                        await transaction.RollbackAsync();
+                        return (null, $"Sản phẩm xxx đã hết hàng trong lúc xử lý đơn hàng.");
+                    }
                 }
             }
 

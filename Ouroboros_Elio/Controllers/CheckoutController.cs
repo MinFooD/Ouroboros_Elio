@@ -13,20 +13,17 @@ public class CheckoutController : Controller
 {
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly ICartRepository _cartRepository;
-    //private readonly IOrderRepository _orderRepository;
     private readonly IOrderService _orderService;
     private readonly IDesignService _designService;
 
     public CheckoutController(
         UserManager<ApplicationUser> userManager,
         ICartRepository cartRepository,
-        //IOrderRepository orderRepository,
         IOrderService orderService,
         IDesignService designService)
     {
         _userManager = userManager;
         _cartRepository = cartRepository;
-        //_orderRepository = orderRepository;
         _orderService = orderService;
         _designService = designService;
     }
@@ -62,6 +59,18 @@ public class CheckoutController : Controller
                 var designViewModel = await _designService.GetDesignByIdAsync(item.DesignId);
                 if (designViewModel != null)
                 {
+                    if (designViewModel.StockQuantity < item.Quantity)
+                    {
+                        await _cartRepository.UpdateQuantity(userGuid, item.DesignId, designViewModel.StockQuantity);
+                        TempData["Error"] = $"Số lượng sản phẩm {designViewModel.DesignName} đã được điều chỉnh còn {designViewModel.StockQuantity} do tồn kho thay đổi.";
+                        return RedirectToAction("CartDetail", "Cart");
+                    }
+                    if (designViewModel.StockQuantity == 0)
+                    {
+                        await _cartRepository.UpdateQuantity(userGuid, item.DesignId, 0);
+                        TempData["Error"] = $"Sản phẩm {designViewModel.DesignName} đã hết hàng và được xóa khỏi giỏ hàng.";
+                        return RedirectToAction("CartDetail", "Cart");
+                    }
                     cartItemViewModels.Add(new CartItemViewModel
                     {
                         DesignId = item.DesignId,
@@ -117,29 +126,6 @@ public class CheckoutController : Controller
                 {
                     ModelState.AddModelError("", error.Description);
                 }
-                // Lấy lại giỏ hàng
-                var cartItems = await _cartRepository.GetCartItemsByUserIdAsync(userGuid);
-                var userCart = await _cartRepository.GetCartByUserIdAsync(userGuid);
-                var cartItemViewModels = new List<CartItemViewModel>();
-                if (cartItems != null)
-                {
-                    foreach (var item in cartItems)
-                    {
-                        var designViewModel = await _designService.GetDesignByIdAsync(item.DesignId);
-                        if (designViewModel != null)
-                        {
-                            cartItemViewModels.Add(new CartItemViewModel
-                            {
-                                DesignId = item.DesignId,
-                                Quantity = item.Quantity,
-                                Price = item.Price,
-                                Design = designViewModel
-                            });
-                        }
-                    }
-                }
-                model.CartItems = cartItemViewModels;
-                model.TotalAmount = userCart?.Total ?? 0;
                 return View(model);
             }
         }
@@ -148,10 +134,21 @@ public class CheckoutController : Controller
             return NotFound("User not found.");
         }
 
-        // Tạo đơn hàng từ giỏ hàng
+        // Kiểm tra lại tồn kho trước khi tạo đơn hàng
         var cart = await _cartRepository.GetCartByUserIdAsync(userGuid);
         if (cart != null)
         {
+            var cartItems = await _cartRepository.GetCartItemsByUserIdAsync(userGuid);
+            foreach (var item in cartItems)
+            {
+                var design = await _designService.GetDesignByIdAsync(item.DesignId);
+                if (design == null || design.StockQuantity < item.Quantity)
+                {
+                    TempData["Error"] = $"Sản phẩm {design?.DesignName ?? "Unknown"} không đủ tồn kho. Vui lòng kiểm tra lại giỏ hàng.";
+                    return RedirectToAction("CartDetail", "Cart");
+                }
+            }
+
             var (order, message) = await _orderService.CreateOrderFromCartAsync(cart.CartId, userGuid);
             if (order != null)
             {
@@ -160,40 +157,16 @@ public class CheckoutController : Controller
             }
             else
             {
-                ModelState.AddModelError("", message);
+                TempData["Error"] = message;
+                return RedirectToAction("CartDetail", "Cart");
             }
         }
         else
         {
-            ModelState.AddModelError("", "Giỏ hàng trống hoặc không tồn tại.");
+            TempData["Error"] = "Giỏ hàng trống hoặc không tồn tại.";
+            return RedirectToAction("CartDetail", "Cart");
         }
-
-        // Nếu có lỗi, lấy lại giỏ hàng
-        var errorCartItems = await _cartRepository.GetCartItemsByUserIdAsync(userGuid);
-        var errorCart = await _cartRepository.GetCartByUserIdAsync(userGuid);
-        var errorCartItemViewModels = new List<CartItemViewModel>();
-        if (errorCartItems != null)
-        {
-            foreach (var item in errorCartItems)
-            {
-                var designViewModel = await _designService.GetDesignByIdAsync(item.DesignId);
-                if (designViewModel != null)
-                {
-                    errorCartItemViewModels.Add(new CartItemViewModel
-                    {
-                        DesignId = item.DesignId,
-                        Quantity = item.Quantity,
-                        Price = item.Price,
-                        Design = designViewModel
-                    });
-                }
-            }
-        }
-        model.CartItems = errorCartItemViewModels;
-        model.TotalAmount = errorCart?.Total ?? 0;
-        return View(model);
     }
-
 
     public IActionResult Cancel()
     {
@@ -220,20 +193,17 @@ public class CheckoutController : Controller
             return NotFound("User not found.");
         }
 
-        // Lấy OrderId từ TempData
         if (!TempData.TryGetValue("OrderId", out var orderIdObj) || !Guid.TryParse(orderIdObj?.ToString(), out var orderId))
         {
             return BadRequest("Invalid order ID.");
         }
 
-        // Lấy thông tin đơn hàng
         var order = await _orderService.GetOrderByIdAsync(orderId, userGuid);
         if (order == null)
         {
             return NotFound("Order not found.");
         }
 
-        // Tải trước tất cả DesignViewModel
         var designIds = order.OrderItems
             .Where(oi => oi.DesignId.HasValue)
             .Select(oi => oi.DesignId.Value)
@@ -245,7 +215,6 @@ public class CheckoutController : Controller
             .Where(d => d != null)
             .ToDictionary(d => d.DesignId, d => d.DesignName ?? "Unknown");
 
-        // Tạo SuccessViewModel
         var model = new SuccessViewModel
         {
             FirstName = user.FirstName,

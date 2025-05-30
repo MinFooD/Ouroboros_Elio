@@ -29,18 +29,44 @@ public class CartController : Controller
         {
             return RedirectToAction("Register", "Auth");
         }
-        else
+
+        var userGuid = Guid.Parse(userId);
+        var cartAndCartItems = new CartAndListCartItemViewModel
         {
-            var cartAndCartItems = new CartAndListCartItemViewModel()
+            CartViewModel = await _cartService.GetCartByUserIdAsync(userGuid),
+            cartItemsViewModel = await _cartService.GetCartItemsByUserIdAsync(userGuid)
+        };
+
+        // Kiểm tra và đồng bộ tồn kho
+        if (cartAndCartItems.cartItemsViewModel != null)
+        {
+            var updatedItems = new List<CartItemViewModel>();
+            foreach (var item in cartAndCartItems.cartItemsViewModel)
             {
-                CartViewModel = await _cartService.GetCartByUserIdAsync(Guid.Parse(userId)),
-                cartItemsViewModel = await _cartService.GetCartItemsByUserIdAsync(Guid.Parse(userId))
-            };
-
-            ViewBag.designId = designId;
-
-            return View(cartAndCartItems);
+                var design = await _designService.GetDesignByIdAsync(item.DesignId);
+                if (design == null || design.StockQuantity == 0)
+                {
+                    // Xóa sản phẩm khỏi giỏ hàng nếu không còn tồn kho
+                    await _cartService.UpdateQuantity(userGuid, item.DesignId, 0);
+                    TempData["Warning"] = $"Sản phẩm {item.Design.DesignName} đã hết hàng và được xóa khỏi giỏ hàng.";
+                    continue;
+                }
+                if (design.StockQuantity < item.Quantity)
+                {
+                    // Giảm số lượng nếu vượt tồn kho
+                    await _cartService.UpdateQuantity(userGuid, item.DesignId, design.StockQuantity);
+                    item.Quantity = design.StockQuantity;
+                    TempData["Warning"] = $"Số lượng sản phẩm {item.Design.DesignName} đã được điều chỉnh còn {design.StockQuantity} do tồn kho thay đổi.";
+                }
+                updatedItems.Add(item);
+            }
+            cartAndCartItems.cartItemsViewModel = updatedItems.Any() ? updatedItems : null;
+            // Cập nhật tổng giỏ hàng
+            cartAndCartItems.CartViewModel = await _cartService.GetCartByUserIdAsync(userGuid);
         }
+
+        ViewBag.designId = designId;
+        return View(cartAndCartItems);
     }
 
     public async Task<IActionResult> UpdateCart(Guid designId, int quantity)
