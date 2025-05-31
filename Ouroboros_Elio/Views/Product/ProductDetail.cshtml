@@ -45,7 +45,7 @@
                                 </div>
                                 <div class="sp-essential_stuff">
                                     <ul>
-                                        <li>Giá: <span>@Model.Price VND</span></li>
+                                        <li>Giá: <span>@String.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:N0}", @Model.Price) ₫</span></li>
                                         <li>Bộ Sưu Tập: <span>@Model.CollectionName</span></li>
                                         <li>Chủ Đề: <span>@Model.TopicName</span></li>
                                         <li>Mẫu: <span>@Model.ModelName</span></li>
@@ -183,7 +183,7 @@
         </div>
         <!-- Hiraola's Single Product Tab Area End Here -->
         <!-- Begin Hiraola's Product Area Two -->
-        <div class="hiraola-product_area hiraola-product_area-2 ">
+        <div class="hiraola-product_area hiraola-product_area-2">
         </div>
         <!-- Hiraola's Product Area Two End Here -->
     </div>
@@ -248,7 +248,6 @@
             color: #ea3a3c !important;
             border-color: #ea3a3c !important;
         }
-
         /* Làm mờ và vô hiệu hóa nút khi hết hàng */
         .out-of-stock .qty-cart_btn {
             opacity: 0.5 !important;
@@ -274,16 +273,6 @@
                 background-color: #d5b473;
             }
     </style>
-
-    <!-- Cập nhật phần quantity input -->
-    @* <div class="quantity">
-        <label>Số Lượng</label>
-        <div class="cart-plus-minus">
-            <input class="cart-plus-minus-box" value="1" type="text" data-max-quantity="@Model.StockQuantity">
-            <div class="dec qtybutton"><i class="fa fa-angle-down"></i></div>
-            <div class="inc qtybutton"><i class="fa fa-angle-up"></i></div>
-        </div>
-    </div> *@
 
     <!-- Cập nhật JavaScript -->
     <script>
@@ -364,22 +353,42 @@
         function initializeStockStatus() {
             const qtyArea = $('.qty-btn_area');
             const stock = parseInt(qtyArea.data('stock'));
+            const designId = qtyArea.data('product-id');
             const cartButton = qtyArea.find('.qty-cart_btn');
+            const $input = $('.cart-plus-minus-box');
 
-            $.ajax({
-                url: '/Cart/GetCartItemQuantity',
-                type: 'GET',
-                data: { designId: qtyArea.data('product-id') },
-                success: function (response) {
-                    if (response.success) {
-                        qtyArea.data('cart-quantity', response.quantity);
-                        updateStockStatus(stock, response.quantity);
+            // Kiểm tra tồn kho ngay từ Model.StockQuantity
+            if (stock <= 0) {
+                qtyArea.addClass('out-of-stock');
+                cartButton.prop('disabled', true).text('Hết hàng');
+                $input.data('max-quantity', 0).prop('disabled', true);
+                return;
+            }
+
+            // Kiểm tra số lượng trong giỏ hàng nếu người dùng đã đăng nhập
+            const isAuthenticated = $('input[name="__RequestVerificationToken"]').length > 0;
+            if (isAuthenticated) {
+                $.ajax({
+                    url: '/Cart/GetCartItemQuantity',
+                    type: 'GET',
+                    data: { designId: designId },
+                    success: function (response) {
+                        if (response.success) {
+                            qtyArea.data('cart-quantity', response.quantity);
+                            updateStockStatus(stock, response.quantity);
+                        } else {
+                            updateStockStatus(stock, 0);
+                        }
+                    },
+                    error: function () {
+                        console.error('Không thể lấy số lượng trong giỏ hàng.');
+                        updateStockStatus(stock, 0);
                     }
-                },
-                error: function () {
-                    console.error('Không thể lấy số lượng trong giỏ hàng.');
-                }
-            });
+                });
+            } else {
+                // Nếu chưa đăng nhập, giả định cartQuantity = 0
+                updateStockStatus(stock, 0);
+            }
         }
 
         function updateStockStatus(stock, cartQuantity) {
@@ -388,7 +397,7 @@
             const $input = $('.cart-plus-minus-box');
             const maxAddable = stock - cartQuantity;
 
-            if (stock <= cartQuantity || maxAddable <= 0) {
+            if (stock <= 0 || maxAddable <= 0) {
                 qtyArea.addClass('out-of-stock');
                 cartButton.prop('disabled', true).text('Hết hàng');
                 $input.data('max-quantity', 0).prop('disabled', true);
@@ -427,13 +436,20 @@
             let quantity = parseInt($('.cart-plus-minus-box').val()) || 0;
 
             if (cartButton.prop('disabled')) {
+                Swal.fire({
+                    title: 'Hết hàng',
+                    text: 'Sản phẩm này hiện đã hết hàng.',
+                    icon: 'warning',
+                    confirmButtonText: 'Đóng',
+                    customClass: { confirmButton: 'swal2-confirm' }
+                });
                 return;
             }
 
             if (quantity <= 0) {
                 Swal.fire({
                     title: 'Lỗi',
-                    text: 'Vui lòng chọn số lượng lớn hơn 0',
+                    text: 'Vui lòng chọn số lượng lớn hơn 0.',
                     icon: 'error',
                     confirmButtonText: 'Đóng',
                     customClass: { confirmButton: 'swal2-confirm' }
@@ -517,7 +533,7 @@
                             }
                         }).then((result) => {
                             if (result.isConfirmed) {
-                                window.location.href = '/Auth/Register';
+                                window.location.href = '/Auth/Login?ReturnUrl=' + encodeURIComponent(window.location.pathname);
                             }
                         });
                     } else {
