@@ -1,73 +1,73 @@
-﻿
+﻿@model BusinessLogicLayer.Dtos.ContactDtos.ContactMessageCreateDto
 
 <body class="template-color-1">
-
     <div class="main-wrapper">
-
         <!-- Begin Hiraola's Breadcrumb Area -->
         <div class="breadcrumb-area">
             <div class="container">
                 <div class="breadcrumb-content">
-                    <h2>Other</h2>
+                    <h2>Liên Hệ</h2>
                     <ul>
-                        <li><a href="index.html">Home</a></li>
-                        <li class="active">Contact</li>
+                        <li><a href="/">Trang Chủ</a></li>
+                        <li class="active">Liên Hệ</li>
                     </ul>
                 </div>
             </div>
         </div>
         <!-- Hiraola's Breadcrumb Area End Here -->
         <!-- Begin Contact Main Page Area -->
-        <div class="contact-main-page">           
+        <div class="contact-main-page">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-5 offset-lg-1 col-md-12 order-1 order-lg-2">
                         <div class="contact-page-side-content">
-                            <h3 class="contact-page-title">Contact Us</h3>
+                            <h3 class="contact-page-title">Liên Hệ Với Chúng Tôi</h3>
                             <p class="contact-page-message">
-                                Claritas est etiam processus dynamicus, qui sequitur
-                                mutationem consuetudium lectorum. Mirum est notare quam littera gothica, quam nunc putamus parum
-                                claram anteposuerit litterarum formas human.
+                                Chúng tôi luôn sẵn sàng lắng nghe ý kiến của bạn. Vui lòng liên hệ để được hỗ trợ hoặc gửi phản hồi về sản phẩm và dịch vụ của chúng tôi.
                             </p>
                             <div class="single-contact-block">
-                                <h4><i class="fa fa-fax"></i> Address</h4>
-                                <p>123 Main Street, Anytown, CA 12345 – USA</p>
+                                <h4><i class="fa fa-fax"></i> Địa Chỉ</h4>
+                                <p>123 Đường Lê Lợi, Quận 1, TP. Hồ Chí Minh, Việt Nam</p>
                             </div>
                             <div class="single-contact-block">
-                                <h4><i class="fa fa-phone"></i> Phone</h4>
-                                <p>Mobile: (08) 123 456 789</p>
-                                <p>Hotline: 1009 678 456</p>
+                                <h4><i class="fa fa-phone"></i> Số Điện Thoại</h4>
+                                <p>Di động: (028) 1234 5678</p>
+                                <p>Hotline: 1800 6789</p>
                             </div>
                             <div class="single-contact-block last-child">
                                 <h4><i class="fa fa-envelope-o"></i> Email</h4>
-                                <p>yourmail@domain.com</p>
-                                <p>support@hastech.company</p>
+                                <p>hotro@ourobos.vn</p>
+                                <p>kinhdoanh@ourobos.vn</p>
                             </div>
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-12 order-2 order-lg-1">
                         <div class="contact-form-content">
-                            <h3 class="contact-page-title">Tell Us Your Message</h3>
+                            <h3 class="contact-page-title">Gửi Tin Nhắn Của Bạn</h3>
                             <div class="contact-form">
-                                <form id="contact-form" action="https://whizthemes.com/mail-php/mamunur/hiraola/hiraola.php">
+                                <form id="contact-form" asp-action="SendMessage" asp-controller="Contact" method="post">
                                     <div class="form-group">
-                                        <label>Your Name <span class="required">*</span></label>
-                                        <input type="text" name="con_name" required>
+                                        <label>Tên của bạn <span class="required">*</span></label>
+                                        <input type="text" asp-for="Name" required>
+                                        <span asp-validation-for="Name" class="text-danger"></span>
                                     </div>
                                     <div class="form-group">
-                                        <label>Your Email <span class="required">*</span></label>
-                                        <input type="email" name="con_email" required>
+                                        <label>Email của bạn <span class="required">*</span></label>
+                                        <input type="email" asp-for="Email" required>
+                                        <span asp-validation-for="Email" class="text-danger"></span>
                                     </div>
                                     <div class="form-group">
-                                        <label>Subject</label>
-                                        <input type="text" name="con_subject">
+                                        <label>Chủ đề</label>
+                                        <input type="text" asp-for="Subject">
+                                        <span asp-validation-for="Subject" class="text-danger"></span>
                                     </div>
                                     <div class="form-group form-group-2">
-                                        <label>Your Message</label>
-                                        <textarea name="con_message"></textarea>
+                                        <label>Nội dung tin nhắn <span class="required">*</span></label>
+                                        <textarea asp-for="Message" required></textarea>
+                                        <span asp-validation-for="Message" class="text-danger"></span>
                                     </div>
                                     <div class="form-group">
-                                        <button type="submit" value="submit" id="submit" class="hiraola-contact-form_btn" name="submit">send</button>
+                                        <button type="submit" class="hiraola-contact-form_btn">Gửi</button>
                                     </div>
                                 </form>
                                 <p class="form-message mt-3 mb-0"></p>
@@ -80,4 +80,96 @@
         <!-- Contact Main Page Area End Here -->
     </div>
 
+    <!-- JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.12/jquery.validate.unobtrusive.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            // Cấu hình jQuery Validation
+            $("#contact-form").validate({
+                rules: {
+                    Name: {
+                        required: true,
+                        maxlength: 100
+                    },
+                    Email: {
+                        required: true,
+                        email: true,
+                        maxlength: 100
+                    },
+                    Subject: {
+                        maxlength: 200
+                    },
+                    Message: {
+                        required: true,
+                        maxlength: 2000
+                    }
+                },
+                messages: {
+                    Name: {
+                        required: "Vui lòng nhập tên của bạn.",
+                        maxlength: "Tên không được vượt quá 100 ký tự."
+                    },
+                    Email: {
+                        required: "Vui lòng nhập email của bạn.",
+                        email: "Email không hợp lệ.",
+                        maxlength: "Email không được vượt quá 100 ký tự."
+                    },
+                    Subject: {
+                        maxlength: "Chủ đề không được vượt quá 200 ký tự."
+                    },
+                    Message: {
+                        required: "Vui lòng nhập nội dung tin nhắn.",
+                        maxlength: "Nội dung không được vượt quá 2000 ký tự."
+                    }
+                },
+                submitHandler: function (form) {
+                    $.ajax({
+                        url: $(form).attr('action'),
+                        type: 'POST',
+                        data: $(form).serialize(),
+                        headers: {
+                            'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
+                        },
+                        success: function (response) {
+                            // Kiểm tra phản hồi để đảm bảo message là chuỗi
+                            var message = typeof response.message === 'string' ? response.message : 'Có lỗi xảy ra khi xử lý phản hồi từ server.';
+                            if (response.success) {
+                                Swal.fire({
+                                    title: 'Thành công',
+                                    text: message,
+                                    icon: 'success',
+                                    confirmButtonText: 'Đóng'
+                                });
+                                form.reset();
+                            } else {
+                                Swal.fire({
+                                    title: 'Lỗi',
+                                    text: message,
+                                    icon: 'error',
+                                    confirmButtonText: 'Đóng'
+                                });
+                            }
+                        },
+                        error: function () {
+                            // Xử lý lỗi từ server
+                            var errorMessage = 'Có lỗi xảy ra khi gửi tin nhắn. Vui lòng thử lại.';
+                            if (xhr.responseJSON && typeof xhr.responseJSON.message === 'string') {
+                                errorMessage = xhr.responseJSON.message;
+                            }
+                            Swal.fire({
+                                title: 'Lỗi',
+                                text: 'Có lỗi xảy ra khi gửi tin nhắn. Vui lòng thử lại.',
+                                icon: 'error',
+                                confirmButtonText: 'Đóng'
+                            });
+                        }
+                    });
+                    return false; // Ngăn submit mặc định
+                }
+            });
+        });
+    </script>
 </body>

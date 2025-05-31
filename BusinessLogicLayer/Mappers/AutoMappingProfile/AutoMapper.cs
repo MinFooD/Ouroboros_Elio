@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BusinessLogicLayer.Dtos.CartDtos;
 using BusinessLogicLayer.Dtos.CategoryDtos;
+using BusinessLogicLayer.Dtos.ContactDtos;
 using BusinessLogicLayer.Dtos.DesignDtos;
 using BusinessLogicLayer.Dtos.ModelDtos;
 using BusinessLogicLayer.Dtos.OrderDtos;
@@ -43,6 +44,11 @@ namespace BusinessLogicLayer.Mappers.AutoMappingProfile
 				.ReverseMap();
 
             CreateMap<Category, CategoryViewModel>();
+
+            CreateMap<ContactMessageCreateDto, ContactMessage>()
+                .ForMember(dest => dest.MessageId, opt => opt.Ignore())
+                .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
+                .ForMember(dest => dest.IsRead, opt => opt.Ignore());
         }
 	}
 }

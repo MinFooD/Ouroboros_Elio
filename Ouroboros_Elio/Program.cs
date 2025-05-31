@@ -44,9 +44,13 @@ builder.Services.AddScoped<IDesignRepository, DesignRepository>();
 builder.Services.AddScoped<IModelRepository, ModelRepository>();
 builder.Services.AddScoped<ICartRepository, CartRepository>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
-builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<IContactRepository, ContactRepository>();
+
+builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<IContactService, ContactService>();
+
 //builder.Services.AddDataAccessLayer(builder.Configuration);
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole<Guid>>(options =>
