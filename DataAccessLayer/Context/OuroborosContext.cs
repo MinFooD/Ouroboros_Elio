@@ -26,9 +26,11 @@ public class OuroborosContext : IdentityDbContext<ApplicationUser, IdentityRole<
 	public DbSet<Payment> Payments { get; set; }
 	public DbSet<Topic> Topics { get; set; }
 	public DbSet<SystemTracking> SystemTrackings { get; set; }
+    public DbSet<ContactMessage> ContactMessages { get; set; }
 
-	// Cấu hình mối quan hệ giữa các bảng trong phương thức OnModelCreating
-	protected override void OnModelCreating(ModelBuilder modelBuilder)
+
+    // Cấu hình mối quan hệ giữa các bảng trong phương thức OnModelCreating
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
 	{
 		base.OnModelCreating(modelBuilder);
 
@@ -161,5 +163,10 @@ public class OuroborosContext : IdentityDbContext<ApplicationUser, IdentityRole<
 				  .WithMany(c => c.Topics)
 				  .HasForeignKey(t => t.CollectionId);
 		});
-	}
+
+        modelBuilder.Entity<ContactMessage>(entity =>
+        {
+            entity.HasKey(cm => cm.MessageId);
+        });
+    }
 }

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccessLayer.Migrations
 {
     [DbContext(typeof(OuroborosContext))]
-    [Migration("20250528041425_thêm public int StockQuantity { get; set; }")]
-    partial class thêmpublicintStockQuantitygetset
+    [Migration("20250531152844_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -52,11 +52,9 @@ namespace DataAccessLayer.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("FirstName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LastName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("LockoutEnabled")
@@ -76,8 +74,8 @@ namespace DataAccessLayer.Migrations
                     b.Property<string>("PasswordHash")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("PhoneNumber")
+                        .HasColumnType("int");
 
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
@@ -165,7 +163,7 @@ namespace DataAccessLayer.Migrations
                     b.Property<Guid?>("CustomBraceletId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("DesignId")
+                    b.Property<Guid>("DesignId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<decimal?>("Price")
@@ -253,6 +251,43 @@ namespace DataAccessLayer.Migrations
                     b.ToTable("Collections");
                 });
 
+            modelBuilder.Entity("DataAccessLayer.Entities.ContactMessage", b =>
+                {
+                    b.Property<Guid>("MessageId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<bool>("IsRead")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Subject")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.HasKey("MessageId");
+
+                    b.ToTable("ContactMessages");
+                });
+
             modelBuilder.Entity("DataAccessLayer.Entities.CustomBracelet", b =>
                 {
                     b.Property<Guid>("CustomBraceletId")
@@ -331,7 +366,7 @@ namespace DataAccessLayer.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("StockQuantity")
+                    b.Property<int?>("StockQuantity")
                         .HasColumnType("int");
 
                     b.Property<int>("VisitCount")
@@ -679,7 +714,9 @@ namespace DataAccessLayer.Migrations
 
                     b.HasOne("DataAccessLayer.Entities.Design", "Design")
                         .WithMany("CartItems")
-                        .HasForeignKey("DesignId");
+                        .HasForeignKey("DesignId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Cart");
 
