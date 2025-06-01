@@ -23,7 +23,7 @@ public class ContactService : IContactService
         _configuration = configuration;
     }
 
-    public async Task<(bool Success, string Message)> SendContactMessageAsync(ContactMessageCreateDto contactMessageDto)
+    public async Task<bool> SendContactMessageAsync(ContactMessageCreateDto contactMessageDto)
     {
         try
         {
@@ -34,15 +34,15 @@ public class ContactService : IContactService
             // Gửi email thông báo
             await SendEmailAsync(contactMessageDto);
 
-            return (true, "Tin nhắn của bạn đã được gửi thành công!");
+            return true;
         }
         catch (SmtpException)
         {
-            return (false, "Có lỗi khi gửi email. Vui lòng thử lại sau.");
+            return false;
         }
         catch (Exception)
         {
-            return (false, "Có lỗi xảy ra khi xử lý tin nhắn. Vui lòng thử lại.");
+            return false;
         }
     }
 

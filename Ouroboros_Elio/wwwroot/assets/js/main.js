@@ -1173,9 +1173,9 @@
     /*-------------------------------------------------*/
     /* Hiraola's Bootstraps 4 Tooltip
 /*-------------------------------------------------*/
-    $(function () {
-        $('[data-bs-toggle="tooltip"]').tooltip();
-    });
+    //$(function () {
+    //    $('[data-bs-toggle="tooltip"]').tooltip();
+    //});
     /*--------------------------------
     Price Slider Active
 -------------------------------- */
@@ -1781,70 +1781,70 @@
     /*--------------------------------
     MailChimp
 -------------------------------- */
-    $('#mc-form').ajaxChimp({
-        language: 'en',
-        callback: mailChimpResponse,
-        url: 'https://devitems.us11.list-manage.com/subscribe/post?u=6bbb9b6f5827bd842d9640c82&amp;id=05d85f18ef',
-    });
-    function mailChimpResponse(resp) {
-        if (resp.result === 'success') {
-            $('.mailchimp-success').addClass('active');
-            $('.mailchimp-success')
-                .html('' + resp.msg)
-                .fadeIn(900);
-            $('.mailchimp-error').fadeOut(400);
-        } else if (resp.result === 'error') {
-            $('.mailchimp-error')
-                .html('' + resp.msg)
-                .fadeIn(900);
-        }
-    }
+    //$('#mc-form').ajaxChimp({
+    //    language: 'en',
+    //    callback: mailChimpResponse,
+    //    url: 'https://devitems.us11.list-manage.com/subscribe/post?u=6bbb9b6f5827bd842d9640c82&amp;id=05d85f18ef',
+    //});
+    //function mailChimpResponse(resp) {
+    //    if (resp.result === 'success') {
+    //        $('.mailchimp-success').addClass('active');
+    //        $('.mailchimp-success')
+    //            .html('' + resp.msg)
+    //            .fadeIn(900);
+    //        $('.mailchimp-error').fadeOut(400);
+    //    } else if (resp.result === 'error') {
+    //        $('.mailchimp-error')
+    //            .html('' + resp.msg)
+    //            .fadeIn(900);
+    //    }
+    //}
     /*--------------------------------
     Ajax Contact Form
 -------------------------------- */
-    $(function () {
-        // Get the form.
-        var form = $('#contact-form');
-        // Get the messages div.
-        var formMessages = $('.form-message');
-        // Set up an event listener for the contact form.
-        $(form).submit(function (e) {
-            // Stop the browser from submitting the form.
-            e.preventDefault();
-            // Serialize the form data.
-            var formData = $(form).serialize();
-            // Submit the form using AJAX.
-            $.ajax({
-                type: 'POST',
-                url: $(form).attr('action'),
-                data: formData,
-            })
-                .done(function (response) {
-                    // Make sure that the formMessages div has the 'success' class.
-                    $(formMessages).removeClass('error');
-                    $(formMessages).addClass('success');
+    //$(function () {
+    //    // Get the form.
+    //    var form = $('#contact-form');
+    //    // Get the messages div.
+    //    var formMessages = $('.form-message');
+    //    // Set up an event listener for the contact form.
+    //    $(form).submit(function (e) {
+    //        // Stop the browser from submitting the form.
+    //        e.preventDefault();
+    //        // Serialize the form data.
+    //        var formData = $(form).serialize();
+    //        // Submit the form using AJAX.
+    //        $.ajax({
+    //            type: 'POST',
+    //            url: $(form).attr('action'),
+    //            data: formData,
+    //        })
+    //            .done(function (response) {
+    //                // Make sure that the formMessages div has the 'success' class.
+    //                $(formMessages).removeClass('error');
+    //                $(formMessages).addClass('success');
 
-                    // Set the message text.
-                    $(formMessages).text(response);
+    //                // Set the message text.
+    //                $(formMessages).text(response);
 
-                    // Clear the form.
-                    $('#contact-form input,#contact-form textarea').val('');
-                })
-                .fail(function (data) {
-                    // Make sure that the formMessages div has the 'error' class.
-                    $(formMessages).removeClass('success');
-                    $(formMessages).addClass('error');
+    //                // Clear the form.
+    //                $('#contact-form input,#contact-form textarea').val('');
+    //            })
+    //            .fail(function (data) {
+    //                // Make sure that the formMessages div has the 'error' class.
+    //                $(formMessages).removeClass('success');
+    //                $(formMessages).addClass('error');
 
-                    // Set the message text.
-                    if (data.responseText !== '') {
-                        $(formMessages).text(data.responseText);
-                    } else {
-                        $(formMessages).text(
-                            'Oops! An error occured and your message could not be sent.'
-                        );
-                    }
-                });
-        });
-    });
+    //                // Set the message text.
+    //                if (data.responseText !== '') {
+    //                    $(formMessages).text(data.responseText);
+    //                } else {
+    //                    $(formMessages).text(
+    //                        'Oops! An error occured and your message could not be sent.'
+    //                    );
+    //                }
+    //            });
+    //    });
+    //});
 
 })(jQuery);

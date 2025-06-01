@@ -5,5 +5,5 @@ namespace BusinessLogicLayer.ServiceContracts;
 
 public interface IContactService
 {
-    Task<(bool Success, string Message)> SendContactMessageAsync(ContactMessageCreateDto contactMessageDto);
+    Task<bool> SendContactMessageAsync(ContactMessageCreateDto contactMessageDto);
 }

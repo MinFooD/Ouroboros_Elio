@@ -533,7 +533,9 @@
                             }
                         }).then((result) => {
                             if (result.isConfirmed) {
-                                window.location.href = '/Auth/Login?ReturnUrl=' + encodeURIComponent(window.location.pathname);
+                                const designId = $('.qty-btn_area').data('product-id');
+                                const returnUrl = '/Product/ProductDetail?designId=' + encodeURIComponent(designId);
+                                window.location.href = '/Auth/Register?ReturnUrl=' + encodeURIComponent(returnUrl);
                             }
                         });
                     } else {

@@ -13,6 +13,7 @@ public class ContactMessageCreateDto
     [StringLength(100, ErrorMessage = "Email không được vượt quá 100 ký tự.")]
     public string Email { get; set; }
 
+    [Required(ErrorMessage = "Vui lòng nhập chủ đề của bạn.")]
     [StringLength(200, ErrorMessage = "Chủ đề không được vượt quá 200 ký tự.")]
     public string Subject { get; set; }
 

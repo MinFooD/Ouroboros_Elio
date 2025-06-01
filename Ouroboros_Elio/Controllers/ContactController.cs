@@ -24,11 +24,11 @@ namespace Ouroboros_Elio.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return Json(new { success = false, message = "Vui lòng điền đầy đủ các trường bắt buộc." });
+                return Json(new { success = false, message = "Dữ liệu không hợp lệ." });
             }
 
-            var (success, message) = await _contactService.SendContactMessageAsync(contactMessageDto);
-            return Json(new { success, message });
+            var contactMessage = await _contactService.SendContactMessageAsync(contactMessageDto);
+            return Json(new { success = true });
         }
     }
 }

@@ -38,9 +38,9 @@ namespace Ouroboros_Elio.Controllers
 				Login = new LoginRequestViewModel()
 			};
 			return View(model);
-		}
+		}      
 
-		[HttpPost]
+        [HttpPost]
 		[Route("Login")]
 		public async Task<IActionResult> Login(LoginRegisterViewModel model)
 		{
@@ -86,6 +86,13 @@ namespace Ouroboros_Elio.Controllers
                 {
                     // Xóa cookie RememberedEmail nếu không chọn "Ghi nhớ tôi"
                     Response.Cookies.Delete("RememberedEmail");
+                }
+
+                // Kiểm tra và chuyển hướng theo ReturnUrl nếu có
+                var returnUrl = Request.Query["ReturnUrl"];
+                if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+                {
+                    return Redirect(returnUrl);
                 }
 
                 return RedirectToAction("ProductList", "Product"); 
