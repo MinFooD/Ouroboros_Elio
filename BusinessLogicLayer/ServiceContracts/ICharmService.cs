@@ -1,4 +1,5 @@
 ﻿using BusinessLogicLayer.Dtos.CharmDtos;
+using DataAccessLayer.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,5 +12,9 @@ namespace BusinessLogicLayer.ServiceContracts
 	{
 		Task<CharmViewModel?> GetCharmByIdAsync(Guid charmId);
 		Task<List<CharmViewModel>> GetAllCharmsAsync();
+		Task<CharmViewModel[]> GetArrayCharmsAsync();
+		Task<CustomBraceletViewModel?> GetCustomBraceletByIdAsync(Guid? customBraceletId);
+		Task<List<CustomBraceletCharmViewModel>> GetCustomBraceletCharm(Guid? customBraceletId);
+		Task<bool> CreateCustomBracelet(string braceletName, string note, List<string> charms, Guid userId);
 	}
 }

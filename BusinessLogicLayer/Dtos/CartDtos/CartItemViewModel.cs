@@ -1,4 +1,5 @@
-﻿using BusinessLogicLayer.Dtos.DesignDtos;
+﻿using BusinessLogicLayer.Dtos.CharmDtos;
+using BusinessLogicLayer.Dtos.DesignDtos;
 using DataAccessLayer.Entities;
 using System;
 using System.Collections.Generic;
@@ -24,6 +25,9 @@ namespace BusinessLogicLayer.Dtos.CartDtos
 
 		public decimal Price { get; set; }
 
+		public int? MaximumQuantity { get; set; }
+
 		public virtual DesignViewModel? Design { get; set; }
+		public virtual CustomBraceletViewModel? CustomBracelet { get; set; }
 	}
 }

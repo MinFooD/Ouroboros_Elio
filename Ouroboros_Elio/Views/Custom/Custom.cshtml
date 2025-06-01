@@ -1,245 +1,407 @@
-﻿@{
-    Layout = null;
-}
+﻿
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
+	<meta charset="UTF-8" />
 	<title>Vòng tay với vị trí cố định</title>
 	<link href="~/css/sortable.css" rel="stylesheet" />
+	<link href="~/css/swal.css" rel="stylesheet" />
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
-    <div class="container">
-        <div class="charm-list">
-            <h3>✨ Danh sách Charm</h3>
-            <div id="availableCharms"></div>
-        </div>
+	<div class="container1">
+		<div>
+			<div class="charm-list">
+				<h3>✨ Danh sách Charm</h3>
+				<div class="charm-section">
+					<div id="availableCharms"></div>
+				</div>
+			</div>
+			<div class="note-section">
+				<h3>📝 Ghi chú</h3>
+				<textarea id="noteInput" placeholder="Nhập ghi chú cho vòng tay của bạn..."></textarea>
+				<p id="wordCount">Số từ: 0 / 200</p>
+			</div>
+		</div>
+			<div class="ring">
+				<h3>💍 Vòng tay (Tối thiểu 1 charm)</h3>
+				<div id="bracelet"></div>
+				<button id="submitBtn">Tạo vòng tay (kèm ghi chú)</button>
+			<div id="totalPriceDisplay" style="margin-top: 15px; font-weight: bold; font-size: 18px;">
+				Tổng giá vòng tay: 0đ
+			</div>
+			</div>
+		
+	</div>
 
-        <div class="ring">
-            <h3>💍 Vòng tay (Tối thiểu 1 charm)</h3>
-            <div id="bracelet"></div>
-            <button id="submitBtn">🚀 Gửi vòng tay</button>
-        </div>
-    </div>
+	<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+	<script>
+		const noteInput = document.getElementById("noteInput");
+		const wordCount = document.getElementById("wordCount");
+		const maxChars = 200;
 
-    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
-    <script>
-        const charms = [
-            { id: 1, name: "1", img: "https://dytbw3ui6vsu6.cloudfront.net/media/catalog/product/resize/700x700/h/n/hna_b22lm06_11_1_1.webp"},
-            { id: 2, name: "2", img: "https://dytbw3ui6vsu6.cloudfront.net/media/catalog/product/resize/700x700/h/n/hna_b22lm06_11_1_1.webp" },
-            { id: 3, name: "3", img: "https://dytbw3ui6vsu6.cloudfront.net/media/catalog/product/resize/700x700/h/n/hna_b22lm06_11_1_1.webp" },
-            { id: 4, name: "4", img: "https://dytbw3ui6vsu6.cloudfront.net/media/catalog/product/resize/700x700/h/n/hna_b22lm06_11_1_1.webp" },
-            { id: 5, name: "5", img: "https://dytbw3ui6vsu6.cloudfront.net/media/catalog/product/resize/700x700/h/n/hna_b22lm06_11_1_1.webp" },
-            { id: 6, name: "6", img: "https://dytbw3ui6vsu6.cloudfront.net/media/catalog/product/resize/700x700/h/n/hna_b22lm06_11_1_1.webp" },
-            { id: 7, name: "7", img: "https://dytbw3ui6vsu6.cloudfront.net/media/catalog/product/resize/700x700/h/n/hna_b22lm06_11_1_1.webp" },
-            { id: 8, name: "8", img: "https://dytbw3ui6vsu6.cloudfront.net/media/catalog/product/resize/700x700/h/n/hna_b22lm06_11_1_1.webp" },
-            { id: 9, name: "9", img: "https://dytbw3ui6vsu6.cloudfront.net/media/catalog/product/resize/700x700/h/n/hna_b22lm06_11_1_1.webp" },
-            { id: 10, name: "10", img: "https://dytbw3ui6vsu6.cloudfront.net/media/catalog/product/resize/700x700/h/n/hna_b22lm06_11_1_1.webp" },
-            { id: 11, name: "11", img: "https://dytbw3ui6vsu6.cloudfront.net/media/catalog/product/resize/700x700/h/n/hna_b22lm06_11_1_1.webp"},
-            { id: 12, name: "12", img: "https://dytbw3ui6vsu6.cloudfront.net/media/catalog/product/resize/700x700/h/n/hna_b22lm06_11_1_1.webp" },
-            { id: 13, name: "13", img: "https://dytbw3ui6vsu6.cloudfront.net/media/catalog/product/resize/700x700/h/n/hna_b22lm06_11_1_1.webp" },
-            { id: 14, name: "14", img: "https://dytbw3ui6vsu6.cloudfront.net/media/catalog/product/resize/700x700/h/n/hna_b22lm06_11_1_1.webp" },
-            { id: 15, name: "15", img: "https://dytbw3ui6vsu6.cloudfront.net/media/catalog/product/resize/700x700/h/n/hna_b22lm06_11_1_1.webp" }
-        ];
+		noteInput.addEventListener("input", function() {
+			let currentLength = noteInput.value.length;
 
-        const availableCharmsDiv = document.getElementById('availableCharms');
-        const braceletDiv = document.getElementById('bracelet');
-        const slots = [];
-        const totalSlots = 8;
+			if (currentLength > maxChars) {
+				noteInput.value = noteInput.value.substring(0, maxChars); // Cắt bớt nếu số ký tự vượt quá giới hạn
+				currentLength = maxChars; // Đảm bảo rằng chiều dài không vượt quá giới hạn
+			}
 
-        function removeCharmFromSlot(charm) {
-            const parentSlot = charm.parentNode;
-            if (parentSlot && parentSlot.classList.contains('slot')) {
-                parentSlot.removeChild(charm);
-                renderAvailableCharms();
-            }
-        }
+			// Cập nhật số lượng ký tự đã nhập
+			wordCount.textContent = `Số ký tự: ${currentLength} / ${maxChars}`;
+		});
 
-        function createSlots() {
-            braceletDiv.innerHTML = '';
-            slots.length = 0;
+		const charms = @Html.Raw(Json.Serialize(ViewBag.Charms));
 
-            // Tạo sợi dây ở giữa
-            const rope = document.createElement('div');
-            rope.className = 'bracelet-rope';
-            braceletDiv.appendChild(rope);
+		const availableCharmsDiv = document.getElementById('availableCharms');
+		const braceletDiv = document.getElementById('bracelet');
+		const slots = [];
+		const totalSlots = 8;
 
-            const radius = 160;
-            const centerX = braceletDiv.clientWidth / 2;
-            const centerY = braceletDiv.clientHeight / 2;
+		function removeCharmFromSlot(charm) {
+			const parentSlot = charm.parentNode;
+			if (parentSlot && parentSlot.classList.contains('slot')) {
+				parentSlot.removeChild(charm);
+				updateTotalPrice();
+				renderAvailableCharms();
+			}
+		}
 
-            // Tạo vòng tròn hoàn chỉnh với 8 vị trí
-            for (let i = 0; i < totalSlots; i++) {
-                const slot = document.createElement('div');
-                slot.className = 'slot';
-                slot.id = `slot-${i}`;
-                slot.dataset.index = i;
-                slot.textContent = `${i + 1}`;
+		function createSlots() {
+			braceletDiv.innerHTML = '';
+			slots.length = 0;
+			updateTotalPrice();
+			// Tạo sợi dây ở giữa
+			const rope = document.createElement('div');
+			rope.className = 'bracelet-rope';
+			braceletDiv.appendChild(rope);
 
-                // Tính góc cho vòng tròn hoàn chỉnh (bắt đầu từ trên cùng)
-                const angle = (i * 2 * Math.PI) / totalSlots - Math.PI / 2;
-                const x = centerX + radius * Math.cos(angle) - 35;
-                const y = centerY + radius * Math.sin(angle) - 35;
+			const radius = 160;
+			const centerX = braceletDiv.clientWidth / 2;
+			const centerY = braceletDiv.clientHeight / 2;
 
-                slot.style.left = `${x}px`;
-                slot.style.top = `${y}px`;
+			// Tạo vòng tròn hoàn chỉnh với 8 vị trí
+			for (let i = 0; i < totalSlots; i++) {
+				const slot = document.createElement('div');
+				slot.className = 'slot';
+				slot.id = `slot-${i}`;
+				slot.dataset.index = i;
+				slot.textContent = `${i + 1}`;
 
-                braceletDiv.appendChild(slot);
-                slots.push(slot);
+				// Tính góc cho vòng tròn hoàn chỉnh (bắt đầu từ trên cùng)
+				const angle = (i * 2 * Math.PI) / totalSlots - Math.PI / 2;
+				const x = centerX + radius * Math.cos(angle) - 35;
+				const y = centerY + radius * Math.sin(angle) - 35;
 
-                new Sortable(slot, {
-                    group: {
-                        name: 'charms',
-                        put: function(to, from) {
-                            return to.el.children.length === 0 || from.el === to.el;
-                        }
-                    },
-                    animation: 300,
-                    ghostClass: 'sortable-ghost',
-                    chosenClass: 'sortable-chosen',
-                    onAdd: function(evt) {
-                        const slotEl = evt.to;
-                        if (slotEl.children.length > 1) {
-                            for (let i = 0; i < slotEl.children.length - 1; i++) {
-                                slotEl.removeChild(slotEl.children[i]);
-                            }
-                        }
+				slot.style.left = `${x}px`;
+				slot.style.top = `${y}px`;
 
-                        if (evt.from.id === 'availableCharms') {
-                            const charmItem = evt.item;
-                            const id = +charmItem.dataset.id;
-                            const charm = charms.find(c => c.id === id);
+				braceletDiv.appendChild(slot);
+				slots.push(slot);
 
-                            if (charm) {
-                                const oldButton = charmItem.querySelector('button');
-                                if (oldButton) {
-                                    charmItem.removeChild(oldButton);
-                                }
+				new Sortable(slot, {
+					group: {
+						name: 'charms',
+						put: function(to, from) {
+							return to.el.children.length === 0 || from.el === to.el;
+						}
+					},
+					animation: 300,
+					ghostClass: 'sortable-ghost',
+					chosenClass: 'sortable-chosen',
+					onAdd: function(evt) {
+						const slotEl = evt.to;
+						if (slotEl.children.length > 1) {
+							for (let i = 0; i < slotEl.children.length - 1; i++) {
+								slotEl.removeChild(slotEl.children[i]);
+							}
+						}
 
-                                const btnRemove = document.createElement('button');
-                                btnRemove.textContent = '×';
-                                btnRemove.onclick = function(e) {
-                                    e.stopPropagation();
-                                    e.preventDefault();
-                                    removeCharmFromSlot(this.parentNode);
-                                };
-                                charmItem.appendChild(btnRemove);
+						if (evt.from.id === 'availableCharms') {
+							const charmItem = evt.item;
+							const id = charmItem.dataset.id;
+							const charm = charms.find(c => c.charmId === id);
 
-                                charmItem.classList.remove('charm-item');
-                                charmItem.classList.add('ring-item');
-                            }
-                        }
+							if (charm) {
+								// Xóa phần giá khi charm vào vòng tay
+								const price = charmItem.querySelector('.charm-price');
+								if (price) {
+									charmItem.removeChild(price); // Loại bỏ giá
+								}
 
-                        renderAvailableCharms();
-                    },
-                    onUpdate: function(evt) {
-                        const charmItem = evt.item;
+								const oldButton = charmItem.querySelector('button');
+								if (oldButton) {
+									charmItem.removeChild(oldButton);
+								}
 
-                        const oldButton = charmItem.querySelector('button');
-                        if (oldButton) {
-                            charmItem.removeChild(oldButton);
-                        }
+								const btnRemove = document.createElement('button');
+								btnRemove.textContent = '×';
+								btnRemove.onclick = function(e) {
+									e.stopPropagation();
+									e.preventDefault();
+									removeCharmFromSlot(this.parentNode);
+								};
+								charmItem.appendChild(btnRemove);
 
-                        const btnRemove = document.createElement('button');
-                        btnRemove.textContent = '×';
-                        btnRemove.onclick = function(e) {
-                            e.stopPropagation();
-                            e.preventDefault();
-                            removeCharmFromSlot(this.parentNode);
-                        };
-                        charmItem.appendChild(btnRemove);
-                    }
-                });
-            }
-        }
+								charmItem.classList.remove('charm-item');
+								charmItem.classList.add('ring-item');
 
-        function createCharmItem(charm) {
-            const div = document.createElement('div');
-            div.className = 'charm-item';
-            div.dataset.id = charm.id;
+								// Chỉ thêm ảnh vào vòng tay, không thêm giá
+								const image = charmItem.querySelector('img');
+								image.style.maxWidth = '100%'; // Điều chỉnh chiều rộng của ảnh trong vòng tay nếu cần
+							}
+						}
+						updateTotalPrice();
+						renderAvailableCharms();
+					},
+					onUpdate: function(evt) {
+						const charmItem = evt.item;
 
-            const img = document.createElement('img');
-            img.src = charm.img;
-            img.alt = charm.name;
-            img.onerror = function() {
-                this.style.display = 'none';
-                div.style.background = 'linear-gradient(45deg, #667eea, #764ba2)';
-                div.style.color = 'white';
-                div.style.display = 'flex';
-                div.style.alignItems = 'center';
-                div.style.justifyContent = 'center';
-                div.textContent = charm.name;
-            };
+						const oldButton = charmItem.querySelector('button');
+						if (oldButton) {
+							charmItem.removeChild(oldButton);
+						}
+						
+						const btnRemove = document.createElement('button');
+						btnRemove.textContent = '×';
+						btnRemove.onclick = function(e) {
+							e.stopPropagation();
+							e.preventDefault();
+							removeCharmFromSlot(this.parentNode);
+						};
+						charmItem.appendChild(btnRemove);
+						updateTotalPrice();
+					}
+				});
+			}
+		}
 
-            div.appendChild(img);
-            return div;
-        }
+		function createCharmItem(charm) {
+			const wrapper = document.createElement('div');
+			wrapper.className = 'charm-wrapper';
 
-        function renderAvailableCharms() {
-            availableCharmsDiv.innerHTML = '';
+			const div = document.createElement('div');
+			div.className = 'charm-item';
+			div.dataset.id = charm.charmId;
 
-            const usedIds = new Set();
-            slots.forEach(slot => {
-                if (slot.children.length > 0) {
-                    const id = +slot.children[0].dataset.id;
-                    usedIds.add(id);
-                }
-            });
+			const img = document.createElement('img');
+			img.src = charm.imageUrl;
+			img.alt = charm.name;
+			img.onerror = function() {
+				this.style.display = 'none';
+				div.style.background = 'linear-gradient(45deg, #667eea, #764ba2)';
+				div.style.color = 'white';
+				div.style.display = 'flex';
+				div.style.alignItems = 'center';
+				div.style.justifyContent = 'center';
+				div.textContent = charm.name;
+			};
 
-            const availableCharms = charms.filter(charm => !usedIds.has(charm.id));
+			div.appendChild(img);
 
-            if (availableCharms.length === 0) {
-                availableCharmsDiv.innerHTML = '<div class="empty-message">🎉 Không còn charm nào để chọn</div>';
-            } else {
-                availableCharms.forEach(charm => {
-                    const charmItem = createCharmItem(charm);
-                    availableCharmsDiv.appendChild(charmItem);
-                });
-            }
-        }
+			// Chỉ hiển thị giá khi ở trong danh sách charm (availableCharms)
+			const price = document.createElement('div');
+			price.className = 'charm-price';
+			price.textContent = charm.price ? `${charm.price.toLocaleString('vi-VN')}đ` : 'Liên hệ';
 
-        new Sortable(availableCharmsDiv, {
-            group: {
-                name: 'charms',
-                pull: 'clone',
-                put: false
-            },
-            sort: false,
-            animation: 300,
-            ghostClass: 'sortable-ghost',
-            chosenClass: 'sortable-chosen'
-        });
+			wrapper.appendChild(div);
+			wrapper.appendChild(price);
 
-        document.getElementById('submitBtn').onclick = () => {
-            const selectedIds = [];
+			return wrapper;
+		}
 
-            // Duyệt qua tất cả các slot theo thứ tự
-            for (let i = 0; i < slots.length; i++) {
-                const slot = slots[i];
-                if (slot.children.length > 0) {
-                    // Có charm trong slot này
-                    selectedIds.push(+slot.children[0].dataset.id);
-                } else {
-                    // Slot trống, gán id = 0
-                    selectedIds.push(0);
-                }
-            }
+				function updateTotalPrice() {
+			let totalPrice = 0;
 
-            // Đếm số charm đã được đặt
-            const filledSlots = selectedIds.filter(id => id !== 0).length;
+			// Duyệt từng slot, lấy charmId và tìm giá
+			for (let i = 0; i < slots.length; i++) {
+				const slot = slots[i];
+				if (slot.children.length > 0) {
+					const charmId = slot.children[0].dataset.id;
+					const charm = charms.find(c => c.charmId === charmId);
+					if (charm && charm.price) {
+						totalPrice += charm.price;
+					}
+				}
+			}
 
-            // Kiểm tra tối thiểu 1 charm
-            if (filledSlots === 0) {
-                alert('🎯 Vui lòng đặt ít nhất 1 charm vào vòng tay trước khi gửi!');
-                return;
-            }
+			// Hiển thị giá (định dạng theo tiền VNĐ)
+			const priceDisplay = document.getElementById('totalPriceDisplay');
+			priceDisplay.textContent = `Tổng giá vòng tay: ${totalPrice.toLocaleString('vi-VN')}đ`;
+		}
 
-            alert(`🎉 Vòng tay của bạn có ${filledSlots} charm!\nVị trí charm: [${selectedIds.join(', ')}]\n(0 = vị trí trống)`);
-        };
 
-        createSlots();
-        renderAvailableCharms();
-    </script>
+		function renderAvailableCharms() {
+			availableCharmsDiv.innerHTML = '';
+
+			const usedIds = new Set();
+			slots.forEach(slot => {
+				if (slot.children.length > 0) {
+					const id = slot.children[0].dataset.id;
+					usedIds.add(id);
+				}
+			});
+
+			const availableCharms = charms.filter(charm => !usedIds.has(charm.charmId));
+
+			if (availableCharms.length === 0) {
+				availableCharmsDiv.innerHTML = '<div class="empty-message">🎉 Không còn charm nào để chọn</div>';
+			} else {
+				availableCharms.forEach(charm => {
+					const charmItem = createCharmItem(charm);
+					availableCharmsDiv.appendChild(charmItem);
+				});
+			}
+		}
+
+		new Sortable(availableCharmsDiv, {
+			group: {
+				name: 'charms',
+				pull: 'clone',
+				put: false
+			},
+			sort: false,
+			animation: 300,
+			ghostClass: 'sortable-ghost',
+			chosenClass: 'sortable-chosen',
+			onStart: function(evt) {
+				// Khi bắt đầu kéo, tìm charm-item bên trong wrapper
+				const wrapper = evt.item;
+				const charmItem = wrapper.querySelector('.charm-item');
+				if (charmItem) {
+					evt.item.dataset.id = charmItem.dataset.id;
+				}
+			}
+		});
+
+		document.getElementById('submitBtn').onclick = () => {
+			const selectedIds = [];
+
+			// Duyệt qua tất cả các slot theo thứ tự
+			for (let i = 0; i < slots.length; i++) {
+				const slot = slots[i];
+				if (slot.children.length > 0) {
+					// Có charm trong slot này
+					selectedIds.push(slot.children[0].dataset.id);
+				} else {
+					// Slot trống, gán null hoặc empty string
+					selectedIds.push("");
+				}
+			}
+
+			// Lấy ghi chú
+			const note = document.getElementById('noteInput').value.trim();
+
+			// Đếm số charm đã được đặt
+			const filledSlots = selectedIds.filter(id => id !== "").length;
+
+			// Kiểm tra tối thiểu 1 charm
+			if (filledSlots === 0) {
+				alert('🎯 Vui lòng đặt ít nhất 1 charm vào vòng tay trước khi gửi!');
+				return;
+			} else{
+				Swal.fire({
+				title: 'Xác nhận thêm vào giỏ',
+				text: 'Bạn có muốn thêm vòng tay này vào giỏ hàng không?',
+				icon: 'question',
+				showCancelButton: true,
+				confirmButtonText: 'Thêm vào giỏ',
+				cancelButtonText: 'Hủy',
+				customClass: {
+					confirmButton: 'swal2-confirm',
+					cancelButton: 'swal2-cancel'
+				}
+			}).then((result) => {
+				if (result.isConfirmed) {
+					console.log('Đang gửi vòng tay:', { note, selectedIds });
+					 $.ajax({
+						url: '/Custom/AddBraceletToCart',
+						type: 'POST',
+						contentType: 'application/json',
+						data: JSON.stringify({
+							note: note,
+							charmIds: selectedIds  // key là "charmIds"
+						}),
+						headers: {
+							'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
+						},
+						success: function (response) {
+							console.log('AJAX success:', response);
+							if (response.success) {
+								Swal.fire({
+									title: 'Thành công',
+									text: 'Sản phẩm đã được thêm vào giỏ hàng.',
+									icon: 'success',
+									confirmButtonText: 'OK'
+								}).then(() => {
+									updateCartCount(); /* Gọi nếu có hàm cập nhật số lượng giỏ */
+									window.location.href = 'Cart/CartDetail';
+								});
+							} else {
+								Swal.fire({
+									title: 'Lỗi',
+									text: response.message || 'Không thể thêm vào giỏ hàng.',
+									icon: 'error',
+									confirmButtonText: 'Đóng'
+								});
+							}
+						},
+						error: function (xhr, status, error) {
+							console.error('AJAX error:', status, error, xhr.responseText);
+							Swal.fire({
+								title: 'Lỗi',
+								text: 'Có lỗi xảy ra khi thêm sản phẩm vào giỏ hàng.',
+								icon: 'error',
+								confirmButtonText: 'Đóng'
+							});
+						}
+					});
+				}
+			});
+			}
+
+			// const noteText = note ? `\nGhi chú: "${note}"` : '';
+			// alert(`🎉 Vòng tay của bạn có ${filledSlots} charm!\nVị trí charm: [${selectedIds.join(', ')}]\n(null = vị trí trống)${note}`);
+
+			// Để gửi dữ liệu về server, bạn có thể sử dụng:
+			console.log('Selected charm IDs:', selectedIds);
+			console.log('Note:', note);
+
+			// Hoặc gửi POST request
+			// fetch('/your-endpoint', {
+			//     method: 'POST',
+			//     headers: {
+			//         'Content-Type': 'application/json',
+			//     },
+			//     body: JSON.stringify({
+			//         charmIds: selectedIds,
+			//         note: note
+			//     })
+			// });
+			// fetch('/Custom/AddBraceletToCart', {
+			// 	method: 'POST',
+			// 	headers: {
+			// 		'Content-Type': 'application/json',
+			// 	},
+			// 	body: JSON.stringify({
+			// 		note: note,
+			// 		charmIds: selectedIds
+			// 	})
+			// })
+			// .then(response => response.json())
+			// .then(data => {
+			// 	console.log('Response from server:', data);
+			// 	// Xử lý phản hồi từ server nếu cần
+			// })
+			// .catch(error => {
+			// 	console.error('Error:', error);
+			// 	// Xử lý lỗi nếu có
+			// });
+		};
+		createSlots();
+		renderAvailableCharms();
+	</script>
 </body>
 </html>

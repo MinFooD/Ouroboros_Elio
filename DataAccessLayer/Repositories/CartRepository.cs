@@ -13,71 +13,124 @@ namespace DataAccessLayer.Repositories
 	public class CartRepository : ICartRepository
 	{
 		private readonly OuroborosContext _context;
+		private readonly ICustomBraceletRepository _customBraceletRepository;
 
-		public CartRepository(OuroborosContext context)
+		public CartRepository(OuroborosContext context, ICustomBraceletRepository customBraceletRepository)
 		{
 			_context = context;
+			_customBraceletRepository = customBraceletRepository;
 		}
 
-        public async Task<bool> AddToCart(Guid userId, Guid designId, int quantity, bool productType = false)
+		public async Task<bool> AddToCart(Guid userId, Guid designId, int quantity, bool productType = false)
         {
+			
             if (quantity <= 0)
             {
                 return false;
             }
 
-            var design = await _context.Designs.FirstOrDefaultAsync(d => d.DesignId == designId);
-            if (design == null)
-            {
-                return false;
-            }
+			if (productType == false)
+			{
+				var design = await _context.Designs.FirstOrDefaultAsync(d => d.DesignId == designId);
 
-            var cart = await _context.Carts.FirstOrDefaultAsync(c => c.UserId == userId);
-            if (cart == null)
-            {
-                cart = new Cart
-                {
-                    UserId = userId,
-                    Total = 0,
-                    CreatedAt = DateTime.UtcNow,
-                };
-                await _context.Carts.AddAsync(cart);
-                await _context.SaveChangesAsync();
-            }
+				if (design == null)
+				{
+					return false;
+				}
 
-            var cartItem = await _context.CartItems.FirstOrDefaultAsync(ci => ci.CartId == cart.CartId && ci.DesignId == designId);
-            if (cartItem != null)
-            {
-                // Sản phẩm đã có, tăng số lượng
-                cartItem.Quantity += quantity;
-            }
-            else
-            {
-                // Thêm sản phẩm mới
-                cartItem = new CartItem
-                {
-                    CartId = cart.CartId,
-                    DesignId = designId,
-                    Quantity = quantity,
-                    ProductType = productType,
-                    Price = design.Price,
-                };
-                await _context.CartItems.AddAsync(cartItem);
-            }
+				var cart = await _context.Carts.FirstOrDefaultAsync(c => c.UserId == userId);
+				if (cart == null)
+				{
+					cart = new Cart
+					{
+						UserId = userId,
+						Total = 0,
+						CreatedAt = DateTime.UtcNow,
+					};
+					await _context.Carts.AddAsync(cart);
+					await _context.SaveChangesAsync();
+				}
 
-            await _context.SaveChangesAsync();
-            await UpdateCartTotalAsync(cart.CartId);
-            return true;
-        }
+				var cartItem = await _context.CartItems.FirstOrDefaultAsync(ci => ci.CartId == cart.CartId && ci.DesignId == designId);
+				if (cartItem != null)
+				{
+					// Sản phẩm đã có, tăng số lượng
+					cartItem.Quantity += quantity;
+				}
+				else
+				{
+					// Thêm sản phẩm mới
+					cartItem = new CartItem
+					{
+						CartId = cart.CartId,
+						DesignId = designId,
+						Quantity = quantity,
+						ProductType = productType,
+						Price = design.Price,
+					};
+					await _context.CartItems.AddAsync(cartItem);
+				}
 
-        public async Task<bool?> UpdateQuantity(Guid userId, Guid designId, int quantity)
+				await _context.SaveChangesAsync();
+				await UpdateCartTotalAsync(cart.CartId);
+				return true;
+			}
+			else
+			{
+				var bracelet = await _customBraceletRepository.GetCustomBraceletByIdAsync(designId);
+
+				if (bracelet == null)
+				{
+					return false;
+				}
+
+				var cart = await _context.Carts.FirstOrDefaultAsync(c => c.UserId == userId);
+				if (cart == null)
+				{
+					cart = new Cart
+					{
+						UserId = userId,
+						Total = 0,
+						CreatedAt = DateTime.UtcNow,
+					};
+					await _context.Carts.AddAsync(cart);
+					await _context.SaveChangesAsync();
+				}
+
+				//var cartItem = await _context.CartItems.FirstOrDefaultAsync(ci => ci.CartId == cart.CartId && ci.DesignId == designId);
+				//if (cartItem != null)
+				//{
+				//	// Sản phẩm đã có, tăng số lượng
+				//	cartItem.Quantity += quantity;
+				//}
+				//else
+				//{
+					// Thêm sản phẩm mới
+					 var cartItem = new CartItem
+					{
+						CartId = cart.CartId,
+						CustomBraceletId = bracelet.CustomBraceletId,
+						Quantity = quantity,
+						ProductType = productType,
+						Price = bracelet.TotalPrice,
+					 };
+					await _context.CartItems.AddAsync(cartItem);
+				//}
+
+				await _context.SaveChangesAsync();
+				await UpdateCartTotalAsync(cart.CartId);
+				return true;
+			}
+		}
+
+        public async Task<bool> UpdateQuantity(Guid userId, Guid designId, int quantity, bool? productType)
 		{
 			var cart = await _context.Carts.FirstOrDefaultAsync(c => c.UserId == userId);
 			if (cart == null)
 			{
 				return false;
 			}
-			var cartItem = await _context.CartItems.FirstOrDefaultAsync(ci => ci.CartId == cart.CartId && ci.DesignId == designId);
+			var cartItem = await _context.CartItems.FirstOrDefaultAsync(ci => ci.CartId == cart.CartId && (ci.DesignId == designId || ci.CustomBraceletId == designId));
 			if (cartItem == null)
 			{
 				return false;
@@ -85,6 +138,14 @@ namespace DataAccessLayer.Repositories
 			if (quantity <= 0)
 			{
 				_context.CartItems.Remove(cartItem);
+				if (productType == true)
+				{
+					var result = await _customBraceletRepository.DeleteCustomBracelet(designId);
+					if (!result)
+					{
+						return false; // Không tìm thấy CustomBracelet để xóa
+					}
+				}
 			}
 			else
 			{

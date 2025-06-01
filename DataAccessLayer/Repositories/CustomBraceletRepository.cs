@@ -1,0 +1,44 @@
+﻿using DataAccessLayer.Context;
+using DataAccessLayer.Entities;
+using DataAccessLayer.RepositoryContracts;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace DataAccessLayer.Repositories
+{
+	public class CustomBraceletRepository : ICustomBraceletRepository
+	{
+		private readonly OuroborosContext _context;
+
+		public CustomBraceletRepository(OuroborosContext context)
+		{
+			_context = context;
+		}
+
+		public async Task<bool> DeleteCustomBracelet(Guid customBraceletId)
+		{
+			var exitingCustomBracelet = await _context.CustomBracelets
+				.Include(cb => cb.CustomBraceletCharms)
+				.FirstOrDefaultAsync(cb => cb.CustomBraceletId == customBraceletId);
+			if (exitingCustomBracelet == null)
+			{
+				return false;
+			}
+			// Xóa các Charm liên kết với CustomBracelet
+			_context.CustomBraceletCharms.RemoveRange(exitingCustomBracelet.CustomBraceletCharms);
+			_context.CustomBracelets.Remove(exitingCustomBracelet);
+			await _context.SaveChangesAsync();
+			return true;
+		}
+		public async Task<CustomBracelet?> GetCustomBraceletByIdAsync(Guid? customBraceletId)
+		{
+			return await _context.CustomBracelets
+				.Include(cb => cb.CustomBraceletCharms)
+				.FirstOrDefaultAsync(cb => cb.CustomBraceletId == customBraceletId);
+		}
+	}
+}
