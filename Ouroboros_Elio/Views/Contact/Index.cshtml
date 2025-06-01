@@ -67,7 +67,12 @@
                                         <span asp-validation-for="Message" class="text-danger"></span>
                                     </div>
                                     <div class="form-group">
-                                        <button type="submit" class="hiraola-contact-form_btn" id="submit-btn">Gửi</button>
+                                        <!-- Widget reCAPTCHA -->
+                                        <div class="g-recaptcha" data-sitekey="6LevClIrAAAAAPHgpjovd9NfDcIqU7t7drGXOFzK" data-callback="onRecaptchaSuccess"></div>
+                                        <span id="recaptcha-error" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <button type="submit" class="hiraola-contact-form_btn" id="submit-btn" disabled>Gửi</button>
                                     </div>
                                 </form>
                                 <p class="form-message mt-3 mb-0" id="form-message"></p>
@@ -79,106 +84,123 @@
         </div>
         <!-- Contact Main Page Area End Here -->
     </div>
-    <!-- Thêm jQuery và jQuery Validation -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
-    <script>
-        $(document).ready(function () {
-            // Kiểm tra xem jQuery Validation đã tải chưa
-            if (!$.fn.validate) {
-                console.error("jQuery Validation plugin không được tải.");
-                $("#form-message").addClass("text-danger").text("Lỗi: Không thể tải plugin xác thực. Vui lòng thử lại sau.");
-                return;
+
+    @section Scripts {
+        <!-- Thêm thư viện jQuery Validation -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/additional-methods.min.js"></script>
+        <script>
+            // Callback khi reCAPTCHA được hoàn thành
+            function onRecaptchaSuccess() {
+                $('#submit-btn').prop('disabled', false);
+                $('#recaptcha-error').text('');
             }
 
-            // Cấu hình jQuery Validation
-            $("#contact-form").validate({
-                rules: {
-                    Name: {
-                        required: true,
-                        maxlength: 100
-                    },
-                    Email: {
-                        required: true,
-                        email: true,
-                        maxlength: 100
-                    },
-                    Subject: {
-                        maxlength: 200
-                    },
-                    Message: {
-                        required: true,
-                        maxlength: 2000
-                    }
-                },
-                messages: {
-                    Name: {
-                        required: "Vui lòng nhập tên của bạn.",
-                        maxlength: "Tên không được vượt quá 100 ký tự."
-                    },
-                    Email: {
-                        required: "Vui lòng nhập email của bạn.",
-                        email: "Email không hợp lệ.",
-                        maxlength: "Email không được vượt quá 100 ký tự."
-                    },
-                    Subject: {
-                        maxlength: "Chủ đề không được vượt quá 200 ký tự."
-                    },
-                    Message: {
-                        required: "Vui lòng nhập nội dung tin nhắn.",
-                        maxlength: "Nội dung không được vượt quá 2000 ký tự."
-                    }
-                },
-                // Xử lý gửi biểu mẫu
-                submitHandler: async function (form, event) {
-                    event.preventDefault(); // Ngăn hành vi gửi mặc định
-
-                    const $submitBtn = $("#submit-btn");
-                    const $formMessage = $("#form-message");
-
-                    // Vô hiệu hóa nút gửi và hiển thị trạng thái đang xử lý
-                    $submitBtn
-                        .prop("disabled", true)
-                        .text("Đang gửi...")
-                        .addClass("disabled");
-
-                    // Xóa thông báo trước đó
-                    $formMessage.removeClass("text-success text-danger").text("");
-
-                    try {
-                        // Gửi yêu cầu POST bất đồng bộ
-                        const response = await $.ajax({
-                            url: form.action,
-                            type: form.method,
-                            data: $(form).serialize(),
-                            dataType: "json", // Giả sử server trả về JSON
-                            headers: {
-                                "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val()
-                            }
-                        });
-
-                        // Xử lý phản hồi thành công
-                        $formMessage
-                            .addClass("text-success")
-                            .text("Tin nhắn của bạn đã được gửi thành công!");
-                        form.reset(); // Xóa biểu mẫu
-                        $("#contact-form").validate().resetForm(); // Xóa trạng thái xác thực
-                    } catch (error) {
-                        // Xử lý lỗi
-                        let errorMessage = "Có lỗi xảy ra khi gửi tin nhắn. Vui lòng thử lại.";
-                        if (error.responseJSON && error.responseJSON.message) {
-                            errorMessage = error.responseJSON.message;
+            $(document).ready(function () {
+                // Khởi tạo validation cho form
+                $('#contact-form').validate({
+                    rules: {
+                        Name: {
+                            required: true,
+                            minlength: 2
+                        },
+                        Email: {
+                            required: true,
+                            email: true
+                        },
+                        Message: {
+                            required: true,
+                            minlength: 10
                         }
-                        $formMessage.addClass("text-danger").text(errorMessage);
-                    } finally {
-                        // Kích hoạt lại nút gửi
-                        $submitBtn
-                            .prop("disabled", false)
-                            .text("Gửi")
-                            .removeClass("disabled");
+                    },
+                    messages: {
+                        Name: {
+                            required: "Vui lòng nhập tên của bạn.",
+                            minlength: "Tên phải có ít nhất 2 ký tự."
+                        },
+                        Email: {
+                            required: "Vui lòng nhập email của bạn.",
+                            email: "Vui lòng nhập địa chỉ email hợp lệ."
+                        },
+                        Message: {
+                            required: "Vui lòng nhập nội dung tin nhắn.",
+                            minlength: "Nội dung tin nhắn phải có ít nhất 10 ký tự."
+                        }
+                    },
+                    errorElement: "span",
+                    errorClass: "text-danger",
+                    errorPlacement: function (error, element) {
+                        error.insertAfter(element);
                     }
+                });
+
+                $('#contact-form').on('submit', function (e) {
+                    e.preventDefault();
+
+                    // Kiểm tra validation client-side
+                    if (!$(this).valid()) {
+                        $('#form-message').text('Vui lòng kiểm tra lại các trường thông tin.').removeClass('text-success').addClass('text-danger');
+                        return;
+                    }
+
+                    // Kiểm tra reCAPTCHA
+                    var recaptchaResponse = grecaptcha.getResponse();
+                    console.log('reCAPTCHA Response:', recaptchaResponse); // Debug giá trị token
+                    if (!recaptchaResponse) {
+                        $('#recaptcha-error').text('Vui lòng xác nhận bạn không phải là robot.');
+                        $('#form-message').text('Vui lòng hoàn thành xác thực reCAPTCHA.').removeClass('text-success').addClass('text-danger');
+                        return;
+                    }
+                    $('#recaptcha-error').text(''); // Xóa lỗi reCAPTCHA cũ
+
+                    // Sử dụng FormData để gửi dữ liệu
+                    var formData = new FormData(this);
+                    formData.append('g-recaptcha-response', recaptchaResponse);
+
+                    $.ajax({
+                        url: $(this).attr('action'),
+                        type: 'POST',
+                        data: formData,
+                        processData: false, // Không xử lý dữ liệu (cần cho FormData)
+                        contentType: false, // Không đặt contentType (cần cho FormData)
+                        headers: {
+                            'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
+                        },
+                        success: function (response) {
+                            if (response.success) {
+                                $('#form-message').text('Tin nhắn của bạn đã được gửi thành công!').removeClass('text-danger').addClass('text-success');
+                                $('#contact-form')[0].reset();
+                                grecaptcha.reset();
+                                $('#submit-btn').prop('disabled', true); // Vô hiệu hóa nút sau khi gửi
+                            } else {
+                                $('#form-message').text(response.message).removeClass('text-success').addClass('text-danger');
+                            }
+                        },
+                        error: function (xhr) {
+                            var errorMessage = 'Đã có lỗi xảy ra. Vui lòng thử lại sau.';
+                            if (xhr.responseJSON && xhr.responseJSON.message) {
+                                errorMessage = xhr.responseJSON.message;
+                            }
+                            $('#form-message').text(errorMessage).removeClass('text-success').addClass('text-danger');
+                        }
+                    });
+                });
+
+                // Kiểm tra xem reCAPTCHA có tải đúng không
+                if (typeof grecaptcha === 'undefined') {
+                    $('#recaptcha-error').text('Không thể tải reCAPTCHA. Vui lòng kiểm tra kết nối mạng hoặc thử lại sau.');
+                    $('#submit-btn').prop('disabled', true);
+                } else {
+                    // Đợi reCAPTCHA sẵn sàng
+                    window.onload = function() {
+                        if (typeof grecaptcha !== 'undefined' && grecaptcha.render) {
+                            console.log('reCAPTCHA script loaded successfully.');
+                        } else {
+                            console.error('reCAPTCHA script failed to load.');
+                        }
+                    };
                 }
             });
-        });
-    </script>
+        </script>
+    }
 </body>

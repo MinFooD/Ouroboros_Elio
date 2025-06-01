@@ -68,6 +68,7 @@ builder.Services.Configure<MailSettings>(mailsettings);
 builder.Services.AddDbContext<OuroborosContext>(option => option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddMemoryCache();
+builder.Services.AddHttpClient();
 
 var app = builder.Build();
 
