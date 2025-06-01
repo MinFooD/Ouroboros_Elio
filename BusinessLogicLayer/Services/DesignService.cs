@@ -3,6 +3,7 @@ using BusinessLogicLayer.Dtos.DesignDtos;
 using BusinessLogicLayer.ServiceContracts;
 using DataAccessLayer.Entities;
 using DataAccessLayer.RepositoryContracts;
+using Microsoft.Extensions.Caching.Memory;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,14 +16,18 @@ namespace BusinessLogicLayer.Services
 	{
 		private readonly IDesignRepository _designRepository;
 		private readonly IMapper _mapper;
+        private readonly IMemoryCache _cache;
+        private const string TopOrderedDesignsCacheKey = "TopOrderedDesigns";
+        private readonly TimeSpan CacheDuration = TimeSpan.FromMinutes(10);
 
-		public DesignService(IDesignRepository designRepository, IMapper mapper)
-		{
-			_designRepository = designRepository;
-			_mapper = mapper;
-		}
+        public DesignService(IDesignRepository designRepository, IMapper mapper, IMemoryCache cache)
+        {
+            _designRepository = designRepository;
+            _mapper = mapper;
+            _cache = cache;
+        }
 
-		public async Task<List<DesignViewModel>?> GetAllDesignsAsync(Guid? modelId)
+        public async Task<List<DesignViewModel>?> GetAllDesignsAsync(Guid? modelId)
 		{
 			var designs = await _designRepository.GetAllDesignsAsync(modelId);
 			if (designs == null || designs.Count == 0)
@@ -133,6 +138,35 @@ namespace BusinessLogicLayer.Services
                 designViewModels[i].CategoryName = design.Category.CategoryName;
                 designViewModels[i].FirstImage = _mapper.Map<DesignImageViewModel>(design.DesignImages.FirstOrDefault());
             }
+
+            return designViewModels;
+        }
+
+        public async Task<List<DesignViewModel>> GetTopOrderedDesignsAsync(int topCount)
+        {
+            // Try to get from cache
+            if (_cache.TryGetValue($"{TopOrderedDesignsCacheKey}_{topCount}", out List<DesignViewModel> cachedDesigns))
+            {
+                return cachedDesigns;
+            }
+
+            // Fetch from database
+            var designs = await _designRepository.GetTopOrderedDesignsAsync(topCount);
+            var designViewModels = _mapper.Map<List<DesignViewModel>>(designs);
+
+            for (int i = 0; i < designs.Count; i++)
+            {
+                var design = designs[i];
+                designViewModels[i].DesignName = $"{design.Model.Topic.Collection.CollectionName}-{design.Model.Topic.TopicName}-{design.Model.ModelName}-{design.Category.CategoryName}";
+                designViewModels[i].CollectionName = design.Model.Topic.Collection.CollectionName;
+                designViewModels[i].ModelName = design.Model.ModelName;
+                designViewModels[i].TopicName = design.Model.Topic.TopicName;
+                designViewModels[i].CategoryName = design.Category.CategoryName;
+                designViewModels[i].FirstImage = _mapper.Map<DesignImageViewModel>(design.DesignImages.FirstOrDefault());
+            }
+
+            // Store in cache
+            _cache.Set($"{TopOrderedDesignsCacheKey}_{topCount}", designViewModels, CacheDuration);
 
             return designViewModels;
         }

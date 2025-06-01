@@ -2,32 +2,44 @@
 using BusinessLogicLayer.Dtos.ModelDtos;
 using BusinessLogicLayer.ServiceContracts;
 using DataAccessLayer.RepositoryContracts;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.Extensions.Caching.Memory;
 
-namespace BusinessLogicLayer.Services
+namespace BusinessLogicLayer.Services;
+
+public class ModelService : IModelService
 {
-	public class ModelService : IModelService
-	{
-		private readonly IModelRepository _modelRepository;
-		private readonly IMapper _mapper;
-		public ModelService(IModelRepository modelRepository, IMapper mapper)
-		{
-			_modelRepository = modelRepository;
-			_mapper = mapper;
-		}
-		public async Task<List<ModelViewModel>?> GetAllModelsAsync()
-		{
-			var models = await _modelRepository.GetAllModelsAsync();
-			if (models == null)
-			{
-				return null;
-			}
-			var modelViewModels = _mapper.Map<List<ModelViewModel>>(models);
-			return modelViewModels;
-		}
-	}
+    private readonly IModelRepository _modelRepository;
+    private readonly IMapper _mapper;
+    private readonly IMemoryCache _cache;
+    private const string ActiveModelsCacheKey = "ActiveModels";
+    private readonly TimeSpan CacheDuration = TimeSpan.FromMinutes(10);
+
+    public ModelService(IModelRepository modelRepository, IMapper mapper, IMemoryCache cache)
+    {
+        _modelRepository = modelRepository;
+        _mapper = mapper;
+        _cache = cache;
+    }
+    public async Task<List<ModelViewModel>?> GetAllActiveModelsAsync()
+    {
+        // Try to get from cache
+        if (_cache.TryGetValue(ActiveModelsCacheKey, out List<ModelViewModel> cachedModels))
+        {
+            return cachedModels;
+        }
+
+        // Fetch from database
+        var models = await _modelRepository.GetAllActiveModelsAsync();
+        if (models == null)
+        {
+            return null;
+        }
+
+        var modelViewModels = _mapper.Map<List<ModelViewModel>>(models);
+
+        // Store in cache
+        _cache.Set(ActiveModelsCacheKey, modelViewModels, CacheDuration);
+
+        return modelViewModels;
+    }
 }
