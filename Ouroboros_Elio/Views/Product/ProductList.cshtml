@@ -9,7 +9,7 @@
                     <h2>Cửa Hàng</h2>
                     <ul>
                         <li><a href="/Home/Index">Trang Chủ</a></li>
-                        <li class="active">Sản Phẩm</li>
+                        <li class="active">Danh Sách</li>
                     </ul>
                 </div>
             </div>
@@ -116,7 +116,7 @@
                                                                asp-route-designId="@item.DesignId">@item.DesignName</a>
                                                         </h6>
                                                         <div class="price-box">
-                                                            <span class="new-price">@item.Price VND</span>
+                                                            <span class="new-price">@item.Price.ToString("N0") ₫</span>
                                                         </div>
                                                         <div class="rating-box">
                                                             <ul>
@@ -163,7 +163,7 @@
                                                             </ul>
                                                         </div>
                                                         <div class="price-box">
-                                                            <span class="new-price">@item.Price VND</span>
+                                                            <span class="new-price">@item.Price.ToString("N0") ₫</span>
                                                         </div>
                                                         <div class="product-short_desc">
                                                             <p>@item.Description</p>
