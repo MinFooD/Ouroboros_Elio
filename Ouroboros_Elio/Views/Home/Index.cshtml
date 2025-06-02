@@ -144,7 +144,7 @@
                                                     <img class="secondary-img" src="@item.FirstImage.ImageUrl" alt="Hiraola's Product Image">
                                                 </a>
                                                 <span class="sticker">Hot</span>
-                                                <div class="add-actions">
+                                                @* <div class="add-actions">
                                                     <ul>
                                                         <li>
                                                             <a class="hiraola-add_cart" href="javascript:void(0)" onclick="addToCart('@item.DesignId', 1, false)" data-bs-toggle="tooltip" data-placement="top" title="Thêm vào giỏ hàng">
@@ -157,7 +157,7 @@
                                                             </a>
                                                         </li>
                                                     </ul>
-                                                </div>
+                                                </div> *@
                                             </div>
                                             <div class="hiraola-product_content">
                                                 <div class="product-desc_info">
@@ -165,7 +165,7 @@
                                                         <a class="product-name" asp-controller="Product" asp-action="ProductDetail" asp-route-designId="@item.DesignId">@item.DesignName</a>
                                                     </h6>
                                                     <div class="price-box">
-                                                        <span class="new-price">@item.Price.ToString("N0") VND</span>
+                                                        <span class="new-price">@item.Price.ToString("N0") ₫</span>
                                                     </div>
                                                     <div class="rating-box">
                                                         <ul>
@@ -260,7 +260,7 @@
                                                                     <img class="primary-img" src="@item.FirstImage.ImageUrl" alt="Hiraola's Product Image">
                                                                     <img class="secondary-img" src="@item.FirstImage.ImageUrl" alt="Hiraola's Product Image">
                                                                 </a>
-                                                                <div class="add-actions">
+                                                               @*  <div class="add-actions">
                                                                     <ul>
                                                                         <li>
                                                                             <a class="hiraola-add_cart" href="javascript:void(0)" onclick="addToCart('@item.DesignId', 1, false)" data-bs-toggle="tooltip" data-placement="top" title="Thêm vào giỏ hàng">
@@ -273,7 +273,7 @@
                                                                             </a>
                                                                         </li>
                                                                     </ul>
-                                                                </div>
+                                                                </div> *@
                                                             </div>
                                                             <div class="hiraola-product_content">
                                                                 <div class="product-desc_info">
@@ -281,7 +281,7 @@
                                                                         <a class="product-name" asp-controller="Product" asp-action="ProductDetail" asp-route-designId="@item.DesignId">@item.DesignName</a>
                                                                     </h6>
                                                                     <div class="price-box">
-                                                                        <span class="new-price">@item.Price.ToString("N0") VND</span>
+                                                                        <span class="new-price">@item.Price.ToString("N0") ₫</span>
                                                                     </div>
                                                                     <div class="rating-box">
                                                                         <ul>
