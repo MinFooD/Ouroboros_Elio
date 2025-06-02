@@ -15,7 +15,7 @@ public partial class CartItem
 
     public Guid? CustomBraceletId { get; set; }
 
-    public int? Quantity { get; set; }
+    public int Quantity { get; set; }
 
     public decimal? Price { get; set; }
 

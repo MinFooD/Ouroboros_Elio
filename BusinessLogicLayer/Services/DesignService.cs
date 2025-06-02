@@ -229,5 +229,28 @@ namespace BusinessLogicLayer.Services
 
             return designViewModels;
         }
+
+        public async Task<List<DesignViewModel>> GetDesignsByIdsAsync(List<Guid> designIds)
+        {
+            var designs = await _designRepository.GetDesignsByIdsAsync(designIds);
+            var designViewModels = _mapper.Map<List<DesignViewModel>>(designs);
+
+            for (int i = 0; i < designs.Count; i++)
+            {
+                var design = designs[i];
+                designViewModels[i].DesignName =
+                    $"{design.Model.Topic.Collection.CollectionName}" +
+                    $"-{design.Model.Topic.TopicName}" +
+                    $"-{design.Model.ModelName}" +
+                    $"-{design.Category.CategoryName}";
+                designViewModels[i].CollectionName = design.Model.Topic.Collection.CollectionName;
+                designViewModels[i].ModelName = design.Model.ModelName;
+                designViewModels[i].TopicName = design.Model.Topic.TopicName;
+                designViewModels[i].CategoryName = design.Category.CategoryName;
+                designViewModels[i].FirstImage = _mapper.Map<DesignImageViewModel>(design.DesignImages.FirstOrDefault());
+            }
+
+            return designViewModels;
+        }
     }
 }

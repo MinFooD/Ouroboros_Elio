@@ -45,10 +45,10 @@
                                 </div>
                                 <div class="sp-essential_stuff">
                                     <ul>
-                                        <li>Giá: <span>@String.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:N0}", @Model.Price) ₫</span></li>
                                         <li>Bộ Sưu Tập: <span>@Model.CollectionName</span></li>
                                         <li>Chủ Đề: <span>@Model.TopicName</span></li>
                                         <li>Mẫu: <span>@Model.ModelName</span></li>
+                                        <li>Loại: <span>@Model.CategoryName</span></li>
                                         <li>Lượt Xem: <span>@Model.VisitCount</span></li>
                                     </ul>
                                 </div>
@@ -67,9 +67,8 @@
                                         </li>
                                     </ul>
                                 </div>
-                                <div class="hiraola-tag-line">
-                                    <h6>Loại:</h6>
-                                    <span>@Model.CategoryName</span>
+                                <div class="hiraola-tag-line">                                   
+                                    <h6>Giá: @Model.Price.ToString("N0") ₫</h6>
                                 </div>
                                 <div class="hiraola-social_link">
                                     <ul>

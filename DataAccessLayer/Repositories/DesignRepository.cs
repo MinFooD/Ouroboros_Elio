@@ -169,4 +169,14 @@ public class DesignRepository : IDesignRepository
             .Take(topCount)
             .ToListAsync();
     }
+
+    public async Task<List<Design>> GetDesignsByIdsAsync(List<Guid> designIds)
+    {
+        return await _context.Designs
+            .Include(d => d.Category)
+            .Include(d => d.DesignImages)
+            .Include(d => d.Model).ThenInclude(m => m.Topic).ThenInclude(m => m.Collection)
+            .Where(d => designIds.Contains(d.DesignId))
+            .ToListAsync();
+    }
 }

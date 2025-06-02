@@ -28,4 +28,5 @@ public interface IDesignService
         string? searchQuery = null);
     Task<List<DesignViewModel>?> GetDesignsByCategoryAsync(Guid categoryId);
     Task<List<DesignViewModel>> GetTopOrderedDesignsAsync(int topCount);
+    Task<List<DesignViewModel>> GetDesignsByIdsAsync(List<Guid> designIds);
 }

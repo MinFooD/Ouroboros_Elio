@@ -4,7 +4,11 @@ using DataAccessLayer.Entities;
 using DataAccessLayer.RepositoryContracts;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Net.payOS;
+using Net.payOS.Errors;
+using Net.payOS.Types;
 using Ouroboros_Elio.Models;
+using System.Linq;
 using System.Security.Claims;
 
 namespace Ouroboros_Elio.Controllers;
@@ -15,18 +19,25 @@ public class CheckoutController : Controller
     private readonly ICartRepository _cartRepository;
     private readonly IOrderService _orderService;
     private readonly IDesignService _designService;
+    private readonly PayOS _payOS;
 
     public CheckoutController(
         UserManager<ApplicationUser> userManager,
         ICartRepository cartRepository,
         IOrderService orderService,
-        IDesignService designService)
+        IDesignService designService,
+        IConfiguration configuration)
     {
         _userManager = userManager;
         _cartRepository = cartRepository;
         _orderService = orderService;
         _designService = designService;
-    }
+        _payOS = new PayOS(
+            configuration["PayOS:ClientId"] ?? throw new Exception("PayOS ClientId not found"),
+            configuration["PayOS:ApiKey"] ?? throw new Exception("PayOS ApiKey not found"),
+            configuration["PayOS:ChecksumKey"] ?? throw new Exception("PayOS ChecksumKey not found")
+        );
+    }    
 
     [HttpGet("Checkout/PlaceOrder")]
     public async Task<IActionResult> PlaceOrder()
@@ -112,60 +123,131 @@ public class CheckoutController : Controller
             return BadRequest("Invalid user ID format.");
         }
 
-        // Cập nhật thông tin người dùng
         var user = await _userManager.FindByIdAsync(userId);
-        if (user != null)
-        {
-            user.FirstName = model.FirstName;
-            user.LastName = model.LastName;
-            user.Address = model.Address;
-            user.Email = model.Email;
-            user.PhoneNumber = model.PhoneNumber;
-            var updateResult = await _userManager.UpdateAsync(user);
-            if (!updateResult.Succeeded)
-            {
-                foreach (var error in updateResult.Errors)
-                {
-                    ModelState.AddModelError("", error.Description);
-                }
-                return View(model);
-            }
-        }
-        else
+        if (user == null)
         {
             return NotFound("User not found.");
         }
 
-        // Kiểm tra lại tồn kho trước khi tạo đơn hàng
-        var cart = await _cartRepository.GetCartByUserIdAsync(userGuid);
-        if (cart != null)
+        // Cập nhật thông tin người dùng
+        user.FirstName = model.FirstName;
+        user.LastName = model.LastName;
+        user.Address = model.Address;
+        user.Email = model.Email;
+        user.PhoneNumber = model.PhoneNumber;
+        var updateResult = await _userManager.UpdateAsync(user);
+        if (!updateResult.Succeeded)
         {
-            var cartItems = await _cartRepository.GetCartItemsByUserIdAsync(userGuid);
-            foreach (var item in cartItems)
+            foreach (var error in updateResult.Errors)
             {
-                var design = await _designService.GetDesignByIdAsync(item.DesignId);
-                if (design == null || design.StockQuantity < item.Quantity)
-                {
-                    TempData["Error"] = $"Sản phẩm {design?.DesignName ?? "Unknown"} không đủ tồn kho. Vui lòng kiểm tra lại giỏ hàng.";
-                    return RedirectToAction("CartDetail", "Cart");
-                }
+                ModelState.AddModelError("", error.Description);
             }
+            return View(model);
+        }
 
-            var (order, message) = await _orderService.CreateOrderFromCartAsync(cart.CartId, userGuid);
-            if (order != null)
+        // Kiểm tra giỏ hàng và tồn kho
+        var cart = await _cartRepository.GetCartByUserIdAsync(userGuid);
+        if (cart == null || cart.CartItems == null || !cart.CartItems.Any())
+        {
+            TempData["Error"] = "Giỏ hàng trống hoặc không tồn tại.";
+            return RedirectToAction("CartDetail", "Cart");
+        }
+
+        var cartItems = await _cartRepository.GetCartItemsByUserIdAsync(userGuid);
+        // Lấy tất cả DesignViewModel cho các DesignId trong giỏ hàng
+        var designIds = cartItems.Select(item => item.DesignId).Distinct().ToList();
+        var designs = await _designService.GetDesignsByIdsAsync(designIds);
+        var designDict = designs.ToDictionary(d => d.DesignId, d => d);
+
+        foreach (var item in cartItems)
+        {
+            if (!designDict.ContainsKey(item.DesignId) || designDict[item.DesignId].StockQuantity < item.Quantity)
             {
-                TempData["OrderId"] = order.OrderId.ToString();
-                return RedirectToAction("Success");
-            }
-            else
-            {
-                TempData["Error"] = message;
+                TempData["Error"] = $"Sản phẩm {designDict.GetValueOrDefault(item.DesignId)?.DesignName ?? "Unknown"} không đủ tồn kho. Vui lòng kiểm tra lại giỏ hàng.";
                 return RedirectToAction("CartDetail", "Cart");
             }
         }
-        else
+
+        // Tạo orderCode duy nhất dựa trên timestamp và random
+        var timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+        var random = new Random().Next(1000, 9999);
+        long orderCode = long.Parse($"{timestamp % 100000}{random}"); // 5 chữ số timestamp + 4 chữ số random
+
+        // Tạo link thanh toán PayOS
+        var items = cartItems.Select(item =>
         {
-            TempData["Error"] = "Giỏ hàng trống hoặc không tồn tại.";
+            var design = designDict.GetValueOrDefault(item.DesignId);
+            var itemName = design != null
+                ? $"{design.CollectionName}-{design.TopicName}-{design.ModelName}-{design.CategoryName}"
+                : "Unknown Product";
+            return new ItemData(
+                name: itemName,
+                quantity: item.Quantity,
+                price: (int)item.Price
+            );
+        }).ToList();
+
+        var paymentData = new PaymentData(
+            orderCode: orderCode,
+            amount: (int)cart.Total,
+            description: "Thanh toán giỏ hàng",
+            items: items,
+            returnUrl: Url.Action("Success", "Checkout", null, Request.Scheme),
+            cancelUrl: Url.Action("Cancel", "Checkout", null, Request.Scheme)
+        );
+
+        // Kiểm tra trạng thái link thanh toán cũ
+        try
+        {
+            var paymentInfo = await _payOS.getPaymentLinkInformation(orderCode);
+            if (paymentInfo != null && paymentInfo.status == "PENDING")
+            {
+                // Tạo lại link thanh toán với cùng orderCode để lấy checkoutUrl
+                var response = await _payOS.createPaymentLink(paymentData);
+                TempData["CartId"] = cart.CartId.ToString();
+                return Redirect(response.checkoutUrl);
+            }
+        }
+        catch
+        {
+            // Nếu không tìm thấy link hoặc lỗi khác, tiếp tục tạo link mới
+        }
+
+
+        try
+        {
+            var response = await _payOS.createPaymentLink(paymentData);
+            TempData["CartId"] = cart.CartId.ToString(); // Lưu CartId để sử dụng trong Success
+            return Redirect(response.checkoutUrl);
+        }
+        catch (PayOSError ex) when (ex.Message.Contains("Đơn thanh toán đã tồn tại"))
+        {
+            // Thử lại với orderCode mới
+            orderCode = int.Parse($"{(timestamp + 1) % 1000000}{random + 1}");
+            paymentData = new PaymentData(
+                orderCode: orderCode,
+                amount: (int)cart.Total,
+                description: "Thanh toán giỏ hàng",
+                items: items,
+                returnUrl: Url.Action("Success", "Checkout", null, Request.Scheme),
+                cancelUrl: Url.Action("Cancel", "Checkout", null, Request.Scheme)
+            );
+
+            try
+            {
+                var response = await _payOS.createPaymentLink(paymentData);
+                TempData["CartId"] = cart.CartId.ToString();
+                return Redirect(response.checkoutUrl);
+            }
+            catch (Exception ex2)
+            {
+                TempData["Error"] = $"Lỗi khi tạo link thanh toán: {ex2.Message}";
+                return RedirectToAction("CartDetail", "Cart");
+            }
+        }
+        catch (Exception ex)
+        {
+            TempData["Error"] = $"Lỗi khi tạo link thanh toán: {ex.Message}";
             return RedirectToAction("CartDetail", "Cart");
         }
     }
