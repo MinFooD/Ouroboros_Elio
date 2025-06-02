@@ -216,18 +216,28 @@
                 $('#cart-total').text(formattedTotal + ' ₫');
             }
 
-            // Hàm cập nhật số lượng giỏ hàng
-            function updateCartCount() {
-                $.ajax({
-                    url: '/Cart/GetCartItemCount',
-                    type: 'GET',
-                    success: function (response) {
-                        if (response.success) {
-                            console.log('Cập nhật số lượng giỏ hàng:', response.count);
-                        }
+                    // Hàm cập nhật số lượng giỏ hàng
+        function updateCartCount() {
+            $.ajax({
+                url: '/Cart/GetCartItemCount',
+                type: 'GET',
+                success: function (response) {
+                    if (response.success) {
+                        // Cập nhật số lượng trên icon giỏ hàng
+                        $('#cart-count').text(response.count);
+                        console.log('Cập nhật số lượng giỏ hàng:', response.count);
+                    } else {
+                        // Nếu có lỗi, đặt số lượng về 0 hoặc xử lý phù hợp
+                        $('#cart-count').text(0);
+                        console.error('Lỗi khi lấy số lượng giỏ hàng:', response.message);
                     }
-                });
-            }
+                },
+                error: function () {
+                    $('#cart-count').text(0);
+                    console.error('Lỗi AJAX khi cập nhật số lượng giỏ hàng');
+                }
+            });
+        }
 
             // Hàm kiểm tra tồn kho định kỳ
             function checkStockStatus() {
