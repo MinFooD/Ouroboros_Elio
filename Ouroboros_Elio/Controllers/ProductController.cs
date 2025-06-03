@@ -1,4 +1,5 @@
-﻿using BusinessLogicLayer.ServiceContracts;
+﻿using BusinessLogicLayer.Dtos.DesignDtos;
+using BusinessLogicLayer.ServiceContracts;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Ouroboros_Elio.Controllers;
@@ -58,10 +59,23 @@ public class ProductController : Controller
         {
             return NotFound();
         }
-        if (design == null)
+
+        // Lấy sản phẩm liên quan theo danh mục, loại bỏ sản phẩm hiện tại
+        var relatedDesigns = await _designService.GetDesignsByCategoryAsync(design.CategoryId);
+        if (relatedDesigns != null)
         {
-            return NotFound();
+            relatedDesigns = relatedDesigns
+                .Where(d => d.DesignId != designId)
+                .Take(5) // Giới hạn 4 sản phẩm liên quan
+                .ToList();
         }
+        else
+        {
+            relatedDesigns = new List<DesignViewModel>();
+        }
+
+        ViewBag.RelatedDesigns = relatedDesigns;
+
         return View(design);
     }
 

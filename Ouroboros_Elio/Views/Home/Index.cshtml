@@ -144,20 +144,6 @@
                                                     <img class="secondary-img" src="@item.FirstImage.ImageUrl" alt="Hiraola's Product Image">
                                                 </a>
                                                 <span class="sticker">Hot</span>
-                                                @* <div class="add-actions">
-                                                    <ul>
-                                                        <li>
-                                                            <a class="hiraola-add_cart" href="javascript:void(0)" onclick="addToCart('@item.DesignId', 1, false)" data-bs-toggle="tooltip" data-placement="top" title="Thêm vào giỏ hàng">
-                                                                <i class="ion-bag"></i>
-                                                            </a>
-                                                        </li>
-                                                        <li class="quick-view-btn" data-bs-toggle="modal" data-bs-target="#exampleModalCenter">
-                                                            <a asp-controller="Product" asp-action="ProductDetail" asp-route-designId="@item.DesignId" data-bs-toggle="tooltip" data-placement="top" title="Xem nhanh">
-                                                                <i class="ion-eye"></i>
-                                                            </a>
-                                                        </li>
-                                                    </ul>
-                                                </div> *@
                                             </div>
                                             <div class="hiraola-product_content">
                                                 <div class="product-desc_info">
@@ -167,7 +153,7 @@
                                                     <div class="price-box">
                                                         <span class="new-price">@item.Price.ToString("N0") ₫</span>
                                                     </div>
-                                                    <div class="rating-box">
+                                                   @*  <div class="rating-box">
                                                         <ul>
                                                             <li><i class="fa fa-star-of-david"></i></li>
                                                             <li><i class="fa fa-star-of-david"></i></li>
@@ -175,7 +161,7 @@
                                                             <li><i class="fa fa-star-of-david"></i></li>
                                                             <li class="silver-color"><i class="fa fa-star-of-david"></i></li>
                                                         </ul>
-                                                    </div>
+                                                    </div> *@
                                                 </div>
                                             </div>
                                         </div>
@@ -259,21 +245,7 @@
                                                                 <a asp-controller="Product" asp-action="ProductDetail" asp-route-designId="@item.DesignId">
                                                                     <img class="primary-img" src="@item.FirstImage.ImageUrl" alt="Hiraola's Product Image">
                                                                     <img class="secondary-img" src="@item.FirstImage.ImageUrl" alt="Hiraola's Product Image">
-                                                                </a>
-                                                               @*  <div class="add-actions">
-                                                                    <ul>
-                                                                        <li>
-                                                                            <a class="hiraola-add_cart" href="javascript:void(0)" onclick="addToCart('@item.DesignId', 1, false)" data-bs-toggle="tooltip" data-placement="top" title="Thêm vào giỏ hàng">
-                                                                                <i class="ion-bag"></i>
-                                                                            </a>
-                                                                        </li>
-                                                                        <li class="quick-view-btn" data-bs-toggle="modal" data-bs-target="#exampleModalCenter">
-                                                                            <a asp-controller="Product" asp-action="ProductDetail" asp-route-designId="@item.DesignId" data-bs-toggle="tooltip" data-placement="top" title="Xem nhanh">
-                                                                                <i class="ion-eye"></i>
-                                                                            </a>
-                                                                        </li>
-                                                                    </ul>
-                                                                </div> *@
+                                                                </a>                                                               
                                                             </div>
                                                             <div class="hiraola-product_content">
                                                                 <div class="product-desc_info">
@@ -283,7 +255,7 @@
                                                                     <div class="price-box">
                                                                         <span class="new-price">@item.Price.ToString("N0") ₫</span>
                                                                     </div>
-                                                                    <div class="rating-box">
+                                                                    @* <div class="rating-box">
                                                                         <ul>
                                                                             <li><i class="fa fa-star-of-david"></i></li>
                                                                             <li><i class="fa fa-star-of-david"></i></li>
@@ -291,7 +263,7 @@
                                                                             <li><i class="fa fa-star-of-david"></i></li>
                                                                             <li class="silver-color"><i class="fa fa-star-of-david"></i></li>
                                                                         </ul>
-                                                                    </div>
+                                                                    </div> *@
                                                                 </div>
                                                             </div>
                                                         </div>

@@ -34,7 +34,7 @@
                                 <div class="sp-heading">
                                     <h5><a href="#">@Model.DesignName</a></h5>
                                 </div>
-                                <div class="rating-box">
+                                @* <div class="rating-box">
                                     <ul>
                                         <li><i class="fa fa-star-of-david"></i></li>
                                         <li><i class="fa fa-star-of-david"></i></li>
@@ -42,7 +42,7 @@
                                         <li><i class="fa fa-star-of-david"></i></li>
                                         <li class="silver-color"><i class="fa fa-star-of-david"></i></li>
                                     </ul>
-                                </div>
+                                </div> *@
                                 <div class="sp-essential_stuff">
                                     <ul>
                                         <li>Bộ Sưu Tập: <span>@Model.CollectionName</span></li>
@@ -96,84 +96,14 @@
             <div class="container">
                 <div class="row">
                     <div class="col-lg-12">
-                        <div class="sp-product-tab_nav">
-                            <div class="product-tab">
-                                <ul class="nav product-menu">
-                                    <li>
-                                        <a class="active" data-bs-toggle="tab" href="#description"><span>Mô Tả</span></a>
-                                    </li>
-                                    <li><a data-bs-toggle="tab" href="#reviews"><span>Đánh Giá (1)</span></a></li>
-                                </ul>
-                            </div>
+                        <div class="sp-product-tab_nav">                            
                             <div class="tab-content hiraola-tab_content">
                                 <div id="description" class="tab-pane active show" role="tabpanel">
                                     <div class="product-description">
                                         @Model.Description
                                     </div>
                                 </div>
-                                <div id="reviews" class="tab-pane" role="tabpanel">
-                                    <form class="form-horizontal" id="form-review">
-                                        <div id="review">
-                                            <table class="table table-striped table-bordered">
-                                                <tbody>
-                                                    <tr>
-                                                        <td style="width: 50%;"><strong>Khách hàng</strong></td>
-                                                        <td class="text-right">25/04/2022</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td colspan="2">
-                                                            <p>Sản phẩm tốt! Cảm ơn rất nhiều</p>
-                                                            <div class="rating-box">
-                                                                <ul>
-                                                                    <li><i class="fa fa-star-of-david"></i></li>
-                                                                    <li><i class="fa fa-star-of-david"></i></li>
-                                                                    <li><i class="fa fa-star-of-david"></i></li>
-                                                                    <li><i class="fa fa-star-of-david"></i></li>
-                                                                    <li><i class="fa fa-star-of-david"></i></li>
-                                                                </ul>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                        <h2>Viết đánh giá</h2>
-                                        <div class="form-group required">
-                                            <div class="col-sm-12 p-0">
-                                                <label>Email của bạn <span class="required">*</span></label>
-                                                <input class="review-input" type="email" name="con_email" id="con_email" required>
-                                            </div>
-                                        </div>
-                                        <div class="form-group required second-child">
-                                            <div class="col-sm-12 p-0">
-                                                <label class="control-label">Chia sẻ ý kiến của bạn</label>
-                                                <textarea class="review-textarea" name="con_message" id="con_message"></textarea>
-                                                <div class="help-block">
-                                                    <span class="text-danger">Lưu ý:</span> HTML không được chuyển đổi.
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="form-group last-child required">
-                                            <div class="col-sm-12 p-0">
-                                                <div class="your-opinion">
-                                                    <label>Đánh giá của bạn</label>
-                                                    <span>
-                                                        <select class="star-rating">
-                                                            <option value="1">1</option>
-                                                            <option value="2">2</option>
-                                                            <option value="3">3</option>
-                                                            <option value="4">4</option>
-                                                            <option value="5">5</option>
-                                                        </select>
-                                                    </span>
-                                                </div>
-                                            </div>
-                                            <div class="hiraola-btn-ps_right">
-                                                <a href="javascript:void(0)" class="hiraola-btn hiraola-btn_dark">Tiếp tục</a>
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
+                                
                             </div>
                         </div>
                     </div>
@@ -182,7 +112,94 @@
         </div>
         <!-- Hiraola's Single Product Tab Area End Here -->
         <!-- Begin Hiraola's Product Area Two -->
-        <div class="hiraola-product_area hiraola-product_area-2">
+        <div class="hiraola-product_area hiraola-product_area-2 section-space_add">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+
+                        <div class="hiraola-section_title">
+                            <h4>Sản Phẩm Liên Quan</h4>
+                        </div>
+
+                    </div>
+                    <div class="col-lg-12">
+                        <div class="hiraola-product_slider-3">
+
+                            <!-- Begin Hiraola's Slide Item Area -->
+                            @if (ViewBag.RelatedDesigns != null && ViewBag.RelatedDesigns.Count > 0)
+                            {
+                                foreach (var design in ViewBag.RelatedDesigns as List<BusinessLogicLayer.Dtos.DesignDtos.DesignViewModel>)
+                                {
+                                    <!-- Begin Hiraola's Slide Item Area -->
+                                    <div class="slide-item">
+                                        <div class="single_product">
+                                            <div class="product-img">
+                                                <a href="@Url.Action("ProductDetail", "Product", new { designId = design.DesignId })">
+                                                    <img class="primary-img" src="@(design.FirstImage?.ImageUrl ?? "/assets/images/product/placeholder.jpg")" alt="@design.DesignName">
+                                                    <img class="secondary-img" src="@(design.FirstImage?.ImageUrl ?? "/assets/images/product/placeholder.jpg")" alt="@design.DesignName">
+                                                </a>
+                                                @if (design.StockQuantity <= 0)
+                                                {
+                                                    <span class="sticker-2">Hết hàng</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="sticker-2">Còn hàng</span>
+                                                }
+                                                <div class="add-actions">
+                                                    <ul>
+                                                        <li>
+                                                            <a class="hiraola-add_cart" href="javascript:void(0)" onclick="addToCart('@design.DesignId')" data-bs-toggle="tooltip" data-placement="top" title="Add To Cart"><i class="ion-bag"></i></a>
+                                                        </li>
+                                                        <li>
+                                                            <a class="hiraola-add_compare" href="compare.html" data-bs-toggle="tooltip" data-placement="top" title="Compare This Product">
+                                                                <i class="ion-ios-shuffle-strong"></i>
+                                                            </a>
+                                                        </li>
+                                                        <li class="quick-view-btn" data-bs-toggle="modal" data-bs-target="#exampleModalCenter">
+                                                            <a href="javascript:void(0)" data-bs-toggle="tooltip" data-placement="top" title="Quick View">
+                                                                <i class="ion-eye"></i>
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                            <div class="hiraola-product_content">
+                                                <div class="product-desc_info">
+                                                    <h6>
+                                                        <a class="product-name" href="@Url.Action("ProductDetail", "Product", new { designId = design.DesignId })">
+                                                            @design.DesignName
+                                                        </a>
+                                                    </h6>
+                                                    <div class="price-box">
+                                                        <span class="new-price">@design.Price.ToString("N0") ₫</span>
+                                                    </div>
+                                                    <div class="additional-add_action">
+                                                        <ul>
+                                                            <li>
+                                                                <a class="hiraola-add_compare" href="wishlist.html" data-bs-toggle="tooltip" data-placement="top" title="Add To Wishlist">
+                                                                    <i class="ion-android-favorite-outline"></i>
+                                                                </a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>                                                 
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Hiraola's Slide Item Area End Here -->
+                                }
+                            }
+                            else
+                            {
+                                <p>Không có sản phẩm liên quan.</p>
+                            }
+                            <!-- Hiraola's Slide Item Area End Here -->                           
+
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         <!-- Hiraola's Product Area Two End Here -->
     </div>
@@ -303,9 +320,9 @@
 
                 if (newVal > maxQuantity) {
                     Swal.fire({
-                        title: 'Lỗi',
+                        title: 'Thông Báo',
                         text: `Sản phẩm này chỉ còn ${maxQuantity} trong kho.`,
-                        icon: 'error',
+                        icon: 'warning',
                         confirmButtonText: 'Đóng',
                         customClass: { confirmButton: 'swal2-confirm' }
                     });
@@ -323,9 +340,9 @@
 
                 if (quantity <= 0) {
                     Swal.fire({
-                        title: 'Lỗi',
+                        title: 'Thông Báo',
                         text: 'Số lượng phải lớn hơn 0.',
-                        icon: 'error',
+                        icon: 'warning',
                         confirmButtonText: 'Đóng',
                         customClass: { confirmButton: 'swal2-confirm' }
                     });
@@ -335,9 +352,9 @@
 
                 if (quantity > maxQuantity) {
                     Swal.fire({
-                        title: 'Lỗi',
+                        title: 'Thông Báo',
                         text: `Sản phẩm này chỉ còn ${maxQuantity} trong kho.`,
-                        icon: 'error',
+                        icon: 'warning',
                         confirmButtonText: 'Đóng',
                         customClass: { confirmButton: 'swal2-confirm' }
                     });
@@ -447,9 +464,9 @@
 
             if (quantity <= 0) {
                 Swal.fire({
-                    title: 'Lỗi',
+                    title: 'Thông Báo',
                     text: 'Vui lòng chọn số lượng lớn hơn 0.',
-                    icon: 'error',
+                    icon: 'warning',
                     confirmButtonText: 'Đóng',
                     customClass: { confirmButton: 'swal2-confirm' }
                 });
