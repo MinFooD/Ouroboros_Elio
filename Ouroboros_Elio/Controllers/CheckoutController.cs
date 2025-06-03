@@ -258,7 +258,7 @@ public class CheckoutController : Controller
     }
 
     [HttpGet("Checkout/Success")]
-    public async Task<IActionResult> Success()
+    public async Task<IActionResult> Success(long? orderCode)
     {
         if (!User.Identity.IsAuthenticated)
         {
@@ -277,28 +277,56 @@ public class CheckoutController : Controller
             return NotFound("User not found.");
         }
 
-        if (!TempData.TryGetValue("OrderId", out var orderIdObj) || !Guid.TryParse(orderIdObj?.ToString(), out var orderId))
+        // Lấy CartId từ TempData
+        if (!TempData.TryGetValue("CartId", out var cartIdObj) || !Guid.TryParse(cartIdObj?.ToString(), out var cartId))
         {
-            return BadRequest("Invalid order ID.");
+            TempData["Error"] = "Không tìm thấy thông tin giỏ hàng.";
+            return RedirectToAction("CartDetail", "Cart");
         }
 
-        var order = await _orderService.GetOrderByIdAsync(orderId, userGuid);
-        if (order == null)
+        // Kiểm tra trạng thái thanh toán qua PayOS
+        if (!orderCode.HasValue)
         {
-            return NotFound("Order not found.");
+            TempData["Error"] = "Mã đơn thanh toán không hợp lệ.";
+            return RedirectToAction("CartDetail", "Cart");
         }
 
-        var designIds = order.OrderItems
+        try
+        {
+            var paymentInfo = await _payOS.getPaymentLinkInformation(orderCode.Value);
+            if (paymentInfo == null || paymentInfo.status != "PAID")
+            {
+                TempData["Error"] = "Thanh toán chưa được xác nhận hoặc không thành công.";
+                return RedirectToAction("CartDetail", "Cart");
+            }
+        }
+        catch (Exception ex)
+        {
+            TempData["Error"] = $"Lỗi khi kiểm tra trạng thái thanh toán: {ex.Message}";
+            return RedirectToAction("PlaceOrder", "Checkout");
+        }
+
+        // Tạo đơn hàng từ giỏ hàng
+        var (orderViewModel, message) = await _orderService.CreateOrderFromCartAsync(cartId, userGuid);
+        if (orderViewModel == null)
+        {
+            TempData["Error"] = message;
+            return RedirectToAction("CartDetail", "Cart");
+        }
+
+        // Lưu OrderId vào TempData để hiển thị thông tin đơn hàng
+        TempData["OrderId"] = orderViewModel.OrderId.ToString();
+
+        // Lấy thông tin thiết kế cho các sản phẩm trong đơn hàng
+        var designIds = orderViewModel.OrderItems
             .Where(oi => oi.DesignId.HasValue)
             .Select(oi => oi.DesignId.Value)
             .Distinct()
             .ToList();
-        var designTasks = designIds.Select(id => _designService.GetDesignByIdAsync(id)).ToList();
-        var designs = await Task.WhenAll(designTasks);
-        var designDict = designs
-            .Where(d => d != null)
-            .ToDictionary(d => d.DesignId, d => d.DesignName ?? "Unknown");
+        var designs = await _designService.GetDesignsByIdsAsync(designIds);
+        var designDict = designs.ToDictionary(d => d.DesignId, d => d.DesignName ?? "Unknown");
 
+        // Chuẩn bị model cho view
         var model = new SuccessViewModel
         {
             FirstName = user.FirstName,
@@ -306,11 +334,11 @@ public class CheckoutController : Controller
             Address = user.Address,
             Email = user.Email,
             PhoneNumber = user.PhoneNumber,
-            OrderId = order.OrderId,
-            OrderDate = order.OrderDate,
-            TotalAmount = order.TotalAmount,
-            Status = order.Status,
-            OrderItems = order.OrderItems.Select(oi => new OrderItemViewModel
+            OrderId = orderViewModel.OrderId,
+            OrderDate = orderViewModel.OrderDate,
+            TotalAmount = orderViewModel.TotalAmount,
+            Status = orderViewModel.Status,
+            OrderItems = orderViewModel.OrderItems.Select(oi => new OrderItemViewModel
             {
                 OrderItemId = oi.OrderItemId,
                 DesignId = oi.DesignId,
