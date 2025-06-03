@@ -34,15 +34,6 @@
                                 <div class="sp-heading">
                                     <h5><a href="#">@Model.DesignName</a></h5>
                                 </div>
-                                @* <div class="rating-box">
-                                    <ul>
-                                        <li><i class="fa fa-star-of-david"></i></li>
-                                        <li><i class="fa fa-star-of-david"></i></li>
-                                        <li><i class="fa fa-star-of-david"></i></li>
-                                        <li><i class="fa fa-star-of-david"></i></li>
-                                        <li class="silver-color"><i class="fa fa-star-of-david"></i></li>
-                                    </ul>
-                                </div> *@
                                 <div class="sp-essential_stuff">
                                     <ul>
                                         <li>Bộ Sưu Tập: <span>@Model.CollectionName</span></li>
@@ -177,12 +168,12 @@
                                                     <div class="additional-add_action">
                                                         <ul>
                                                             <li>
-                                                                <a class="hiraola-add_compare" href="wishlist.html" data-bs-toggle="tooltip" data-placement="top" title="Add To Wishlist">
-                                                                    <i class="ion-android-favorite-outline"></i>
-                                                                </a>
+                                                                <span class="hiraola-view_count" data-bs-toggle="tooltip" data-placement="top" title="Lượt Xem">
+                                                                    <i class="ion-eye"></i> @design.VisitCount
+                                                                </span>
                                                             </li>
                                                         </ul>
-                                                    </div>                                                 
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
