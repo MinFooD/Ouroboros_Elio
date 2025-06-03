@@ -1,19 +1,41 @@
-﻿<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Thanh toán thất bại</title>
-    <link rel="stylesheet" href="~/css/style.css">
-</head>
-<body>
-    <div class="main-box">
-        <h4 class="payment-titlte">Thanh toán thất bại</h4>
-        <p>Nếu có bất kỳ câu hỏi nào, hãy gửi email tới <a href="mailto:support@payos.vn">support@payos.vn</a></p>
-        <a href="/" id="return-page-btn">Trở về trang Tạo Link thanh toán</a>
+﻿<body class="template-color-1">
 
-        Trang thông báo đã hủy thanh toán (Không cần data, chỉ cần đẹp)
+    <div class="main-wrapper">
+
+        <!-- Begin Hiraola's Breadcrumb Area -->
+        <div class="breadcrumb-area">
+            <div class="container">
+                <div class="breadcrumb-content">
+                    <h2>Thanh Toán</h2>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li class="active">Lỗi Thanh Toán</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- Hiraola's Breadcrumb Area End Here -->
+        <!-- Begin Hiraola's Payment Error Page Area -->
+        <div class="error404-area">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8 mx-auto text-center">
+                        <div class="search-error-wrapper">
+                            @* <h1>THANH TOÁN KHÔNG THÀNH CÔNG</h1> *@
+                            <h2>THANH TOÁN KHÔNG THÀNH CÔNG</h2>
+                            <p class="short_desc mb-3">
+                                Rất tiếc, giao dịch thanh toán qua PayOS của bạn không thể hoàn tất. Vui lòng kiểm tra lại thông tin thanh toán hoặc thử lại sau.
+                            </p>
+                            <div></div>
+                            <div class="hiraola-btn-ps_center"></div>
+                            <a href="/Checkout/PlaceOrder" class="hiraola-error_btn">Quay Lại Thanh Toán</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Hiraola's Payment Error Page End Here -->
+
     </div>
-    <script src="script.js"></script>
+
 </body>
-</html>
