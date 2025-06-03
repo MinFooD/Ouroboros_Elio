@@ -28,10 +28,13 @@
 				<h3>💍 Vòng tay (Tối thiểu 1 charm)</h3>
 				<div id="bracelet"></div>
 				<button id="submitBtn">Tạo vòng tay (kèm ghi chú)</button>
-			<div id="totalPriceDisplay" style="margin-top: 15px; font-weight: bold; font-size: 18px;">
+			<div id="totalPriceDisplay" style="margin-top: 15px; font-weight: bold;">
 				Tổng giá vòng tay: 0đ
 			</div>
+			<div id="noteForUser" style="margin-top: 15px;">
+				Lưu ý: Sản phẩm vòng tay bạn đã thiết kế đang tồn tại trong giỏ hàng sẽ bị xóa nếu bạn thiết kế 1 vòng tay khác thay thế!!!
 			</div>
+		</div>
 		
 	</div>
 
@@ -337,7 +340,7 @@
 									confirmButtonText: 'OK'
 								}).then(() => {
 									updateCartCount(); /* Gọi nếu có hàm cập nhật số lượng giỏ */
-									window.location.href = 'Cart/CartDetail';
+									window.location.href = 'https://localhost:7290/Cart/CartDetail';
 								});
 							} else {
 								Swal.fire({

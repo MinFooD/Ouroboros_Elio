@@ -142,6 +142,39 @@ h3 {
         border-radius: 50%;
     }
 
+#noteForUser {
+    margin-top: 15px;
+    font-weight: bold;
+    font-size: 14px;
+    color: #a94442; /* đỏ nhạt */
+    background-color: #f2dede; /* nền đỏ phấn nhạt */
+    padding: 12px 15px;
+    border-radius: 6px;
+    position: relative;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+    #noteForUser::before {
+        color: #d9534f; /* đỏ đậm hơn cho dấu * */
+        font-weight: bold;
+        font-size: 14px;
+        position: absolute;
+        left: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
+#totalPriceDisplay {
+    margin-top: 25px;
+    font-weight: 700;
+    font-size: 22px;
+    color: #2c3e50; /* xanh đậm */
+    border-bottom: 2px solid #2980b9;
+    padding-bottom: 8px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+
 /* Vùng vòng tay */
 #bracelet {
     position: relative;

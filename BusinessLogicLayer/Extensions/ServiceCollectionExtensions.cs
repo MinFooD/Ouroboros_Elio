@@ -1,5 +1,7 @@
 ﻿using BusinessLogicLayer.ServiceContracts;
 using BusinessLogicLayer.Services;
+using DataAccessLayer.Repositories;
+using DataAccessLayer.RepositoryContracts;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -28,6 +30,8 @@ namespace BusinessLogicLayer.Extensions
 			services.AddScoped<ICartService, CartService>();
 			services.AddScoped<IOrderService, OrderService>();
 			services.AddScoped<ICharmService, CharmService>();
+			services.AddScoped<ICategoryService, CategoryService>();
+			
 
 		}
 	}
