@@ -1,0 +1,381 @@
+﻿
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    /*padding: 20px;*/
+    color: #333;
+}
+
+.container1 {
+    display: flex;
+    gap: 40px;
+    max-width: 1200px;
+    margin: 50px auto;
+}
+
+.charm-list {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 25px;
+    width: 400px;
+    min-height: 400px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.note-section {
+    margin-top: 40px;
+    backdrop-filter: blur(50px);
+    border-radius: 20px;
+    padding: 25px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+
+
+#noteInput {
+    width: 100%; /* Đảm bảo textarea chiếm hết chiều rộng */
+    height: 150px; /* Chiều cao của textarea */
+    padding: 15px;
+    font-size: 16px;
+    color: #333; /* Màu chữ */
+    background: rgba(255, 255, 255, 0.8); /* Nền trắng mờ */
+    border-radius: 10px;
+    border: 1px solid rgba(0, 0, 0, 0.1); /* Đường viền mờ */
+    resize: none; /* Tắt khả năng thay đổi kích thước */
+    transition: all 0.3s ease; /* Hiệu ứng chuyển tiếp mượt mà */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+    #noteInput::placeholder {
+        color: #aaa; /* Màu chữ placeholder */
+        font-style: italic; /* Làm chữ placeholder nghiêng */
+    }
+
+    #noteInput:focus {
+        outline: none; /* Xóa viền mặc định khi focus */
+        border-color: #91C4AF; /* Đổi màu viền khi focus */
+        box-shadow: 0 0 8px #91C4AF; /* Tạo hiệu ứng glow khi focus */
+    }
+
+    #noteInput:hover {
+        background: rgba(255, 255, 255, 1); /* Thay đổi màu nền khi hover */
+    }
+
+.ring {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 25px;
+    width: 60%;
+    min-height: 500px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+h3 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 1.4em;
+    font-weight: 600;
+    color: #4a5568;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#availableCharms {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+    overflow-y: auto;
+    padding-right: 10px;
+    height: 300px;
+}
+
+    #availableCharms::-webkit-scrollbar {
+
+        width: 6px;
+    }
+
+    #availableCharms::-webkit-scrollbar-track {
+        background: rgba(0, 0, 0, 0.1);
+        border-radius: 3px;
+    }
+
+    #availableCharms::-webkit-scrollbar-thumb {
+        background: linear-gradient(to bottom, rgba(218, 227, 103, 0.8), rgba(23, 140, 111, 0.8)), linear-gradient(to bottom, rgba(145, 196, 175, 0.8), rgba(23, 140, 111, 0.8)), linear-gradient(to bottom, rgba(218, 227, 103, 0.8), rgba(145, 196, 175, 0.8)), linear-gradient(to bottom, rgba(23, 140, 111, 0.8), rgba(145, 196, 175, 0.8)), linear-gradient(to bottom, rgba(218, 227, 103, 0.8), rgba(145, 196, 175, 0.8));
+        border-radius: 3px;
+    }
+
+.charm-item {
+    width: 64px;
+    height: 64px;
+    border: 3px solid transparent;
+    border-radius: 50%;
+    background: linear-gradient(to bottom, rgba(218, 227, 103, 0.8), rgba(23, 140, 111, 0.8)), linear-gradient(to bottom, rgba(145, 196, 175, 0.8), rgba(23, 140, 111, 0.8)), linear-gradient(to bottom, rgba(218, 227, 103, 0.8), rgba(145, 196, 175, 0.8)), linear-gradient(to bottom, rgba(23, 140, 111, 0.8), rgba(145, 196, 175, 0.8)), linear-gradient(to bottom, rgba(218, 227, 103, 0.8), rgba(145, 196, 175, 0.8));
+    cursor: grab;
+    transition: all 0.3s ease;
+    overflow: hidden;
+    position: relative;
+}
+
+    .charm-item:hover {
+        transform: translateY(-5px) scale(1.05);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .charm-item:active {
+        cursor: grabbing;
+        transform: scale(0.95);
+    }
+
+    .charm-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 50%;
+    }
+
+#noteForUser {
+    margin-top: 15px;
+    font-weight: bold;
+    font-size: 14px;
+    color: #a94442; /* đỏ nhạt */
+    background-color: #f2dede; /* nền đỏ phấn nhạt */
+    padding: 12px 15px;
+    border-radius: 6px;
+    position: relative;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+    #noteForUser::before {
+        color: #d9534f; /* đỏ đậm hơn cho dấu * */
+        font-weight: bold;
+        font-size: 14px;
+        position: absolute;
+        left: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
+#totalPriceDisplay {
+    margin-top: 25px;
+    font-weight: 700;
+    font-size: 22px;
+    color: #2c3e50; /* xanh đậm */
+    border-bottom: 2px solid #2980b9;
+    padding-bottom: 8px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+
+/* Vùng vòng tay */
+#bracelet {
+    position: relative;
+    width: 100%;
+    height: 400px;
+    margin-bottom: 20px;
+}
+
+/* Sợi dây vòng tay (màu bạc xám rõ nét) */
+.bracelet-rope {
+    position: absolute;
+    width: 340px;
+    height: 340px;
+    border: 4px solid #B0B0B0; /* bạc xám */
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: transparent;
+    box-shadow: inset 0 0 0 2px #D8D8D8, /* viền sáng xám nhạt bên trong */
+    0 0 12px rgba(100, 100, 100, 0.6); /* bóng xám ánh nhẹ */
+}
+
+    .bracelet-rope::before {
+        content: '';
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        border: 2px dashed #A8A8A8; /* viền bạc xám hơn */
+        border-radius: 50%;
+        top: -2px;
+        left: -2px;
+        opacity: 0.85; /* rõ vừa đủ */
+    }
+
+.slot {
+    width: 70px;
+    height: 70px;
+    border: 3px dashed #cbd5e0;
+    border-radius: 50%;
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+    color: #a0aec0;
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+    transition: all 0.3s ease;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 2;
+}
+
+    .slot:hover {
+        background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e0 100%);
+        border-color: #667eea;
+        transform: scale(1.05);
+    }
+
+.ring-item {
+    width: 64px;
+    height: 64px;
+    border: 3px solid transparent;
+    border-radius: 50%;
+    background: linear-gradient(white, white) padding-box, linear-gradient(45deg, #48bb78, #38b2ac) border-box;
+    position: absolute;
+    margin: 0;
+    cursor: grab;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    z-index: 3;
+}
+
+    .ring-item:hover {
+        transform: scale(1.1);
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .ring-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 50%;
+    }
+
+    .ring-item button {
+        position: absolute;
+        top: -5px;
+        display: none;
+        right: -5px;
+        background: linear-gradient(45deg, #f56565, #e53e3e);
+        border: none;
+        color: white;
+        border-radius: 50%;
+        width: 28px;
+        height: 28px;
+        font-weight: bold;
+        font-size: 16px;
+        cursor: pointer;
+        z-index: 10;
+        transition: all 0.2s ease;
+        box-shadow: 0 4px 12px rgba(229, 62, 62, 0.4);
+    }
+    .ring-item:hover button {
+        display: block; /* Hiển thị nút khi hover phần tử cha */
+    }
+
+        .ring-item button:hover {
+            background: linear-gradient(45deg, #e53e3e, #c53030);
+            transform: scale(1.1);
+            box-shadow: 0 6px 16px rgba(229, 62, 62, 0.6);
+        }
+
+    .ring-item.dragging {
+        opacity: 0.7;
+        transform: rotate(5deg);
+    }
+
+#submitBtn {
+    width: 100%;
+    padding: 15px;
+    background: linear-gradient(45deg, rgba(218, 227, 103, 0.8), rgba(23, 140, 111, 0.8)), linear-gradient(90deg, rgba(145, 196, 175, 0.8), rgba(23, 140, 111, 0.8)), linear-gradient(135deg, rgba(218, 227, 103, 0.8), rgba(145, 196, 175, 0.8)), linear-gradient(180deg, rgba(23, 140, 111, 0.8), rgba(145, 196, 175, 0.8)), linear-gradient(225deg, rgba(218, 227, 103, 0.8), rgba(145, 196, 175, 0.8));
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 25px rgba(72, 187, 120, 0.3);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+    #submitBtn:hover {
+        background: linear-gradient(45deg, #38b2ac, #319795);
+        transform: translateY(-2px);
+        box-shadow: 0 12px 30px rgba(72, 187, 120, 0.4);
+    }
+
+    #submitBtn:active {
+        transform: translateY(0);
+    }
+
+/* Hiệu ứng khi danh sách charm trống */
+.empty-message {
+    text-align: center;
+    color: #a0aec0;
+    font-style: italic;
+    padding: 20px;
+    background: rgba(160, 174, 192, 0.1);
+    border-radius: 12px;
+    margin-top: 20px;
+}
+
+/* Animation cho drag and drop */
+.sortable-ghost {
+    opacity: 0.4;
+    transform: rotate(5deg);
+}
+
+.sortable-chosen {
+    transform: scale(1.05);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .ring {
+        position: relative;
+        top: auto;
+        right: auto;
+        width: 100%;
+        height: auto;
+    }
+
+    .charm-list {
+        width: 100%;
+    }
+
+    #availableCharms {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+/* Hiệu ứng loading */
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+}
+
+.loading {
+    animation: pulse 1.5s ease-in-out infinite;
+}

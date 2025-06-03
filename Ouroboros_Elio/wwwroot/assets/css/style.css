@@ -5645,7 +5645,8 @@ button.li-btn {
 /*  22 - Components - Breadcrumb
 /*----------------------------------------*/
 .breadcrumb-area {
-    background-image: url("../images/breadcrumb/1.jpg");
+    /*background-image: url("");*/
+    background-image: url('../../img/1920x230px.jpg');
     background-repeat: no-repeat;
     background-position: center center;
     background-size: cover;
@@ -6006,7 +6007,7 @@ button.li-btn {
 
 /* ---Header Bottom Area--- */
 .header-bottom_area {
-    background-color: #63BC85;
+    background: linear-gradient(45deg, rgba(218, 227, 103, 0.8), rgba(23, 140, 111, 0.8)), linear-gradient(90deg, rgba(145, 196, 175, 0.8), rgba(23, 140, 111, 0.8)), linear-gradient(135deg, rgba(218, 227, 103, 0.8), rgba(145, 196, 175, 0.8)), linear-gradient(180deg, rgba(23, 140, 111, 0.8), rgba(145, 196, 175, 0.8)), linear-gradient(225deg, rgba(218, 227, 103, 0.8), rgba(145, 196, 175, 0.8));
 }
 
     .header-bottom_area > .container {

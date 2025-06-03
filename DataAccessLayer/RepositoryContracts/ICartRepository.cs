@@ -12,6 +12,6 @@ namespace DataAccessLayer.RepositoryContracts
 		Task<Cart?> GetCartByUserIdAsync(Guid userId);
 		Task<List<CartItem>?> GetCartItemsByUserIdAsync(Guid userId);
 		Task<bool> AddToCart(Guid userId, Guid designId, int quantity, bool productType);
-		Task<bool?> UpdateQuantity(Guid userId, Guid designId, int quantity);
+		Task<bool> UpdateQuantity(Guid userId, Guid designId, int quantity, bool? productType);
 	}
 }

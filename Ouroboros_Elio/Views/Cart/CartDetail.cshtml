@@ -3,60 +3,60 @@
 <style>
     /* Tùy chỉnh SweetAlert2 để đồng bộ với giao diện website */
     .swal2-popup {
-        font-family: 'Lato', sans-serif; /* Font chữ giống website */
-        background: #f4f4f4; /* Màu nền xám nhạt giống form */
-        color: #595959; /* Màu chữ xám giống nội dung */
-        border: 1px solid #e5e5e5; /* Viền giống các thành phần trên website */
-        border-radius: 8px; /* Bo góc nhẹ */
+    font-family: 'Lato', sans-serif; /* Font chữ giống website */
+    background: #f4f4f4; /* Màu nền xám nhạt giống form */
+    color: #595959; /* Màu chữ xám giống nội dung */
+    border: 1px solid #e5e5e5; /* Viền giống các thành phần trên website */
+    border-radius: 8px; /* Bo góc nhẹ */
     }
 
     .swal2-title {
-        color: #333; /* Màu tiêu đề giống website */
-        font-size: 18px; /* Kích thước chữ tiêu đề */
-        font-weight: 700; /* Đậm giống h3, h4 */
+    color: #333; /* Màu tiêu đề giống website */
+    font-size: 18px; /* Kích thước chữ tiêu đề */
+    font-weight: 700; /* Đậm giống h3, h4 */
     }
 
     .swal2-content {
-        color: #595959; /* Màu nội dung giống website */
-        font-size: 16px; /* Kích thước chữ nội dung */
+    color: #595959; /* Màu nội dung giống website */
+    font-size: 16px; /* Kích thước chữ nội dung */
     }
 
     .swal2-confirm {
-        background-color: #cda557 !important; /* Nút "Xóa" màu vàng */
-        color: #fff !important; /* Chữ trắng */
-        border-radius: 3px !important; /* Bo góc giống hiraola-btn */
-        padding: 10px 20px !important; /* Kích thước giống nút */
-        font-size: 12px !important; /* Kích thước chữ */
-        text-transform: uppercase !important; /* Chữ in hoa */
-        transition: all 0.3s ease-in !important; /* Hiệu ứng chuyển đổi */
+    background-color: #cda557 !important; /* Nút "Xóa" màu vàng */
+    color: #fff !important; /* Chữ trắng */
+    border-radius: 3px !important; /* Bo góc giống hiraola-btn */
+    padding: 10px 20px !important; /* Kích thước giống nút */
+    font-size: 12px !important; /* Kích thước chữ */
+    text-transform: uppercase !important; /* Chữ in hoa */
+    transition: all 0.3s ease-in !important; /* Hiệu ứng chuyển đổi */
     }
 
     .swal2-cancel {
-        background-color: #595959 !important; /* Nút "Hủy" màu xám đậm */
-        color: #fff !important; /* Chữ trắng */
-        border-radius: 3px !important; /* Bo góc giống hiraola-btn */
-        padding: 10px 20px !important; /* Kích thước giống nút */
-        font-size: 12px !important; /* Kích thước chữ */
-        text-transform: uppercase !important; /* Chữ in hoa */
-        transition: all 0.3s ease-in !important; /* Hiệu ứng chuyển đổi */
+    background-color: #595959 !important; /* Nút "Hủy" màu xám đậm */
+    color: #fff !important; /* Chữ trắng */
+    border-radius: 3px !important; /* Bo góc giống hiraola-btn */
+    padding: 10px 20px !important; /* Kích thước giống nút */
+    font-size: 12px !important; /* Kích thước chữ */
+    text-transform: uppercase !important; /* Chữ in hoa */
+    transition: all 0.3s ease-in !important; /* Hiệu ứng chuyển đổi */
     }
 
     .swal2-confirm:hover {
-        background-color: #d5b473 !important; /* Hover màu vàng nhạt hơn */
+    background-color: #d5b473 !important; /* Hover màu vàng nhạt hơn */
     }
 
     .swal2-cancel:hover {
-        background-color: #333 !important; /* Hover màu xám đậm hơn */
+    background-color: #333 !important; /* Hover màu xám đậm hơn */
     }
 
     .swal2-icon.swal2-warning {
-        color: #cda557 !important; /* Màu biểu tượng cảnh báo */
-        border-color: #cda557 !important;
+    color: #cda557 !important; /* Màu biểu tượng cảnh báo */
+    border-color: #cda557 !important;
     }
 
     .swal2-icon.swal2-error {
-        color: #ea3a3c !important; /* Màu biểu tượng lỗi (đỏ) */
-        border-color: #ea3a3c !important;
+    color: #ea3a3c !important; /* Màu biểu tượng lỗi (đỏ) */
+    border-color: #ea3a3c !important;
     }
 </style>
 
@@ -95,44 +95,86 @@
                                         {
                                             foreach (var item in Model.cartItemsViewModel)
                                             {
-                                        <tr data-design-id="@item.DesignId">
-                                            <td class="hiraola-product-remove">
-                                                <a href="javascript:void(0)" onclick="removeFromCart('@item.DesignId')">
-                                                    <i class="fa fa-trash" title="Remove"></i>
-                                                </a>
-                                            </td>
-                                            <td class="hiraola-product-thumbnail">
-                                                <a href="javascript:void(0)">
-                                                    <img src="@item.Design.FirstImage.ImageUrl" alt="Hiraola's Cart Thumbnail" style="max-width:30%">
-                                                </a>
-                                            </td>
-                                            <td class="hiraola-product-name">
-                                                <a href="/Product/ProductDetail?designId=@item.DesignId" title="Xem chi tiết sản phẩm">@item.Design.DesignName</a>
-                                            </td>
-                                            <td class="hiraola-product-price">
-                                                <span class="amount">
-                                                    @String.Format(new System.Globalization.CultureInfo("vi-VN")
-                                                                                                        , "{0:N0}"
-                                                                                                        , item.Price) ₫
-                                                </span>
-                                            </td>
-                                            <td class="quantity">
-                                                <label>Số Lượng</label>
-                                                <div class="cart-plus-minus">
-                                                    <input class="cart-plus-minus-box" value="@item.Quantity" type="text" data-design-id="@item.DesignId" data-price="@item.Price">
-                                                    <div class="dec qtybutton"><i class="fa fa-angle-down"></i></div>
-                                                    <div class="inc qtybutton"><i class="fa fa-angle-up"></i></div>
-                                                </div>
-                                            </td>
-                                            <td class="product-subtotal">
-                                                <span class="amount" data-subtotal="@((item.Quantity * item.Price))">
-                                                    @String.Format(new System.Globalization.CultureInfo("vi-VN")
-                                                                                                        , "{0:N0}"
-                                                                                                        , (item.Quantity) * (item.Price)) ₫
-                                                </span>
-                                            </td>
-                                        </tr>
-                                                                                }
+                                                if(item.ProductType == false)
+                                                {
+                                                    <tr data-design-id="@item.DesignId" data-product-type="@item.ProductType">
+                                                        <td class="hiraola-product-remove">
+                                                            <a href="javascript:void(0)" onclick="removeFromCart('@item.DesignId')">
+                                                                <i class="fa fa-trash" title="Remove"></i>
+                                                            </a>
+                                                        </td>
+                                                        <td class="hiraola-product-thumbnail">
+                                                            <a href="javascript:void(0)">
+                                                                <img src="@item.Design.FirstImage.ImageUrl" alt="Hiraola's Cart Thumbnail" style="max-width:30%">
+                                                            </a>
+                                                        </td>
+                                                        <td class="hiraola-product-name">
+                                                            <a href="/Product/ProductDetail?designId=@item.DesignId" title="Xem chi tiết sản phẩm">@item.Design.DesignName</a>
+                                                        </td>
+                                                        <td class="hiraola-product-price">
+                                                            <span class="amount">
+                                                                @String.Format(new System.Globalization.CultureInfo("vi-VN")
+                                                                                  , "{0:N0}"
+                                                                                  , item.Price) ₫
+                                                            </span>
+                                                        </td>
+                                                        <td class="quantity">
+                                                            <label>Số Lượng</label>
+                                                            <div class="cart-plus-minus">
+                                                                <input class="cart-plus-minus-box" value="@item.Quantity" type="text" data-design-id="@item.DesignId" data-price="@item.Price" data-product-type="@item.ProductType">
+                                                                <div class="dec qtybutton"><i class="fa fa-angle-down"></i></div>
+                                                                <div class="inc qtybutton"><i class="fa fa-angle-up"></i></div>
+                                                            </div>
+                                                        </td>
+                                                        <td class="product-subtotal">
+                                                            <span class="amount" data-subtotal="@((item.Quantity * item.Price))">
+                                                                @String.Format(new System.Globalization.CultureInfo("vi-VN")
+                                                                                  , "{0:N0}"
+                                                                                  , (item.Quantity) * (item.Price)) ₫
+                                                            </span>
+                                                        </td>
+                                                    </tr>
+                                                } else if (item.ProductType == true)
+                                                {
+                                                    <tr data-custom-bracelet-id="@item.CustomBraceletId" data-product-type="@item.ProductType">
+                                                        <td class="hiraola-product-remove">
+                                                            <a href="javascript:void(0)" onclick="removeBraceletFromCart('@item.CustomBraceletId')">
+                                                                <i class="fa fa-trash" title="Remove"></i>
+                                                            </a>
+                                                        </td>
+                                                        <td class="hiraola-product-thumbnail">
+                                                            <a href="javascript:void(0)">
+                                                                <img @* src="@item.Design.FirstImage.ImageUrl" *@ src="https://www.shutterstock.com/image-vector/sledge-hammer-vector-isolated-on-600nw-2596804669.jpg" alt="Hiraola's Cart Thumbnail" style="max-width:30%">
+                                                            </a>
+                                                        </td>
+                                                        <td class="hiraola-product-name">
+                                                            <a @* href="/Product/ProductDetail?designId=@item.DesignId" *@ title="Xem chi tiết sản phẩm">@item.CustomBracelet.CustomBraceletName</a>
+                                                        </td>
+                                                        <td class="hiraola-product-price">
+                                                            <span class="amount">
+                                                                @String.Format(new System.Globalization.CultureInfo("vi-VN")
+                                                                         , "{0:N0}"
+                                                                         , item.Price) ₫
+                                                            </span>
+                                                        </td>
+                                                        <td class="quantity">
+                                                            <label>Số Lượng</label>
+                                                            <div class="cart-plus-minus">
+                                                                <input class="cart-plus-minus-box" value="@item.Quantity" type="text" data-design-id="@item.CustomBracelet.CustomBraceletId" data-price="@item.Price" data-product-type="@item.ProductType">
+                                                                <div class="dec qtybutton"><i class="fa fa-angle-down"></i></div>
+                                                                <div class="inc qtybutton"><i class="fa fa-angle-up"></i></div>
+                                                            </div>
+                                                        </td>
+                                                        <td class="product-subtotal">
+                                                            <span class="amount" data-subtotal="@((item.Quantity * item.Price))">
+                                                                @String.Format(new System.Globalization.CultureInfo("vi-VN")
+                                                                         , "{0:N0}"
+                                                                         , (item.Quantity) * (item.Price)) ₫
+                                                            </span>
+                                                        </td>
+                                                    </tr>
+                                                }
+                                            }
                                         }
                                         else
                                         {
@@ -206,7 +248,15 @@
                 $input.val(newVal);
                 var designId = $input.data('design-id');
                 console.log('designId:', designId);
-                updateQuantity(designId, newVal, $input);
+                var productType = $input.data('product-type');
+                if(productType === "False" || productType === false){
+					console.log('Cập nhật số lượng cho sản phẩm thông thường');
+                    updateQuantity(designId, newVal, $input);
+				} else {
+					console.log('Cập nhật số lượng cho sản phẩm tùy chỉnh');
+                    updateBraceletQuantity(designId, newVal, $input);
+                }
+                
             });
 
             // Gắn sự kiện change cho input
@@ -221,11 +271,18 @@
                 var quantity = parseInt($input.val());
                 var designId = $input.data('design-id');
                 console.log('designId:', designId, 'quantity:', quantity);
-                updateQuantity(designId, quantity, $input);
+                var productType = $input.data('product-type');
+                if(productType === "False" || productType === false){
+                    console.log('Cập nhật số lượng cho sản phẩm thông thường');
+                    updateQuantity(designId, newVal, $input);
+                } else {
+                    console.log('Cập nhật số lượng cho sản phẩm tùy chỉnh');
+                    updateBraceletQuantity(designId, newVal, $input);
+                }
             });
         });
 
-                function updateQuantity(designId, quantity, $input) {
+        function updateQuantity(designId, quantity, $input) {
             if (isNaN(quantity) || quantity <= 0) {
                 console.log('Số lượng không hợp lệ:', quantity);
                 alert("Số lượng phải lớn hơn 0");
@@ -240,7 +297,7 @@
                 type: 'POST',
                 data: {
                     designId: designId,
-                    quantity: quantity
+                    quantity: quantity // Thêm tham số productType để xác định đây là sản phẩm thông thường
                 },
                 headers: {
                     'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
@@ -291,7 +348,78 @@
                 }
             });
         }
-                function removeFromCart(designId) {
+
+        function updateBraceletQuantity(customBraceletId, quantity, $input)
+        {
+            if (isNaN(quantity) || quantity <= 0) 
+            {
+                console.log('Số lượng không hợp lệ:', quantity);
+                alert("Số lượng phải lớn hơn 0");
+                $input.val(1);
+                return;
+            }
+            console.log('Gửi AJAX request: customBraceletId=', customBraceletId, 'quantity=', quantity);
+            isUpdating = true;
+            $.ajax(
+                {
+                     url: '/Cart/UpdateCart',
+                     type: 'POST',
+                     data: {
+                            designId: customBraceletId,
+                            quantity: quantity,
+                            productType: true // Thêm tham số productType để xác định đây là sản phẩm tùy chỉnh
+                        },
+                     headers: {
+                            'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
+                        },
+                     success: function (response) {
+                            console.log('AJAX success:', response);
+                            if (response.success) {
+                                var price = parseFloat($input.data('price'));
+                                var subtotal = quantity * price;
+
+                                // Định dạng số với dấu chấm làm phân cách hàng nghìn
+                                var formattedSubtotal = subtotal.toLocaleString('vi-VN', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+
+                                $input.closest('tr').find('.product-subtotal .amount')
+                                    .text(formattedSubtotal + ' ₫')
+                                    .data('subtotal', subtotal);
+
+                                var total = 0;
+                                $('.product-subtotal .amount').each(function () {
+                                    total += parseFloat($(this).data('subtotal'));
+                                });
+
+                                // Định dạng tổng với dấu chấm
+                                var formattedTotal = total.toLocaleString('vi-VN', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+                                $('#cart-total').text(formattedTotal + ' ₫');
+
+                                // Cập nhật số lượng giỏ hàng
+                                updateCartCount();
+                            } else {
+                                console.log('Lỗi từ server:', response.message);
+                                Swal.fire({
+                                    title: 'Lỗi',
+                                    text: response.message,
+                                    icon: 'error',
+                                    confirmButtonText: 'Đóng'
+                                });
+                                $input.val($input.data('original-value') || 1);
+                            }
+                     },
+                     error: function (xhr, status, error) {
+                            console.error('AJAX error:', status, error, xhr.responseText);
+                            alert("Có lỗi xảy ra khi cập nhật số lượng.");
+                            $input.val($input.data('original-value') || 1);
+                     },
+                     complete: function () {
+                            isUpdating = false;
+                            console.log('AJAX complete');
+                     }
+                });
+        }
+
+        function removeFromCart(designId) {
             Swal.fire({
                 title: 'Xác nhận xóa',
                 text: 'Bạn có chắc muốn xóa sản phẩm này khỏi giỏ hàng không?',
@@ -311,7 +439,62 @@
                         type: 'POST',
                         data: {
                             designId: designId,
-                            quantity: 0
+                            quantity: 0 // Thêm tham số productType để xác định đây là sản phẩm thông thường
+                        },
+                        headers: {
+                            'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
+                        },
+                        success: function (response) {
+                            console.log('AJAX success (xóa):', response);
+                            if (response.success) {
+                                window.location.reload();
+                                // Cập nhật số lượng giỏ hàng
+                                updateCartCount();
+                            } else {
+                                Swal.fire({
+                                    title: 'Lỗi',
+                                    text: response.message,
+                                    icon: 'error',
+                                    confirmButtonText: 'Đóng'
+                                });
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            console.error('AJAX error (xóa):', status, error, xhr.responseText);
+                            Swal.fire({
+                                title: 'Lỗi',
+                                text: 'Có lỗi xảy ra khi xóa sản phẩm khỏi giỏ hàng.',
+                                icon: 'error',
+                                confirmButtonText: 'Đóng'
+                            });
+                        }
+                    });
+                }
+            });
+        }
+
+        function removeBraceletFromCart(customBraceletId) {
+            Swal.fire({
+                title: 'Xác nhận xóa',
+                text: 'Bạn có chắc muốn xóa sản phẩm này khỏi giỏ hàng không?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Xóa',
+                cancelButtonText: 'Hủy',
+                customClass: {
+                    confirmButton: 'swal2-confirm',
+                    cancelButton: 'swal2-cancel'
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    console.log('Gửi AJAX request xóa: customBraceletId=', customBraceletId);
+                    $.ajax({
+                        url: '/Cart/UpdateCart',
+                        type: 'POST',
+                        data: {
+                            designId: customBraceletId,
+                            quantity: 0,
+                            productType: true
                         },
                         headers: {
                             'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()

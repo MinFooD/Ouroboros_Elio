@@ -45,7 +45,8 @@ builder.Services.AddScoped<IModelRepository, ModelRepository>();
 builder.Services.AddScoped<ICartRepository, CartRepository>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
-builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<ICharmRepository, CharmRepository>();
+builder.Services.AddScoped<ICustomBraceletRepository, CustomBraceletRepository>();
 //builder.Services.AddDataAccessLayer(builder.Configuration);
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole<Guid>>(options =>

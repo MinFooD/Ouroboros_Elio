@@ -40,7 +40,7 @@ namespace Ouroboros_Elio.Controllers
 			}
         }
 
-        public async Task<IActionResult> UpdateCart(Guid designId, int quantity)
+        public async Task<IActionResult> UpdateCart(Guid designId, int quantity, bool? productType = false)
         {
             var currentUser = HttpContext.User;
             var userId = _userManager.GetUserId(currentUser);
@@ -50,8 +50,8 @@ namespace Ouroboros_Elio.Controllers
             }
 
             try
-            {
-                var result = await _cartService.UpdateQuantity(Guid.Parse(userId), designId, quantity);
+            {  
+                var result = await _cartService.UpdateQuantity(Guid.Parse(userId), designId, quantity, productType);
                 if (result == true)
                 {
                     return Json(new { success = true });
@@ -80,8 +80,16 @@ namespace Ouroboros_Elio.Controllers
 
             try
             {
-                var result = await _cartService.AddToCart(Guid.Parse(userId), designId, quantity, productType);
-                if (result)
+                var result = false;
+                if(productType == false)
+                {
+					result = await _cartService.AddToCart(Guid.Parse(userId), designId, quantity, productType);
+                }
+                else
+                {
+					result = await _cartService.AddToCart(Guid.Parse(userId), designId, quantity, productType);
+				}
+				if (result)
                 {
                     return Json(new { success = true });
                 }
