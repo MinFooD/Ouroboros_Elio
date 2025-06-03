@@ -320,9 +320,9 @@
 
                 if (newVal > stockQuantity) {
                     Swal.fire({
-                        title: 'Lỗi',
+                        title: 'Thông Báo',
                         text: `Chỉ còn ${stockQuantity} sản phẩm trong kho.`,
-                        icon: 'error',
+                        icon: 'warning',
                         confirmButtonText: 'Đóng'
                     });
                     return;
@@ -344,9 +344,9 @@
 
                 if (isNaN(quantity) || quantity <= 0) {
                     Swal.fire({
-                        title: 'Lỗi',
+                        title: 'Thông Báo',
                         text: 'Số lượng phải lớn hơn 0.',
-                        icon: 'error',
+                        icon: 'warning',
                         confirmButtonText: 'Đóng'
                     });
                     $input.val(oldValue);
@@ -355,9 +355,9 @@
 
                 if (quantity > stockQuantity) {
                     Swal.fire({
-                        title: 'Lỗi',
+                        title: 'Thông Báo',
                         text: `Chỉ còn ${stockQuantity} sản phẩm trong kho.`,
-                        icon: 'error',
+                        icon: 'warning',
                         confirmButtonText: 'Đóng'
                     });
                     $input.val(oldValue);
@@ -414,9 +414,9 @@
                     },
                     error: function () {
                         Swal.fire({
-                            title: 'Lỗi',
+                            title: 'Thông Báo',
                             text: 'Có lỗi xảy ra khi cập nhật số lượng.',
-                            icon: 'error',
+                            icon: 'warning',
                             confirmButtonText: 'Đóng'
                         });
                         var originalValue = parseInt($input.data('original-value')) || 1;
