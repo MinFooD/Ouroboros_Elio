@@ -50,6 +50,9 @@ builder.Services.AddScoped<IContactRepository, ContactRepository>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IContactService, ContactService>();
+builder.Services.AddScoped<ICharmRepository, CharmRepository>();
+builder.Services.AddScoped<ICharmService, CharmService>();
+builder.Services.AddScoped<ICustomBraceletRepository, CustomBraceletRepository>();
 
 //builder.Services.AddDataAccessLayer(builder.Configuration);
 

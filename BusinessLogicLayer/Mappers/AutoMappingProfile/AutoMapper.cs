@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BusinessLogicLayer.Dtos.CartDtos;
 using BusinessLogicLayer.Dtos.CategoryDtos;
+using BusinessLogicLayer.Dtos.CharmDtos;
 using BusinessLogicLayer.Dtos.ContactDtos;
 using BusinessLogicLayer.Dtos.DesignDtos;
 using BusinessLogicLayer.Dtos.ModelDtos;
@@ -49,6 +50,10 @@ namespace BusinessLogicLayer.Mappers.AutoMappingProfile
                 .ForMember(dest => dest.MessageId, opt => opt.Ignore())
                 .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
                 .ForMember(dest => dest.IsRead, opt => opt.Ignore());
+
+            CreateMap<Charm, CharmViewModel>().ReverseMap();
+            CreateMap<CustomBraceletCharm, CustomBraceletCharmViewModel>().ReverseMap();
+            CreateMap<CustomBracelet, CustomBraceletViewModel>().ReverseMap();
         }
 	}
 }

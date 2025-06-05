@@ -230,7 +230,7 @@ namespace BusinessLogicLayer.Services
             return designViewModels;
         }
 
-        public async Task<List<DesignViewModel>> GetDesignsByIdsAsync(List<Guid> designIds)
+        public async Task<List<DesignViewModel>> GetDesignsByIdsAsync(List<Guid?> designIds)
         {
             var designs = await _designRepository.GetDesignsByIdsAsync(designIds);
             var designViewModels = _mapper.Map<List<DesignViewModel>>(designs);

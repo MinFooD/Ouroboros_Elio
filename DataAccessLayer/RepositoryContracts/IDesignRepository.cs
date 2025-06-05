@@ -33,6 +33,6 @@ namespace DataAccessLayer.RepositoryContracts
 			string? searchQuery = null
 			);
         Task<List<Design>> GetTopOrderedDesignsAsync(int topCount);
-        Task<List<Design>> GetDesignsByIdsAsync(List<Guid> designIds);
+        Task<List<Design>> GetDesignsByIdsAsync(List<Guid?> designIds);
     }
 }

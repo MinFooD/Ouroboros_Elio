@@ -11,6 +11,10 @@ public partial class Charm
 
     public decimal Price { get; set; }
 
+    public int Quantity { get; set; }
+
+    public int InternalCode { get; set; }
+
     public decimal? CapitalExpense { get; set; }
 
     public string? ImageUrl { get; set; }

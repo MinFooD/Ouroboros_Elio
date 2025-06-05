@@ -14,6 +14,10 @@ public partial class CustomBracelet
 
     public string? CustomBraceletName { get; set; }
 
+    public string? Image { get; set; }
+
+    public string? Note { get; set; }
+
     public decimal TotalPrice { get; set; }
 
     public decimal? TotalCapitalExpense { get; set; }

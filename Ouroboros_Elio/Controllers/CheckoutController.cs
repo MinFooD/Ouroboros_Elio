@@ -161,9 +161,16 @@ public class CheckoutController : Controller
 
         foreach (var item in cartItems)
         {
-            if (!designDict.ContainsKey(item.DesignId) || designDict[item.DesignId].StockQuantity < item.Quantity)
+            // Kiểm tra nếu item.DesignId là null
+            if (!item.DesignId.HasValue)
             {
-                TempData["Error"] = $"Sản phẩm {designDict.GetValueOrDefault(item.DesignId)?.DesignName ?? "Unknown"} không đủ tồn kho. Vui lòng kiểm tra lại giỏ hàng.";
+                TempData["Error"] = "Có sản phẩm trong giỏ hàng không có thông tin thiết kế hợp lệ.";
+                return RedirectToAction("CartDetail", "Cart");
+            }
+
+            if (!designDict.ContainsKey(item.DesignId.Value) || designDict[item.DesignId.Value].StockQuantity < item.Quantity)
+            {
+                TempData["Error"] = $"Sản phẩm {designDict.GetValueOrDefault(item.DesignId.Value)?.DesignName ?? "Unknown"} không đủ tồn kho. Vui lòng kiểm tra lại giỏ hàng.";
                 return RedirectToAction("CartDetail", "Cart");
             }
         }
@@ -176,7 +183,7 @@ public class CheckoutController : Controller
         // Tạo link thanh toán PayOS
         var items = cartItems.Select(item =>
         {
-            var design = designDict.GetValueOrDefault(item.DesignId);
+            var design = item.DesignId.HasValue ? designDict.GetValueOrDefault(item.DesignId.Value) : null;
             var itemName = design != null
                 ? $"{design.CollectionName}-{design.TopicName}-{design.ModelName}-{design.CategoryName}"
                 : "Unknown Product";
@@ -320,7 +327,7 @@ public class CheckoutController : Controller
         // Lấy thông tin thiết kế cho các sản phẩm trong đơn hàng
         var designIds = orderViewModel.OrderItems
             .Where(oi => oi.DesignId.HasValue)
-            .Select(oi => oi.DesignId.Value)
+            .Select(oi => oi.DesignId)
             .Distinct()
             .ToList();
         var designs = await _designService.GetDesignsByIdsAsync(designIds);

@@ -107,23 +107,28 @@
                                         {
                                             foreach (var item in Model.cartItemsViewModel)
                                             {
-                                                <tr data-design-id="@item.DesignId">
+                                                var itemId = item.ProductType == false ? item.DesignId : item.CustomBraceletId;
+                                                var productType = item.ProductType;
+                                                var imageUrl = item.ProductType == false ? item.Design?.FirstImage?.ImageUrl : "https://www.shutterstock.com/image-vector/sledge-hammer-vector-isolated-on-600nw-2596804669.jpg";
+                                                var name = item.ProductType == false ? item.Design?.DesignName : item.CustomBracelet?.CustomBraceletName;
+                                                var detailUrl = item.ProductType == false ? $"/Product/ProductDetail?designId={item.DesignId}" : "javascript:void(0)";
+                                                <tr data-design-id="@item.DesignId" data-product-type="@productType">
                                                     <td class="hiraola-product-remove">
-                                                        <a href="javascript:void(0)" onclick="removeFromCart('@item.DesignId')">
+                                                        <a href="javascript:void(0)" onclick="removeFromCart('@itemId', @productType)">
                                                             <i class="fa fa-trash" title="Remove"></i>
                                                         </a>
                                                     </td>
                                                     <td class="hiraola-product-thumbnail">
                                                         <a href="javascript:void(0)">
-                                                            <img src="@item.Design.FirstImage.ImageUrl" alt="Hiraola's Cart Thumbnail" style="max-width:30%">
+                                                            <img src="@imageUrl" alt="Hiraola's Cart Thumbnail" style="max-width:30%">
                                                         </a>
                                                     </td>
                                                     <td class="hiraola-product-name">
-                                                        <a href="/Product/ProductDetail?designId=@item.DesignId" title="Xem chi tiết sản phẩm">@item.Design.DesignName</a>
+                                                        <a href="@detailUrl" title="Xem chi tiết sản phẩm">@name</a>
                                                     </td>
                                                     <td class="hiraola-product-price">
                                                         <span class="amount">
-                                                            @String.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:N0}", item.Price) ₫
+                                                            @item.Price.ToString("N0") ₫
                                                         </span>
                                                     </td>
                                                     <td class="quantity">
@@ -132,16 +137,17 @@
                                                             <input class="cart-plus-minus-box"
                                                                    value="@item.Quantity"
                                                                    type="text"
-                                                                   data-design-id="@item.DesignId"
+                                                                   data-design-id="@itemId"
                                                                    data-price="@item.Price"
-                                                                   data-stock-quantity="@item.Design.StockQuantity">
+                                                                   data-product-type="@productType"
+                                                                   data-stock-quantity="@(item.ProductType == false ? item.Design?.StockQuantity : item.MaximumQuantity)">
                                                             <div class="dec qtybutton"><i class="fa fa-angle-down"></i></div>
                                                             <div class="inc qtybutton"><i class="fa fa-angle-up"></i></div>
                                                         </div>
                                                     </td>
                                                     <td class="product-subtotal">
                                                         <span class="amount" data-subtotal="@((item.Quantity * item.Price))">
-                                                            @String.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:N0}", (item.Quantity) * (item.Price)) ₫
+                                                            @($"{item.Quantity * item.Price:N0}") ₫
                                                         </span>
                                                     </td>
                                                 </tr>
@@ -164,7 +170,7 @@
                                             <li>
                                                 Tổng
                                                 <span id="cart-total">
-                                                    @String.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:N0}", Model.CartViewModel?.Total) ₫
+                                                    @Model.CartViewModel?.Total.ToString("N0") ₫
                                                 </span>
                                             </li>
                                         </ul>
@@ -194,6 +200,13 @@
                 clearTimeout(timeout);
                 timeout = setTimeout(later, wait);
             };
+        }
+
+        // Kiểm tra jQuery
+        if (typeof jQuery === 'undefined') {
+            console.error('jQuery không được tải!');
+        } else {
+            console.log('jQuery đã được tải, phiên bản:', jQuery.fn.jquery);
         }
 
         $(document).ready(function () {

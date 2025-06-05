@@ -170,7 +170,7 @@ public class DesignRepository : IDesignRepository
             .ToListAsync();
     }
 
-    public async Task<List<Design>> GetDesignsByIdsAsync(List<Guid> designIds)
+    public async Task<List<Design>> GetDesignsByIdsAsync(List<Guid?> designIds)
     {
         return await _context.Designs
             .Include(d => d.Category)
