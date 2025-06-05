@@ -60,9 +60,8 @@ public class CartController : Controller
                         item.Quantity = design.StockQuantity;
                         TempData["Warning"] = $"Số lượng sản phẩm {item.Design?.DesignName} đã được điều chỉnh còn {design.StockQuantity} do tồn kho thay đổi.";
                     }
-                    updatedItems.Add(item);
                 }
-                
+                updatedItems.Add(item);
 
                 //var design = await _designService.GetDesignByIdAsync(item.DesignId);
                 //if (design == null || design.StockQuantity == 0)

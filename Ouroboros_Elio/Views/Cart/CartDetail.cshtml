@@ -112,7 +112,7 @@
                                                 var imageUrl = item.ProductType == false ? item.Design?.FirstImage?.ImageUrl : "https://www.shutterstock.com/image-vector/sledge-hammer-vector-isolated-on-600nw-2596804669.jpg";
                                                 var name = item.ProductType == false ? item.Design?.DesignName : item.CustomBracelet?.CustomBraceletName;
                                                 var detailUrl = item.ProductType == false ? $"/Product/ProductDetail?designId={item.DesignId}" : "javascript:void(0)";
-                                                <tr data-design-id="@item.DesignId" data-product-type="@productType">
+                                                <tr data-design-id="@itemId" data-product-type="@productType">
                                                     <td class="hiraola-product-remove">
                                                         <a href="javascript:void(0)" onclick="removeFromCart('@itemId', @productType)">
                                                             <i class="fa fa-trash" title="Remove"></i>
@@ -253,67 +253,72 @@
         }
 
             // Hàm kiểm tra tồn kho định kỳ
-            function checkStockStatus() {
-                $('.table tbody tr').each(function () {
-                    var $row = $(this);
-                    var designId = $row.data('design-id');
-                    var $input = $row.find('.cart-plus-minus-box');
-                    var currentQuantity = parseInt($input.val()) || 1;
+            // function checkStockStatus() {
+            //     $('.table tbody tr').each(function () {
+            //         var $row = $(this);
+            //         var itemId = $row.data('item-id');
+            //         var productType = $row.data('product-type') === 'True' || $row.data('product-type') === true;
+            //         var $input = $row.find('.cart-plus-minus-box');
+            //         var currentQuantity = parseInt($input.val()) || 1;
 
-                    $.ajax({
-                        url: '/Cart/CheckStockStatus',
-                        type: 'GET',
-                        data: { designId: designId },
-                        success: function (response) {
-                            if (response.success) {
-                                if (response.stockQuantity === 0) {
-                                    // Xóa sản phẩm nếu hết hàng
-                                    $row.remove();
-                                    Swal.fire({
-                                        title: 'Cảnh báo',
-                                        text: `Sản phẩm đã hết hàng và được xóa khỏi giỏ hàng.`,
-                                        icon: 'warning',
-                                        confirmButtonText: 'Đóng'
-                                    });
-                                    updateCart();
-                                } else if (response.stockQuantity < currentQuantity) {
-                                    // Giảm số lượng nếu vượt tồn kho
-                                    $input.val(response.stockQuantity);
-                                    updateQuantity(designId, response.stockQuantity, $input);
-                                    Swal.fire({
-                                        title: 'Cảnh báo',
-                                        text: `Số lượng sản phẩm đã được điều chỉnh còn ${response.stockQuantity} do tồn kho thay đổi.`,
-                                        icon: 'warning',
-                                        confirmButtonText: 'Đóng'
-                                    });
-                                }
-                            }
-                        }
-                    });
-                });
-            }
+            //         $.ajax({
+            //             url: '/Cart/CheckStockStatus',
+            //             type: 'GET',
+            //             data: { designId: designId, productType: productType },
+            //             success: function (response) {
+            //                 if (response.success) {
+            //                     if (response.stockQuantity === 0) {
+            //                         // Xóa sản phẩm nếu hết hàng
+            //                         $row.remove();
+            //                         Swal.fire({
+            //                             title: 'Cảnh báo',
+            //                             text: `Sản phẩm đã hết hàng và được xóa khỏi giỏ hàng.`,
+            //                             icon: 'warning',
+            //                             confirmButtonText: 'Đóng'
+            //                         });
+            //                         updateCart();
+            //                         // updateCartCount();
+            //                         // if ($('.table tbody tr').length === 0) {
+            //                         //     $('.table tbody').append('<tr><td colspan="6">Giỏ hàng trống</td></tr>');
+            //                         //     $('.cart-page-total a').remove();
+            //                     } else if (response.stockQuantity < currentQuantity) {
+            //                         // Giảm số lượng nếu vượt tồn kho
+            //                         $input.val(response.stockQuantity);
+            //                         updateQuantity(designId, response.stockQuantity, $input, productType);
+            //                         Swal.fire({
+            //                             title: 'Cảnh báo',
+            //                             text: `Số lượng sản phẩm đã được điều chỉnh còn ${response.stockQuantity} do tồn kho thay đổi.`,
+            //                             icon: 'warning',
+            //                             confirmButtonText: 'Đóng'
+            //                         });
+            //                     }
+            //                 }
+            //             }
+            //         });
+            //     });
+            // }
 
-            // Hàm cập nhật giỏ hàng sau khi xóa hoặc điều chỉnh
-            function updateCart() {
-                $.ajax({
-                    url: '/Cart/UpdateCart',
-                    type: 'POST',
-                    data: { designId: null, quantity: 0 }, // Trigger cập nhật tổng
-                    headers: {
-                        'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
-                    },
-                    success: function (response) {
-                        if (response.success) {
-                            updateCartTotal(response.cartTotal);
-                            updateCartCount();
-                            if ($('.table tbody tr').length === 0) {
-                                $('.table tbody').append('<tr><td colspan="6">Giỏ hàng trống</td></tr>');
-                                $('.cart-page-total a').remove();
-                            }
-                        }
-                    }
-                });
-            }
+            // // Hàm cập nhật giỏ hàng sau khi xóa hoặc điều chỉnh
+            // function updateCart() {
+            //     $.ajax({
+            //         url: '/Cart/UpdateCart',
+            //         type: 'POST',
+            //         data: { designId: null, quantity: 0 }, // Trigger cập nhật tổng
+            //         headers: {
+            //             'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
+            //         },
+            //         success: function (response) {
+            //             if (response.success) {
+            //                 updateCartTotal(response.cartTotal);
+            //                 updateCartCount();
+            //                 if ($('.table tbody tr').length === 0) {
+            //                     $('.table tbody').append('<tr><td colspan="6">Giỏ hàng trống</td></tr>');
+            //                     $('.cart-page-total a').remove();
+            //                 }
+            //             }
+            //         }
+            //     });
+            // }
 
             // Gắn sự kiện click cho nút tăng/giảm
             $('.qtybutton').off('click').on('click', function () {
