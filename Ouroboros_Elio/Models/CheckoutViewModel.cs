@@ -1,4 +1,5 @@
 ﻿using BusinessLogicLayer.Dtos.CartDtos;
+using BusinessLogicLayer.Dtos.CharmDtos;
 using BusinessLogicLayer.Dtos.DesignDtos;
 using DataAccessLayer.Entities;
 using System.ComponentModel.DataAnnotations;
@@ -38,4 +39,5 @@ public class CartItemViewModel
     public int? Quantity { get; set; }
     public decimal? Price { get; set; }
     public DesignViewModel Design { get; set; }
+    public CustomBraceletViewModel CustomBracelet { get; set; }
 }

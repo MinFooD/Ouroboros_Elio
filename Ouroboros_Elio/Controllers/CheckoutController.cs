@@ -1,4 +1,5 @@
-﻿using BusinessLogicLayer.ServiceContracts;
+﻿using BusinessLogicLayer.Dtos.DesignDtos;
+using BusinessLogicLayer.ServiceContracts;
 using BusinessLogicLayer.Services;
 using DataAccessLayer.Entities;
 using DataAccessLayer.RepositoryContracts;
@@ -19,6 +20,7 @@ public class CheckoutController : Controller
     private readonly ICartRepository _cartRepository;
     private readonly IOrderService _orderService;
     private readonly IDesignService _designService;
+    private readonly ICharmService _charmService;
     private readonly PayOS _payOS;
 
     public CheckoutController(
@@ -26,7 +28,8 @@ public class CheckoutController : Controller
         ICartRepository cartRepository,
         IOrderService orderService,
         IDesignService designService,
-        IConfiguration configuration)
+        IConfiguration configuration,
+        ICharmService charmService)
     {
         _userManager = userManager;
         _cartRepository = cartRepository;
@@ -37,7 +40,8 @@ public class CheckoutController : Controller
             configuration["PayOS:ApiKey"] ?? throw new Exception("PayOS ApiKey not found"),
             configuration["PayOS:ChecksumKey"] ?? throw new Exception("PayOS ChecksumKey not found")
         );
-    }    
+        _charmService = charmService;
+    }
 
     [HttpGet("Checkout/PlaceOrder")]
     public async Task<IActionResult> PlaceOrder()
@@ -59,52 +63,11 @@ public class CheckoutController : Controller
             return NotFound("User not found.");
         }
 
-        var userCart = await _cartRepository.GetCartByUserIdAsync(userGuid);
-        var cartItems = await _cartRepository.GetCartItemsByUserIdAsync(userGuid);
-
-        var cartItemViewModels = new List<CartItemViewModel>();
-        if (cartItems != null)
+        var (model, redirectResult) = await PrepareCheckoutViewModel(userGuid, user);
+        if (redirectResult != null)
         {
-            foreach (var item in cartItems)
-            {
-                var designViewModel = await _designService.GetDesignByIdAsync(item.DesignId);
-                if (designViewModel != null)
-                {
-                    if (designViewModel.StockQuantity < item.Quantity)
-                    {
-                        // Cập nhật số lượng trong giỏ hàng
-                        await _cartRepository.UpdateQuantity(userGuid, item.DesignId, designViewModel.StockQuantity);
-                        TempData["StockWarning"] = $"Số lượng sản phẩm {designViewModel.DesignName} đã được điều chỉnh còn {designViewModel.StockQuantity} do tồn kho thay đổi.";
-                        return RedirectToAction("CartDetail", "Cart");
-                    }
-                    if (designViewModel.StockQuantity == 0)
-                    {
-                        // Xóa sản phẩm khỏi giỏ hàng
-                        await _cartRepository.UpdateQuantity(userGuid, item.DesignId, 0);
-                        TempData["StockWarning"] = $"Sản phẩm {designViewModel.DesignName} đã hết hàng và được xóa khỏi giỏ hàng.";
-                        return RedirectToAction("CartDetail", "Cart");
-                    }
-                    cartItemViewModels.Add(new CartItemViewModel
-                    {
-                        DesignId = item.DesignId,
-                        Quantity = item.Quantity,
-                        Price = item.Price,
-                        Design = designViewModel
-                    });
-                }
-            }
+            return redirectResult;
         }
-
-        var model = new CheckoutViewModel
-        {
-            FirstName = user.FirstName,
-            LastName = user.LastName,
-            Address = user.Address,
-            Email = user.Email,
-            PhoneNumber = user.PhoneNumber,
-            CartItems = cartItemViewModels,
-            TotalAmount = userCart?.Total ?? 0
-        };
 
         return View(model);
     }
@@ -356,5 +319,76 @@ public class CheckoutController : Controller
         };
 
         return View(model);
+    }
+
+    private async Task<(CheckoutViewModel, IActionResult?)> PrepareCheckoutViewModel(Guid userGuid, ApplicationUser user)
+    {
+        var userCart = await _cartRepository.GetCartByUserIdAsync(userGuid);
+        var cartItems = await _cartRepository.GetCartItemsByUserIdAsync(userGuid);
+        var cartItemViewModels = new List<CartItemViewModel>();
+
+        if (cartItems != null)
+        {
+            foreach (var item in cartItems)
+            {
+                if (item.DesignId.HasValue)
+                {
+                    var designViewModel = await _designService.GetDesignByIdAsync(item.DesignId.Value);
+                    if (designViewModel != null)
+                    {
+                        if (designViewModel.StockQuantity < item.Quantity)
+                        {
+                            await _cartRepository.UpdateQuantity(userGuid, item.DesignId.Value, designViewModel.StockQuantity, false);
+                            TempData["StockWarning"] = $"Số lượng sản phẩm {designViewModel.DesignName} đã được điều chỉnh còn {designViewModel.StockQuantity} do tồn kho thay đổi.";
+                            return (null, RedirectToAction("CartDetail", "Cart"));
+                        }
+                        if (designViewModel.StockQuantity == 0)
+                        {
+                            await _cartRepository.UpdateQuantity(userGuid, item.DesignId.Value, 0, false);
+                            TempData["StockWarning"] = $"Sản phẩm {designViewModel.DesignName} đã hết hàng và được xóa khỏi giỏ hàng.";
+                            return (null, RedirectToAction("CartDetail", "Cart"));
+                        }
+                        cartItemViewModels.Add(new CartItemViewModel
+                        {
+                            DesignId = item.DesignId,
+                            Quantity = item.Quantity,
+                            Price = item.Price,
+                            Design = designViewModel
+                        });
+                    }
+                }
+                else
+                {
+                    var customBracelet = await _charmService.GetCustomBraceletByIdAsync(item.CustomBraceletId.Value);
+                    cartItemViewModels.Add(new CartItemViewModel
+                    {
+                        DesignId = item.DesignId,
+                        Quantity = item.Quantity,
+                        Price = item.Price,
+                        CustomBracelet = customBracelet
+                    });
+                }                
+            }
+        }
+
+        var model = new CheckoutViewModel
+        {
+            FirstName = user.FirstName,
+            LastName = user.LastName,
+            Address = user.Address,
+            Email = user.Email,
+            PhoneNumber = user.PhoneNumber,
+            CartItems = cartItemViewModels,
+            TotalAmount = userCart?.Total ?? 0
+        };
+
+        return (model, null);
+    }
+
+    private long GenerateOrderCode()
+    {
+        var timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+        var random = new Random().Next(1000, 9999);
+        return long.Parse($"{timestamp % 100000}{random}"); // 5 chữ số timestamp + 4 chữ số random
     }
 }

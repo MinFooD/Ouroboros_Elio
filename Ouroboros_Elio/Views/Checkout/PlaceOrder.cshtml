@@ -88,14 +88,28 @@
                                             @if (Model.CartItems != null && Model.CartItems.Any())
                                             {
                                                 foreach (var item in Model.CartItems)
-                                                {
+                                                {                                                    
                                                     <tr class="cart_item">
                                                         <td class="cart-product-name">
-                                                            @item.Design.DesignName<strong class="product-quantity"> × @item.Quantity</strong>
+                                                            @if (item.Design != null)
+                                                            {
+                                                                @item.Design.DesignName
+                                                                <strong class="product-quantity"> × @item.Quantity</strong>
+                                                            }
+                                                            else if (item.CustomBracelet != null)
+                                                            {
+                                                                @item.CustomBracelet.CustomBraceletName
+                                                                <strong class="product-quantity"> × @item.Quantity</strong>
+                                                            }
+                                                            else
+                                                            {
+                                                                <span>Sản phẩm không xác định</span>
+                                                                <strong class="product-quantity"> × @item.Quantity</strong>
+                                                            }
                                                         </td>
                                                         <td class="cart-product-total">
                                                             <span class="amount">
-                                                                @String.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:N0}", item.Quantity * item.Price) đ
+                                                                @($"{item.Quantity * item.Price:N0}") ₫
                                                             </span>
                                                         </td>
                                                     </tr>
@@ -114,7 +128,7 @@
                                                 <td>
                                                     <strong>
                                                         <span class="amount">
-                                                            @String.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:N0}", Model.TotalAmount) đ
+                                                            @Model.TotalAmount.ToString("N0") đ
                                                         </span>
                                                     </strong>
                                             </tr>
