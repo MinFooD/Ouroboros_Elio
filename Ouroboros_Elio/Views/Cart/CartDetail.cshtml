@@ -112,9 +112,10 @@
                                                 var imageUrl = item.ProductType == false ? item.Design?.FirstImage?.ImageUrl : "https://www.shutterstock.com/image-vector/sledge-hammer-vector-isolated-on-600nw-2596804669.jpg";
                                                 var name = item.ProductType == false ? item.Design?.DesignName : item.CustomBracelet?.CustomBraceletName;
                                                 var detailUrl = item.ProductType == false ? $"/Product/ProductDetail?designId={item.DesignId}" : "javascript:void(0)";
-                                                <tr data-design-id="@itemId" data-product-type="@productType">
+                                                <tr data-item-id="@itemId" data-product-type="@productType.ToString().ToLower()">
                                                     <td class="hiraola-product-remove">
-                                                        <a href="javascript:void(0)" onclick="removeFromCart('@itemId', @productType)">
+                                                        <a href="javascript:void(0)"
+                                                           onclick="removeFromCart('@itemId', @productType.ToString().ToLower())">
                                                             <i class="fa fa-trash" title="Remove"></i>
                                                         </a>
                                                     </td>
@@ -229,7 +230,7 @@
                 $('#cart-total').text(formattedTotal + ' ₫');
             }
 
-                    // Hàm cập nhật số lượng giỏ hàng
+        // Hàm cập nhật số lượng giỏ hàng
         function updateCartCount() {
             $.ajax({
                 url: '/Cart/GetCartItemCount',
@@ -298,7 +299,7 @@
             //     });
             // }
 
-            // // Hàm cập nhật giỏ hàng sau khi xóa hoặc điều chỉnh
+            // Hàm cập nhật giỏ hàng sau khi xóa hoặc điều chỉnh
             // function updateCart() {
             //     $.ajax({
             //         url: '/Cart/UpdateCart',
@@ -387,7 +388,7 @@
             }, 300));
 
             // Hàm cập nhật số lượng
-            function updateQuantity(designId, quantity, $input) {
+            function updateQuantity(itemId, quantity, $input, productType) {
                 isUpdating = true;
                 var price = parseFloat($input.data('price'));
 
@@ -395,57 +396,59 @@
                     url: '/Cart/UpdateCart',
                     type: 'POST',
                     data: {
-                        designId: designId,
-                        quantity: quantity
+                        designId: itemId,
+                        quantity: quantity,
+                        productType: productType
                     },
                     headers: {
                         'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
                     },
                     success: function (response) {
                         if (response.success) {
-                            var subtotal = quantity * price;
-                            var formattedSubtotal = subtotal.toLocaleString('vi-VN', { minimumFractionDigits: 0 });
+                            // var subtotal = quantity * price;
+                            // var formattedSubtotal = subtotal.toLocaleString('vi-VN', { minimumFractionDigits: 0 });
 
-                            $input.closest('tr').find('.product-subtotal .amount')
-                                .text(formattedSubtotal + ' ₫')
-                                .data('subtotal', subtotal);
+                            // $input.closest('tr').find('.product-subtotal .amount')
+                            //     .text(formattedSubtotal + ' ₫')
+                            //     .data('subtotal', subtotal);
 
                             updateCartTotal(response.cartTotal);
                             updateCartCount();
                             $input.data('stock-quantity', response.stockQuantity || $input.data('stock-quantity'));
-                        } else {
-                            Swal.fire({
-                                title: 'Lỗi',
-                                text: response.message,
-                                icon: 'error',
-                                confirmButtonText: 'Đóng'
-                            });
-                            var originalValue = parseInt($input.data('original-value')) || 1;
-                            $input.val(originalValue);
-                            var originalSubtotal = originalValue * price;
-                            var formattedOriginalSubtotal = originalSubtotal.toLocaleString('vi-VN', { minimumFractionDigits: 0 });
-                            $input.closest('tr').find('.product-subtotal .amount')
-                                .text(formattedOriginalSubtotal + ' ₫')
-                                .data('subtotal', originalSubtotal);
-                            updateCartTotal(response.cartTotal || 0);
-                        }
+                        } 
+                        // else {
+                        //     Swal.fire({
+                        //         title: 'Lỗi',
+                        //         text: response.message,
+                        //         icon: 'error',
+                        //         confirmButtonText: 'Đóng'
+                        //     });
+                        //     var originalValue = parseInt($input.data('original-value')) || 1;
+                        //     $input.val(originalValue);
+                        //     var originalSubtotal = originalValue * price;
+                        //     var formattedOriginalSubtotal = originalSubtotal.toLocaleString('vi-VN', { minimumFractionDigits: 0 });
+                        //     $input.closest('tr').find('.product-subtotal .amount')
+                        //         .text(formattedOriginalSubtotal + ' ₫')
+                        //         .data('subtotal', originalSubtotal);
+                        //     updateCartTotal(response.cartTotal || 0);
+                        // }
                     },
-                    error: function () {
-                        Swal.fire({
-                            title: 'Thông Báo',
-                            text: 'Có lỗi xảy ra khi cập nhật số lượng.',
-                            icon: 'warning',
-                            confirmButtonText: 'Đóng'
-                        });
-                        var originalValue = parseInt($input.data('original-value')) || 1;
-                        $input.val(originalValue);
-                        var originalSubtotal = originalValue * price;
-                        var formattedOriginalSubtotal = originalSubtotal.toLocaleString('vi-VN', { minimumFractionDigits: 0 });
-                        $input.closest('tr').find('.product-subtotal .amount')
-                            .text(formattedOriginalSubtotal + ' ₫')
-                            .data('subtotal', originalSubtotal);
-                        updateCartTotal(0);
-                    },
+                    // error: function () {
+                    //     Swal.fire({
+                    //         title: 'Thông Báo',
+                    //         text: 'Có lỗi xảy ra khi cập nhật số lượng.',
+                    //         icon: 'warning',
+                    //         confirmButtonText: 'Đóng'
+                    //     });
+                    //     var originalValue = parseInt($input.data('original-value')) || 1;
+                    //     $input.val(originalValue);
+                    //     var originalSubtotal = originalValue * price;
+                    //     var formattedOriginalSubtotal = originalSubtotal.toLocaleString('vi-VN', { minimumFractionDigits: 0 });
+                    //     $input.closest('tr').find('.product-subtotal .amount')
+                    //         .text(formattedOriginalSubtotal + ' ₫')
+                    //         .data('subtotal', originalSubtotal);
+                    //     updateCartTotal(0);
+                    // },
                     complete: function () {
                         isUpdating = false;
                     }
@@ -453,7 +456,7 @@
             }
 
             // Hàm xóa sản phẩm khỏi giỏ hàng
-            window.removeFromCart = function(designId) {
+            window.removeFromCart = function(itemId, productType) {
                 Swal.fire({
                     title: 'Xác nhận xóa',
                     text: 'Bạn có chắc muốn xóa sản phẩm này khỏi giỏ hàng không?',
@@ -471,8 +474,9 @@
                             url: '/Cart/UpdateCart',
                             type: 'POST',
                             data: {
-                                designId: designId,
-                                quantity: 0
+                                designId: itemId,
+                                quantity: 0,
+                                productType: productType
                             },
                             headers: {
                                 'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
@@ -488,7 +492,7 @@
                     }
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        $(`tr[data-design-id="${designId}"]`).remove();
+                        $(`tr[data-item-id="${itemId}"]`).remove();
                         updateCartTotal(result.value.cartTotal);
                         updateCartCount();
                         if ($('.table tbody tr').length === 0) {
@@ -506,9 +510,9 @@
             }
 
             // Kiểm tra tồn kho định kỳ (mỗi 30 giây)
-            setInterval(checkStockStatus, 30000);
+            // setInterval(checkStockStatus, 30000);
             // Kiểm tra ngay khi tải trang
-            checkStockStatus();
+            // checkStockStatus();
         });
     </script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
