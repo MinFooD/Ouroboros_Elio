@@ -1,4 +1,5 @@
-﻿using BusinessLogicLayer.Dtos.DesignDtos;
+﻿using BusinessLogicLayer.Dtos.CharmDtos;
+using BusinessLogicLayer.Dtos.DesignDtos;
 using BusinessLogicLayer.ServiceContracts;
 using BusinessLogicLayer.Services;
 using DataAccessLayer.Entities;
@@ -119,24 +120,38 @@ public class CheckoutController : Controller
         var cartItems = await _cartRepository.GetCartItemsByUserIdAsync(userGuid);
         // Lấy tất cả DesignViewModel cho các DesignId trong giỏ hàng
         var designIds = cartItems.Select(item => item.DesignId).Distinct().ToList();
+        var customBraceletIds = cartItems.Select(item => item.CustomBraceletId).Distinct().ToList();
+
         var designs = await _designService.GetDesignsByIdsAsync(designIds);
         var designDict = designs.ToDictionary(d => d.DesignId, d => d);
 
-        foreach (var item in cartItems)
+        //var customBracelets = await _charmService.GetCustomBraceletCharm(customBaceletIds);
+        var customBraceletList = new List<CustomBraceletViewModel>();
+        foreach (var customBraceletId in customBraceletIds)
         {
-            // Kiểm tra nếu item.DesignId là null
-            if (!item.DesignId.HasValue)
+            var customBracelet = await _charmService.GetCustomBraceletByIdAsync(customBraceletId);
+            if (customBracelet != null)
             {
-                TempData["Error"] = "Có sản phẩm trong giỏ hàng không có thông tin thiết kế hợp lệ.";
-                return RedirectToAction("CartDetail", "Cart");
-            }
-
-            if (!designDict.ContainsKey(item.DesignId.Value) || designDict[item.DesignId.Value].StockQuantity < item.Quantity)
-            {
-                TempData["Error"] = $"Sản phẩm {designDict.GetValueOrDefault(item.DesignId.Value)?.DesignName ?? "Unknown"} không đủ tồn kho. Vui lòng kiểm tra lại giỏ hàng.";
-                return RedirectToAction("CartDetail", "Cart");
+                customBraceletList.Add(customBracelet);
             }
         }
+        var customBraceletDict = customBraceletList.ToDictionary(c => c.CustomBraceletId, c => c);
+
+        //foreach (var item in cartItems)
+        //{
+        //    // Kiểm tra nếu item.DesignId là null
+        //    if (!item.DesignId.HasValue)
+        //    {
+        //        TempData["Error"] = "Có sản phẩm trong giỏ hàng không có thông tin thiết kế hợp lệ.";
+        //        return RedirectToAction("CartDetail", "Cart");
+        //    }
+
+        //    if (!designDict.ContainsKey(item.DesignId.Value) || designDict[item.DesignId.Value].StockQuantity < item.Quantity)
+        //    {
+        //        TempData["Error"] = $"Sản phẩm {designDict.GetValueOrDefault(item.DesignId.Value)?.DesignName ?? "Unknown"} không đủ tồn kho. Vui lòng kiểm tra lại giỏ hàng.";
+        //        return RedirectToAction("CartDetail", "Cart");
+        //    }
+        //}
 
         // Tạo orderCode duy nhất dựa trên timestamp và random
         var timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
@@ -146,15 +161,28 @@ public class CheckoutController : Controller
         // Tạo link thanh toán PayOS
         var items = cartItems.Select(item =>
         {
-            var design = item.DesignId.HasValue ? designDict.GetValueOrDefault(item.DesignId.Value) : null;
-            var itemName = design != null
+            string itemName;
+            if (item.DesignId.HasValue)
+            {
+                var design = designDict.GetValueOrDefault(item.DesignId.Value);
+                itemName = design != null
                 ? $"{design.CollectionName}-{design.TopicName}-{design.ModelName}-{design.CategoryName}"
-                : "Unknown Product";
+                : "Sản phẩm không xác định";
+            }
+            else
+            {
+                var customBracelet = item.CustomBraceletId.HasValue
+                ? customBraceletDict.GetValueOrDefault(item.CustomBraceletId.Value)
+                : null;
+                itemName = customBracelet != null
+                ? customBracelet.CustomBraceletName ?? "Custom Bracelet"
+                : "Sản phẩm không xác định";
+            }
             return new ItemData(
-                name: itemName,
-                quantity: item.Quantity,
-                price: (int)item.Price
-            );
+            name: itemName,
+            quantity: item.Quantity,
+            price: (int)item.Price
+        );
         }).ToList();
 
         var paymentData = new PaymentData(
@@ -367,7 +395,7 @@ public class CheckoutController : Controller
                         Price = item.Price,
                         CustomBracelet = customBracelet
                     });
-                }                
+                }
             }
         }
 
@@ -383,12 +411,5 @@ public class CheckoutController : Controller
         };
 
         return (model, null);
-    }
-
-    private long GenerateOrderCode()
-    {
-        var timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-        var random = new Random().Next(1000, 9999);
-        return long.Parse($"{timestamp % 100000}{random}"); // 5 chữ số timestamp + 4 chữ số random
     }
 }
