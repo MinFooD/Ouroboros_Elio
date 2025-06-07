@@ -26,11 +26,9 @@
                                 <li class="nav-item">
                                     <a class="nav-link active" id="account-orders-tab" data-bs-toggle="tab" href="#account-orders" role="tab" aria-controls="account-orders" aria-selected="false">Đơn Hàng</a>
                                 </li>                                
+                                
                                 <li class="nav-item">
-                                    <a class="nav-link" id="account-details-tab" data-bs-toggle="tab" href="#account-details" role="tab" aria-controls="account-details" aria-selected="false">Chi Tiết Tài Khoản</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" id="account-logout-tab" href="login-register.html" role="tab" aria-selected="false">Đăng Xuất</a>
+                                    <a class="nav-link" id="account-logout-tab" href="/Logout" role="tab" aria-selected="false">Đăng Xuất</a>
                                 </li>
                             </ul>
                         </div>
@@ -125,71 +123,7 @@
 
                                     </div>
                                 </div>
-                                @* <div class="tab-pane fade" id="account-address" role="tabpanel" aria-labelledby="account-address-tab">
-                                    <div class="myaccount-address">
-                                        <p>Các địa chỉ sau sẽ được sử dụng mặc định khi thanh toán.</p>
-                                        <div class="row">
-                                            <div class="col">
-                                                <h4 class="small-title">ĐỊA CHỈ THANH TOÁN</h4>
-                                                <address>
-                                                    @ViewBag.User?.Address ?? "Chưa cập nhật địa chỉ thanh toán"
-                                                </address>
-                                            </div>
-                                            <div class="col">
-                                                <h4 class="small-title">ĐỊA CHỈ GIAO HÀNG</h4>
-                                                <address>
-                                                    @ViewBag.User?.Address ?? "Chưa cập nhật địa chỉ giao hàng"
-                                                </address>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div> *@
-                                <div class="tab-pane fade" id="account-details" role="tabpanel" aria-labelledby="account-details-tab">
-                                    <div class="myaccount-details">
-                                        <form action="#" class="hiraola-form">
-                                            <div class="hiraola-form-inner">
-                                                <div class="single-input single-input-half">
-                                                    <label for="account-details-firstname">First Name*</label>
-                                                    <input type="text" id="account-details-firstname">
-                                                </div>
-                                                <div class="single-input single-input-half">
-                                                    <label for="account-details-lastname">Last Name*</label>
-                                                    <input type="text" id="account-details-lastname">
-                                                </div>
-                                                <div class="single-input">
-                                                    <label for="account-details-email">Email*</label>
-                                                    <input type="email" id="account-details-email">
-                                                </div>
-                                                <div class="single-input">
-                                                    <label for="account-details-oldpass">
-                                                        Current Password(leave blank to leave
-                                                        unchanged)
-                                                    </label>
-                                                    <input type="password" id="account-details-oldpass">
-                                                </div>
-                                                <div class="single-input">
-                                                    <label for="account-details-newpass">
-                                                        New Password (leave blank to leave
-                                                        unchanged)
-                                                    </label>
-                                                    <input type="password" id="account-details-newpass">
-                                                </div>
-                                                <div class="single-input">
-                                                    <label for="account-details-confpass">Confirm New Password</label>
-                                                    <input type="password" id="account-details-confpass">
-                                                </div>
-                                                <div class="single-input">
-                                                    <button class="hiraola-btn hiraola-btn_dark" type="submit">
-                                                        <span>
-                                                            SAVE
-                                                            CHANGES
-                                                        </span>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
+                                
                             </div>
                         </div>
                     </div>

@@ -324,6 +324,23 @@ public class CheckoutController : Controller
         var designs = await _designService.GetDesignsByIdsAsync(designIds);
         var designDict = designs.ToDictionary(d => d.DesignId, d => d.DesignName ?? "Unknown");
 
+        // Lấy thông tin CustomBracelet cho các sản phẩm trong đơn hàng
+        var customBraceletIds = orderViewModel.OrderItems
+            .Where(oi => oi.CustomBraceletId.HasValue)
+            .Select(oi => oi.CustomBraceletId)
+            .Distinct()
+            .ToList();
+        var customBracelets = new List<CustomBraceletViewModel>();
+        foreach (var customBraceletId in customBraceletIds)
+        {
+            var customBracelet = await _charmService.GetCustomBraceletByIdAsync(customBraceletId);
+            if (customBracelet != null)
+            {
+                customBracelets.Add(customBracelet);
+            }
+        }
+        var customBraceletDict = customBracelets.ToDictionary(c => c.CustomBraceletId, c => c.CustomBraceletName ?? "Custom Bracelet");
+
         // Chuẩn bị model cho view
         var model = new SuccessViewModel
         {
@@ -340,7 +357,12 @@ public class CheckoutController : Controller
             {
                 OrderItemId = oi.OrderItemId,
                 DesignId = oi.DesignId,
-                DesignName = oi.DesignId.HasValue && designDict.ContainsKey(oi.DesignId.Value) ? designDict[oi.DesignId.Value] : "Unknown",
+                CustomBraceletId = oi.CustomBraceletId,
+                DesignName = oi.DesignId.HasValue && designDict.ContainsKey(oi.DesignId.Value)
+                    ? designDict[oi.DesignId.Value]
+                    : (oi.CustomBraceletId.HasValue && customBraceletDict.ContainsKey(oi.CustomBraceletId.Value)
+                        ? customBraceletDict[oi.CustomBraceletId.Value]
+                        : "Unknown"),
                 Quantity = oi.Quantity,
                 Price = oi.Price
             }).ToList()
