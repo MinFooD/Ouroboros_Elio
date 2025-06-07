@@ -54,6 +54,14 @@ namespace BusinessLogicLayer.Mappers.AutoMappingProfile
             CreateMap<Charm, CharmViewModel>().ReverseMap();
             CreateMap<CustomBraceletCharm, CustomBraceletCharmViewModel>().ReverseMap();
             CreateMap<CustomBracelet, CustomBraceletViewModel>().ReverseMap();
+
+            CreateMap<Order, OrderMyAccount>()
+                .ForMember(dest => dest.ItemCount, opt => opt.MapFrom(src => src.OrderItems.Count)) 
+                .ForMember(dest => dest.OrderItems, opt => opt.MapFrom(src => src.OrderItems))
+                .ReverseMap();
+
+            CreateMap<OrderItem, OrderItemMyAccount>()
+                .ReverseMap();
         }
 	}
 }

@@ -1,0 +1,121 @@
+﻿@model Ouroboros_Elio.Models.SuccessViewModel
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<body class="template-color-1">
+    <div class="main-wrapper">
+        <!-- Begin Hiraola's Breadcrumb Area -->
+        <div class="breadcrumb-area">
+            <div class="container">
+                <div class="breadcrumb-content">
+                    <h2>Khác</h2>
+                    <ul>
+                        <li><a href="/Home/Index">Trang Chủ</a></li>
+                        <li><a href="/MyAccount/Index">Tài Khoản</a></li>
+                        <li class="active">Chi Tiết Đơn Hàng</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- Hiraola's Breadcrumb Area End Here -->
+        <!-- Begin Hiraola's Checkout Area -->
+        <div class="checkout-area">
+            <div class="container">
+                <h3>Chi Tiết Đơn Hàng</h3>
+                <p>Thông tin chi tiết về đơn hàng của bạn được hiển thị dưới đây:</p>
+
+                <!-- Thông tin đơn hàng -->
+                <div class="your-order" style="margin-bottom: 30px;">
+                    <h4>Thông Tin Đơn Hàng</h4>
+                    <div class="your-order-table table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th class="cart-product-name">Sản Phẩm</th>
+                                    <th class="cart-product-total">Tổng</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.OrderItems != null && Model.OrderItems.Any())
+                                {
+                                    foreach (var item in Model.OrderItems)
+                                    {
+                                        <tr class="cart_item">
+                                            <td class="cart-product-name">
+                                                @(item.DesignName ?? "Unknown")<strong class="product-quantity"> × @item.Quantity</strong>
+                                                @if (item.CustomBraceletId.HasValue)
+                                                {
+                                                    <ul style="list-style-type: none; padding-left: 20px; margin-top: 5px;">
+                                                        @{
+                                                            var customBracelet = ViewBag.CustomBracelets != null && ViewBag.CustomBracelets.ContainsKey(item.CustomBraceletId.Value)
+                                                            ? ViewBag.CustomBracelets[item.CustomBraceletId.Value]
+                                                            : null;
+                                                        }
+                                                        @if (customBracelet != null && customBracelet.CustomBraceletCharms != null)
+                                                        {
+                                                            foreach (var charm in customBracelet.CustomBraceletCharms)
+                                                            {
+                                                                <li>- Charm: @(charm.CharmName ?? "Unknown")</li>
+                                                            }
+                                                        }
+                                                    </ul>
+                                                }
+                                            </td>
+                                            <td class="cart-product-total">
+                                                <span class="amount">
+                                                    @String.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:N0}", item.Quantity * item.Price) đ
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="2">Không có sản phẩm trong đơn hàng</td>
+                                    </tr>
+                                }
+                            </tbody>
+                            <tfoot>
+                                <tr class="order-total">
+                                    <th>Tổng Đơn Hàng</th>
+                                    <td>
+                                        <strong>
+                                            <span class="amount">
+                                                @String.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:N0}", Model.TotalAmount) đ
+                                            </span>
+                                        </strong>
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    <div style="padding: 15px;">
+                        <p><strong>Mã Đơn Hàng:</strong> @Model.OrderId.ToString().Substring(0, 8)</p>
+                        <p><strong>Ngày Đặt Hàng:</strong> @(Model.OrderDate?.ToString("dd/MM/yyyy") ?? "N/A")</p>
+                        <p><strong>Trạng Thái:</strong> @Model.Status</p>
+                    </div>
+                </div>
+
+                <!-- Thông tin người nhận -->
+                <div class="your-order">
+                    <h4>Thông Tin Người Nhận</h4>
+                    <div style="padding: 15px;">
+                        <p><strong>Họ và Tên:</strong> @(Model.FirstName ?? "") @(Model.LastName ?? "")</p>
+                        <p><strong>Địa Chỉ:</strong> @(Model.Address ?? "N/A")</p>
+                        <p><strong>Email:</strong> @(Model.Email ?? "N/A")</p>
+                        <p><strong>Số Điện Thoại:</strong> @(Model.PhoneNumber != 0 ? Model.PhoneNumber.ToString() : "N/A")</p>
+                    </div>
+                </div>
+
+                <!-- Nút quay lại -->
+                <div class="order-button-payment" style="margin-top: 20px;">
+                    <a href="/MyAccount/Index" class="hiraola-btn">Quay Về Tài Khoản</a>
+                </div>
+            </div>
+        </div>
+        <!-- Hiraola's Checkout Area End Here -->
+    </div>
+</body>

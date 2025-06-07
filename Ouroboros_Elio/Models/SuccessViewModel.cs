@@ -21,6 +21,7 @@ public class OrderItemViewModel
 {
     public Guid OrderItemId { get; set; }
     public Guid? DesignId { get; set; }
+    public Guid? CustomBraceletId { get; set; }
     public string DesignName { get; set; }
     public int? Quantity { get; set; }
     public decimal? Price { get; set; }

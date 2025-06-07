@@ -83,7 +83,7 @@
                                         <li>
                                             @if (User.Identity.IsAuthenticated)
                                             {
-                                                <a href="#">@User.Identity.Name<i class="fa fa-chevron-down"></i></a>
+                                                <a href="/MyAccount/Index">@User.Identity.Name<i class="fa fa-chevron-down"></i></a>
                                                 <ul class="ht-dropdown ht-my_account">
                                                     <li class="active"><a asp-controller="Auth" asp-action="Logout">Đăng Xuất</a></li>
                                                 </ul>

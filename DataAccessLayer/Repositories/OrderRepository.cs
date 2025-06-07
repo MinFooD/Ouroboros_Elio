@@ -110,4 +110,22 @@ public class OrderRepository : IOrderRepository
             .ThenInclude(oi => oi.Design)
             .FirstOrDefaultAsync(o => o.OrderId == orderId && o.UserId == userId);
     }
+
+    public async Task<(List<Order> Orders, int TotalCount)> GetOrdersByUserIdAsync(Guid userId, int pageNumber = 1, int pageSize = 10)
+    {
+        var query = _context.Orders
+            .Where(o => o.UserId == userId)
+            .OrderByDescending(o => o.OrderDate)
+            .AsQueryable();
+
+        var totalCount = await query.CountAsync();
+        var orders = await query
+            .Include(o => o.OrderItems)
+            .ThenInclude(oi => oi.Design)
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+        return (orders, totalCount);
+    }
 }

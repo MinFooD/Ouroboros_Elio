@@ -29,4 +29,40 @@ public class OrderService : IOrderService
         var order = await _orderRepository.GetOrderByIdAsync(orderId, userId);
         return _mapper.Map<OrderViewModel>(order);
     }
+
+    public async Task<(List<OrderMyAccount> Orders, int TotalCount)> GetOrdersByUserIdAsync(Guid userId, int pageNumber = 1, int pageSize = 10)
+    {
+        var (orders, totalCount) = await _orderRepository.GetOrdersByUserIdAsync(userId, pageNumber, pageSize);
+        var orderViewModels = _mapper.Map<List<OrderMyAccount>>(orders);
+
+        // Gán DesignName cho từng OrderItem trong mỗi OrderMyAccount
+        foreach (var orderViewModel in orderViewModels)
+        {
+            if (orderViewModel.OrderItems != null)
+            {
+                var originalOrder = orders.FirstOrDefault(o => o.OrderId == orderViewModel.OrderId);
+                if (originalOrder != null)
+                {
+                    foreach (var item in orderViewModel.OrderItems)
+                    {
+                        var orderItem = originalOrder.OrderItems.FirstOrDefault(oi => oi.OrderItemId == item.OrderItemId);
+                        if (orderItem?.Design != null)
+                        {
+                            var design = orderItem.Design;
+                            var collectionName = design.Model?.Topic?.Collection?.CollectionName ?? "Không xác định";
+                            var topicName = design.Model?.Topic?.TopicName ?? "Không xác định";
+                            var modelName = design.Model?.ModelName ?? "Không xác định";
+                            var categoryName = design.Category?.CategoryName ?? "Không xác định";
+                            item.DesignName = $"{collectionName} - {topicName} - {modelName} - {categoryName}";
+                        }
+                        else
+                        {
+                            item.DesignName = "Không xác định";
+                        }
+                    }
+                }
+            }
+        }
+        return (orderViewModels, totalCount);
+    }
 }
