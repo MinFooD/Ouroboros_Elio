@@ -173,13 +173,18 @@
             $('.toggle-form').on('click', function (e) {
                 e.preventDefault();
                 var targetForm = $(this).data('target');
+                console.log('Target Form:', targetForm);
                 var currentForm = $(this).closest('article').attr('id');
+                        console.log('Current Form Class:', $('#' + currentForm).attr('class'));
+        console.log('Target Form Class:', $('#' + targetForm).attr('class'));
 
                 // Ẩn form hiện tại với hiệu ứng fadeOutUp
                 $('#' + currentForm).addClass('animated fadeOutUp').one('animationend', function () {
+                    console.log('Animation Ended for current form');
                     $(this).removeClass('animated fadeOutUp').addClass('d-none');
                     // Hiển thị form đích với hiệu ứng fadeInUp
                     $('#' + targetForm).removeClass('d-none').addClass('animated fadeInUp').one('animationend', function () {
+                        console.log('Animation Ended for target form');
                         $(this).removeClass('animated fadeInUp');
                     });
                 });

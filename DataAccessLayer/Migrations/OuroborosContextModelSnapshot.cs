@@ -160,7 +160,7 @@ namespace DataAccessLayer.Migrations
                     b.Property<Guid?>("CustomBraceletId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("DesignId")
+                    b.Property<Guid?>("DesignId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<decimal?>("Price")
@@ -723,9 +723,7 @@ namespace DataAccessLayer.Migrations
 
                     b.HasOne("DataAccessLayer.Entities.Design", "Design")
                         .WithMany("CartItems")
-                        .HasForeignKey("DesignId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("DesignId");
 
                     b.Navigation("Cart");
 

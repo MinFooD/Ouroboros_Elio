@@ -41,8 +41,8 @@
                                 </div>
                             </div>
                             <div class="category-module hiraola-sidebar_categories">
-                                <div class="category-module_heading">
-                                    <h5>Mẫu sản phẩm</h5>
+                                <div class="category-module_heading" style="text-align:center;">
+                                    <h5 style="margin-bottom:-3px">Mẫu sản phẩm</h5>
                                 </div>
                                 <div class="module-body">
                                     <ul class="module-list_item">
@@ -251,6 +251,13 @@
 
     <!-- CSS tùy chỉnh cho SweetAlert2 và nút ẩn -->
     <style>
+        .product-name {
+            display: -webkit-box; /* Creates a flexible box model */
+            -webkit-box-orient: vertical; /* Set the orientation of the box to vertical */
+            -webkit-line-clamp: 2; /* Limit to 2 lines */
+            overflow: hidden; /* Hide the text that overflows */
+            text-overflow: ellipsis; /* Add ellipsis (...) at the end */
+        }
         .swal2-popup {
             font-family: 'Lato', sans-serif;
             background: #f4f4f4;
@@ -271,7 +278,7 @@
         }
 
         .swal2-confirm {
-            background-color: #cda557 !important;
+            background-color: #63BC85 !important;
             color: #fff !important;
             border-radius: 3px !important;
             padding: 10px 20px !important;
@@ -299,8 +306,8 @@
         }
 
         .swal2-icon.swal2-warning {
-            color: #cda557 !important;
-            border-color: #cda557 !important;
+            color: #63BC85 !important;
+            border-color: #63BC85 !important;
         }
 
         .swal2-icon.swal2-error {

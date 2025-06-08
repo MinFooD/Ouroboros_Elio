@@ -20,7 +20,7 @@
 }
 
 .swal2-confirm {
-    background-color: #cda557 !important; /* Nút "Xóa" màu vàng */
+    background-color: #63BC85 !important; /* Nút "Xóa" màu vàng */
     color: #fff !important; /* Chữ trắng */
     border-radius: 3px !important; /* Bo góc giống hiraola-btn */
     padding: 10px 20px !important; /* Kích thước giống nút */
@@ -48,8 +48,8 @@
 }
 
 .swal2-icon.swal2-warning {
-    color: #cda557 !important; /* Màu biểu tượng cảnh báo */
-    border-color: #cda557 !important;
+    color: #63BC85 !important; /* Màu biểu tượng cảnh báo */
+    border-color: #63BC85 !important;
 }
 
 .swal2-icon.swal2-error {
