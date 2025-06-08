@@ -1,0 +1,367 @@
+﻿@model List<BusinessLogicLayer.Dtos.DesignDtos.DesignViewModel>
+
+@{
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    var monthlyRevenue = ViewBag.MonthlyRevenue as decimal[];
+}
+
+<main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
+    <!-- Navbar -->
+    <nav class="navbar navbar-main navbar-expand-lg px-0 mx-3 shadow-none border-radius-xl" id="navbarBlur" data-scroll="true">
+        <div class="container-fluid py-1 px-3">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
+                    <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="javascript:;">Admin</a></li>
+                    <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Dashboard</li>
+                </ol>
+            </nav>
+            <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
+                <div class="ms-md-auto pe-md-3 d-flex align-items-center">
+                    <div class="input-group input-group-outline">
+                        <label class="form-label">Type for nothing...♥</label>
+                        <input type="text" class="form-control">
+                    </div>
+                </div>
+                <ul class="navbar-nav d-flex align-items-center  justify-content-end">
+                    <li class="nav-item d-flex align-items-center">
+                        <a class="btn btn-outline-primary btn-sm mb-0 me-3" target="_blank"
+                           asp-area="" asp-controller="Admin" asp-action="Export">Online Builder</a>
+                    </li>
+                    <li class="mt-1">
+                        @* <a class="github-button" href="https://github.com/creativetimofficial/material-dashboard" data-icon="octicon-star" data-size="large" data-show-count="true" aria-label="Star creativetimofficial/material-dashboard on GitHub">Star</a> *@
+                    </li>
+                    <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
+                        @* <a href="javascript:;" class="nav-link text-body p-0" id="iconNavbarSidenav">
+                            <div class="sidenav-toggler-inner">
+                                <i class="sidenav-toggler-line"></i>
+                                <i class="sidenav-toggler-line"></i>
+                                <i class="sidenav-toggler-line"></i>
+                            </div>
+                        </a> *@
+                    </li>
+                    <li class="nav-item px-3 d-flex align-items-center">
+                        @* <a href="javascript:;" class="nav-link text-body p-0">
+                            <i class="material-symbols-rounded fixed-plugin-button-nav">settings</i>
+                        </a> *@
+                    </li>
+                    <li class="nav-item dropdown pe-3 d-flex align-items-center">
+
+                    </li>
+                    <li class="nav-item d-flex align-items-center">
+                        @* <a href="../pages/sign-in.html" class="nav-link text-body font-weight-bold px-0">
+                            <i class="material-symbols-rounded">account_circle</i>
+                        </a> *@
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- End Navbar -->
+    <div class="container-fluid py-2">
+        <div class="row">
+            <div class="ms-3">
+                <h3 class="mb-0 h4 font-weight-bolder">Dashboard</h3>
+                <p class="mb-4">
+                    Thống kê số liệu từ người dùng
+                </p>
+            </div>
+            <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+                <div class="card">
+                    <div class="card-header p-2 ps-3">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <p class="text-sm mb-0 text-capitalize">Lượng truy cập</p>
+                                <h4 class="mb-0">@ViewBag.AccessCount</h4>
+                            </div>
+                            <div class="icon icon-md icon-shape bg-gradient-dark shadow-dark shadow text-center border-radius-lg">
+                                <i class="material-symbols-rounded opacity-10">weekend</i>
+                            </div>
+                        </div>
+                    </div>
+                    <hr class="dark horizontal my-0">
+                    <div class="card-footer p-2 ps-3">
+                        <p class="mb-0 text-sm"><span class="text-success font-weight-bolder">+...% </span>kể từ ngày 6/6/2025</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+                <div class="card">
+                    <div class="card-header p-2 ps-3">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <p class="text-sm mb-0 text-capitalize">Lượng người dùng</p>
+                                <h4 class="mb-0">@ViewBag.UserCount</h4>
+                            </div>
+                            <div class="icon icon-md icon-shape bg-gradient-dark shadow-dark shadow text-center border-radius-lg">
+                                <i class="material-symbols-rounded opacity-10">person</i>
+                            </div>
+                        </div>
+                    </div>
+                    <hr class="dark horizontal my-0">
+                    <div class="card-footer p-2 ps-3">
+                        <p class="mb-0 text-sm"><span class="text-success font-weight-bolder">+...% </span>kể từ ngày 6/6/2025</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+                <div class="card">
+                    <div class="card-header p-2 ps-3">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <p class="text-sm mb-0 text-capitalize">Lượng hóa đơn</p>
+                                <h4 class="mb-0">@ViewBag.OrderCount</h4>
+                            </div>
+                            <div class="icon icon-md icon-shape bg-gradient-dark shadow-dark shadow text-center border-radius-lg">
+                                <i class="material-symbols-rounded opacity-10">leaderboard</i>
+                            </div>
+                        </div>
+                    </div>
+                    <hr class="dark horizontal my-0">
+                    <div class="card-footer p-2 ps-3">
+                        <p class="mb-0 text-sm"><span class="text-success font-weight-bolder">+...% </span>kể từ ngày 6/6/2025</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-sm-6">
+                <div class="card">
+                    <div class="card-header p-2 ps-3">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <p class="text-sm mb-0 text-capitalize">Số lượng thiết kế được tạo</p>
+                                <h4 class="mb-0">@ViewBag.CustomBraceletCount</h4>
+                            </div>
+                            <div class="icon icon-md icon-shape bg-gradient-dark shadow-dark shadow text-center border-radius-lg">
+                                <i class="material-symbols-rounded opacity-10">weekend</i>
+                            </div>
+                        </div>
+                    </div>
+                    <hr class="dark horizontal my-0">
+                    <div class="card-footer p-2 ps-3">
+                        <p class="mb-0 text-sm"><span class="text-success font-weight-bolder">+...% </span>kể từ ngày 6/6/2025</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-4 col-md-6 mt-4 mb-4">
+                <div class="card ">
+                    <div class="card-body">
+                        <h6 class="mb-0 "> Doanh thu tháng </h6>
+                        <p class="text-sm "> (<span class="font-weight-bolder">+...%</span>) doanh thu trong năm 2025. </p>
+                        <div class="pe-2">
+                            <div class="chart">
+                                <canvas id="chart-line" class="chart-canvas" height="170"></canvas>
+                            </div>
+                        </div>
+                        <hr class="dark horizontal">
+                        <div class="d-flex ">
+                            <i class="material-symbols-rounded text-sm my-auto me-1">schedule</i>
+                            <p class="mb-0 text-sm"> cập nhật 0p trước </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-8 col-md-6 mb-md-0 mb-4 mt-4">
+                <div class="card">
+                    <div class="card-header pb-0">
+                        <div class="row">
+                            <div class="col-lg-6 col-7">
+                                <h6>Projects</h6>
+                                <p class="text-sm mb-0">
+                                    <i class="fa fa-check text-info" aria-hidden="true"></i>
+                                    <span class="font-weight-bold ms-1">6 sản phẩm</span> có số lượng truy cập cao nhất
+                                </p>
+                            </div>
+                            <div class="col-lg-6 col-5 my-auto text-end">
+                                <div class="dropdown float-lg-end pe-4">
+                                    <a class="cursor-pointer" id="dropdownTable" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="fa fa-ellipsis-v text-secondary"></i>
+                                    </a>
+                                    <ul class="dropdown-menu px-2 py-3 ms-sm-n4 ms-n5" aria-labelledby="dropdownTable">
+                                        <li><a class="dropdown-item border-radius-md" href="javascript:;"><strong>Sort By</strong></a></li>
+                                        <li><a class="dropdown-item border-radius-md" asp-area="" asp-controller="Admin" asp-action="Dashboard" asp-route-sort="VisitCount">Số lượt truy cập</a></li>
+                                        <li><a class="dropdown-item border-radius-md" asp-area="" asp-controller="Admin" asp-action="Dashboard" asp-route-sort="OrderCount">Số lượng đã bán</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body px-0 pb-2">
+                        <div class="table-responsive">
+                            <table class="table align-items-center mb-0">
+                                <thead>
+                                    <tr>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Tên sản phẩm</th>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Ảnh</th>
+                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Số lượng truy cập</th>
+                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Số lượng đã bán</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (Model != null && Model.Any())
+                                    {
+                                        foreach (var item in Model)
+                                        {
+
+                                            <tr>
+                                                <td>
+                                                    <div class="d-flex px-2 py-1">
+                                                        <div>
+                                                            <img src="@item.FirstImage.ImageUrl" class="avatar avatar-sm me-3" alt="xd">
+                                                        </div>
+                                                        <div class="d-flex flex-column justify-content-center">
+                                                            <h6 class="mb-0 text-sm">@item.DesignName</h6>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="avatar-group mt-2">
+                                                        @if (item.DesignImages != null && item.DesignImages.Any())
+                                                        {
+                                                            foreach (var i in item.DesignImages)
+                                                            {
+                                                                <a href="javascript:;" class="avatar avatar-xs rounded-circle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Ảnh vòng tay á">
+                                                                    <img src="@i.ImageUrl" alt="team1">
+                                                                </a>
+                                                            }
+                                                        }
+                                                    </div>
+                                                </td>
+                                                <td class="align-middle text-center text-sm">
+                                                    <span class="text-xs font-weight-bold"> @item.VisitCount </span>
+                                                </td>
+                                                <td class="align-middle text-center text-sm">
+                                                    <span class="text-xs font-weight-bold"> @item.OrderCount </span>
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mb-4">
+        </div>
+        <footer class="footer py-4  ">
+            <div class="container-fluid">
+                <div class="row align-items-center justify-content-lg-between">
+                    <div class="col-lg-6 mb-lg-0 mb-4">
+                        <div class="copyright text-center text-sm text-muted text-lg-start">
+                            © <script>
+                                  document.write(new Date().getFullYear())
+                            </script>,
+                            made with <i class="fa fa-heart"></i> by
+                            <a href="https://www.creative-tim.com" class="font-weight-bold" target="_blank">Ouroboros Team</a>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <ul class="nav nav-footer justify-content-center justify-content-lg-end">
+                            @* <li class="nav-item">
+                                    <a href="https://www.creative-tim.com" class="nav-link text-muted" target="_blank">Creative Tim</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="https://www.creative-tim.com/presentation" class="nav-link text-muted" target="_blank">About Us</a>
+                                </li> *@
+                            <li class="nav-item">
+                                <a href="https://www.facebook.com/profile.php?id=61577049781454" class="nav-link text-muted" target="_blank">Facebook</a>
+                            </li>
+                            @* <li class="nav-item">
+                                    <a href="https://www.creative-tim.com/license" class="nav-link pe-0 text-muted" target="_blank">License</a>
+                                </li> *@
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+</main>
+
+<script src="~/admin/js/plugins/chartjs.min.js"></script>
+<script>
+    var ctx2 = document.getElementById("chart-line").getContext("2d");
+
+    new Chart(ctx2, {
+      type: "line",
+      data: {
+        labels: ["J", "F", "M", "A", "M", "J", "J", "A", "S", "O", "N", "D"],
+        datasets: [{
+          label: "Sales",
+          tension: 0,
+          borderWidth: 2,
+          pointRadius: 3,
+          pointBackgroundColor: "#43A047",
+          pointBorderColor: "transparent",
+          borderColor: "#43A047",
+          backgroundColor: "transparent",
+          fill: true,
+            data: @Html.Raw(Json.Serialize(monthlyRevenue)),
+          maxBarThickness: 6
+
+        }],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            display: false,
+          },
+          tooltip: {
+            callbacks: {
+              title: function(context) {
+                const fullMonths = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+                return fullMonths[context[0].dataIndex];
+              }
+            }
+          }
+        },
+        interaction: {
+          intersect: false,
+          mode: 'index',
+        },
+        scales: {
+          y: {
+            grid: {
+              drawBorder: false,
+              display: true,
+              drawOnChartArea: true,
+              drawTicks: false,
+              borderDash: [4, 4],
+              color: '#e5e5e5'
+            },
+            ticks: {
+              display: true,
+              color: '#737373',
+              padding: 10,
+              font: {
+                size: 12,
+                lineHeight: 2
+              },
+            }
+          },
+          x: {
+            grid: {
+              drawBorder: false,
+              display: false,
+              drawOnChartArea: false,
+              drawTicks: false,
+              borderDash: [5, 5]
+            },
+            ticks: {
+              display: true,
+              color: '#737373',
+              padding: 10,
+              font: {
+                size: 12,
+                lineHeight: 2
+              },
+            }
+          },
+        },
+      },
+    });
+</script>
+

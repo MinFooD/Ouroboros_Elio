@@ -53,6 +53,7 @@ builder.Services.AddScoped<IContactService, ContactService>();
 builder.Services.AddScoped<ICharmRepository, CharmRepository>();
 builder.Services.AddScoped<ICharmService, CharmService>();
 builder.Services.AddScoped<ICustomBraceletRepository, CustomBraceletRepository>();
+builder.Services.AddScoped<IAdminRepository, AdminRepository>();
 
 //builder.Services.AddDataAccessLayer(builder.Configuration);
 

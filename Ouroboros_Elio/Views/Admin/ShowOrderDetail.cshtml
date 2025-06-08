@@ -1,0 +1,489 @@
+﻿@model List<BusinessLogicLayer.Dtos.OrderDtos.OrderItemsViewModel>
+
+@{
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
+    <!-- Navbar -->
+    <nav class="navbar navbar-main navbar-expand-lg px-0 mx-3 shadow-none border-radius-xl"
+         id="navbarBlur"
+         data-scroll="true">
+        <div class="container-fluid py-1 px-3">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
+                    <li class="breadcrumb-item text-sm">
+                        <a class="opacity-5 text-dark" href="javascript:;">Admin</a>
+                    </li>
+                    <li class="breadcrumb-item text-sm text-dark active"
+                        aria-current="page">
+                        Orders / OrderItemDetails
+                    </li>
+                </ol>
+            </nav>
+            <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4"
+                 id="navbar">
+                <div class="ms-md-auto pe-md-3 d-flex align-items-center">
+                    <div class="input-group input-group-outline">
+                        <label class="form-label">Type here...</label>
+                        <input type="text" class="form-control" />
+                    </div>
+                </div>
+                <ul class="navbar-nav d-flex align-items-center justify-content-end">
+                    <li class="nav-item d-flex align-items-center">
+                        <a class="btn btn-outline-primary btn-sm mb-0 me-3"
+                           target="_blank"
+                           href="https://www.creative-tim.com/builder?ref=navbar-material-dashboard">Online Builder</a>
+                    </li>
+                    <li class="mt-1">
+                        <a class="github-button"
+                           href="https://github.com/creativetimofficial/material-dashboard"
+                           data-icon="octicon-star"
+                           data-size="large"
+                           data-show-count="true"
+                           aria-label="Star creativetimofficial/material-dashboard on GitHub">Star</a>
+                    </li>
+                    <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
+                        <a href="javascript:;"
+                           class="nav-link text-body p-0"
+                           id="iconNavbarSidenav">
+                            <div class="sidenav-toggler-inner">
+                                <i class="sidenav-toggler-line"></i>
+                                <i class="sidenav-toggler-line"></i>
+                                <i class="sidenav-toggler-line"></i>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="nav-item px-3 d-flex align-items-center">
+                        <a href="javascript:;" class="nav-link text-body p-0">
+                            <i class="material-symbols-rounded fixed-plugin-button-nav">settings</i>
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown pe-3 d-flex align-items-center">
+                        <a href="javascript:;"
+                           class="nav-link text-body p-0"
+                           id="dropdownMenuButton"
+                           data-bs-toggle="dropdown"
+                           aria-expanded="false">
+                            <i class="material-symbols-rounded">notifications</i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end px-2 py-3 me-sm-n4"
+                            aria-labelledby="dropdownMenuButton">
+                            <li class="mb-2">
+                                <a class="dropdown-item border-radius-md"
+                                   href="javascript:;">
+                                    <div class="d-flex py-1">
+                                        <div class="my-auto">
+                                            <img src="../assets/img/team-2.jpg"
+                                                 class="avatar avatar-sm me-3" />
+                                        </div>
+                                        <div class="d-flex flex-column justify-content-center">
+                                            <h6 class="text-sm font-weight-normal mb-1">
+                                                <span class="font-weight-bold">New message</span>
+                                                from Laur
+                                            </h6>
+                                            <p class="text-xs text-secondary mb-0">
+                                                <i class="fa fa-clock me-1"></i>
+                                                13 minutes ago
+                                            </p>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="mb-2">
+                                <a class="dropdown-item border-radius-md"
+                                   href="javascript:;">
+                                    <div class="d-flex py-1">
+                                        <div class="my-auto">
+                                            <img src="../assets/img/small-logos/logo-spotify.svg"
+                                                 class="avatar avatar-sm bg-gradient-dark me-3" />
+                                        </div>
+                                        <div class="d-flex flex-column justify-content-center">
+                                            <h6 class="text-sm font-weight-normal mb-1">
+                                                <span class="font-weight-bold">New album</span> by
+                                                Travis Scott
+                                            </h6>
+                                            <p class="text-xs text-secondary mb-0">
+                                                <i class="fa fa-clock me-1"></i>
+                                                1 day
+                                            </p>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item border-radius-md"
+                                   href="javascript:;">
+                                    <div class="d-flex py-1">
+                                        <div class="avatar avatar-sm bg-gradient-secondary me-3 my-auto">
+                                            <svg width="12px"
+                                                 height="12px"
+                                                 viewBox="0 0 43 36"
+                                                 version="1.1"
+                                                 xmlns="http://www.w3.org/2000/svg"
+                                                 xmlns:xlink="http://www.w3.org/1999/xlink">
+                                                <title>credit-card</title>
+                                                <g stroke="none"
+                                                   stroke-width="1"
+                                                   fill="none"
+                                                   fill-rule="evenodd">
+                                                    <g transform="translate(-2169.000000, -745.000000)"
+                                                       fill="#FFFFFF"
+                                                       fill-rule="nonzero">
+                                                        <g transform="translate(1716.000000, 291.000000)">
+                                                            <g transform="translate(453.000000, 454.000000)">
+                                                                <path class="color-background"
+                                                                      d="M43,10.7482083 L43,3.58333333 C43,1.60354167 41.3964583,0 39.4166667,0 L3.58333333,0 C1.60354167,0 0,1.60354167 0,3.58333333 L0,10.7482083 L43,10.7482083 Z"
+                                                                      opacity="0.593633743"></path>
+                                                                <path class="color-background"
+                                                                      d="M0,16.125 L0,32.25 C0,34.2297917 1.60354167,35.8333333 3.58333333,35.8333333 L39.4166667,35.8333333 C41.3964583,35.8333333 43,34.2297917 43,32.25 L43,16.125 L0,16.125 Z M19.7083333,26.875 L7.16666667,26.875 L7.16666667,23.2916667 L19.7083333,23.2916667 L19.7083333,26.875 Z M35.8333333,26.875 L28.6666667,26.875 L28.6666667,23.2916667 L35.8333333,23.2916667 L35.8333333,26.875 Z"></path>
+                                                            </g>
+                                                        </g>
+                                                    </g>
+                                                </g>
+                                            </svg>
+                                        </div>
+                                        <div class="d-flex flex-column justify-content-center">
+                                            <h6 class="text-sm font-weight-normal mb-1">
+                                                Payment successfully completed
+                                            </h6>
+                                            <p class="text-xs text-secondary mb-0">
+                                                <i class="fa fa-clock me-1"></i>
+                                                2 days
+                                            </p>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item d-flex align-items-center">
+                        <a href="../pages/sign-in.html"
+                           class="nav-link text-body font-weight-bold px-0">
+                            <i class="material-symbols-rounded">account_circle</i>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- End Navbar -->
+    <!-- Products Table -->
+    <div class="container-fluid py-2">
+        <div class="row">
+            <div class="col-12">
+                <div class="card my-4">
+                    <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+                        <div class="bg-gradient-dark shadow-dark border-radius-lg pt-4 pb-3">
+                            <h6 class="text-white text-capitalize ps-3">
+                                Chi tiết hóa đơn
+                            </h6>
+                        </div>
+                    </div>
+                    <div class="card-body px-0 pb-2">
+                        <div class="table-responsive p-0">
+                            <table class="table align-items-center mb-0">
+                                <thead>
+                                    <tr>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                            ProductId
+                                        </th>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                            Description
+                                        </th>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                            Image
+                                        </th>
+                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                            Price
+                                        </th>
+                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                            Category
+                                        </th>
+                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                            Quantity
+                                        </th>
+                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                            ProductType
+                                        </th>
+                                        <th class="text-secondary opacity-7"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (Model != null && Model.Any())
+                                    {
+                                        foreach (var item in Model)
+                                        {
+                                            if (!item.ProductType)
+                                            {
+
+                                                <tr>
+                                                    <td>
+                                                        <div class="d-flex px-2 py-1">
+                                                            <div class="d-flex flex-column justify-content-center">
+                                                                <h6 class="mb-0 text-sm">@item.Design.DesignId</h6>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td class="align-middle text-center">
+                                                        <span class="text-secondary text-xs font-weight-bold">@item.Design.Description</span>
+                                                    </td>
+                                                    <td>
+                                                        <img src="https://tnj.vn/16501-large_default/vong-tay-bac-nu-co-4-la-dep-ltn0070.jpg"
+                                                             class="avatar avatar-sm me-3"
+                                                             alt="Product Image" />
+                                                    </td>
+                                                    <td class="align-middle text-center">
+                                                        <span class="text-secondary text-xs font-weight-bold">@item.Price</span>
+                                                    </td>
+                                                    <td class="align-middle text-center">
+                                                        <span class="text-secondary text-xs font-weight-bold">@item.Design.Category.CategoryName</span>
+                                                    </td>
+                                                    <td class="align-middle text-center">
+                                                        <span class="text-secondary text-xs font-weight-bold">@item.Quantity</span>
+                                                    </td>
+                                                    <td class="align-middle text-center">
+                                                        <span class="text-secondary text-xs font-weight-bold">Mặc định</span>
+                                                    </td>
+                                                    <td class="align-middle">
+                                                        <a href="javascript:;"
+                                                           class="text-secondary font-weight-bold text-xs view-btn"
+                                                           @* data-bs-toggle="modal"
+                                                           data-bs-target="#viewModal" *@>
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            }
+                                            else
+                                            {
+
+                                                <tr>
+                                                    <td>
+                                                        <div class="d-flex px-2 py-1">
+                                                            <div class="d-flex flex-column justify-content-center">
+                                                                <h6 class="mb-0 text-sm">@item.OrderItemId</h6>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td class="align-middle text-center">
+                                                        <span class="text-secondary text-xs font-weight-bold">@item.CustomBracelet.CustomBraceletName</span>
+                                                    </td>
+                                                    <td>
+                                                        <img src="https://anh.quatructuyen.com/media/catalog/product/cache/1/image/480x480/9df78eab33525d08d6e5fb8d27136e95/l/a/lac_tay_bac_1.jpg"
+                                                             class="avatar avatar-sm me-3"
+                                                             alt="Product Image" />
+                                                    </td>
+                                                    <td class="align-middle text-center">
+                                                        <span class="text-secondary text-xs font-weight-bold">@item.Price</span>
+                                                    </td>
+                                                    <td class="align-middle text-center">
+                                                        <span class="text-secondary text-xs font-weight-bold">@item.CustomBracelet.Category.CategoryName</span>
+                                                    </td>
+                                                    <td class="align-middle text-center">
+                                                        <span class="text-secondary text-xs font-weight-bold">@item.Quantity</span>
+                                                    </td>
+                                                    <td class="align-middle text-center">
+                                                        <span class="text-secondary text-xs font-weight-bold">Thiết kế</span>
+                                                    </td>
+                                                    <td class="align-middle">
+                                                        @{
+                                                            var charmPositions = new string[8]; // Mảng 8 vị trí
+
+                                                            if (item.CustomBracelet?.CustomBraceletCharms != null)
+                                                            {
+                                                                foreach (var charm in item.CustomBracelet.CustomBraceletCharms)
+                                                                {
+                                                                    var pos = charm.OrdinalNumber;
+                                                                    if (pos >= 1 && pos <= 8)
+                                                                    {
+                                                                        charmPositions[pos - 1] = charm.Charm?.InternalCode.ToString() ?? "None";
+                                                                    }
+                                                                }
+                                                            }
+
+                                                            var charmJson = System.Text.Json.JsonSerializer.Serialize(charmPositions);
+                                                        }
+                                                        <a href="javascript:;"
+                                                           class="text-secondary font-weight-bold text-xs view-btn"
+                                                           data-bs-toggle="modal"
+                                                           data-bs-target="#viewModal"
+                                                           data-producttype="@item.ProductType"
+                                                           data-charmpositions='@Html.Raw(charmJson)'
+                                                           data-note="@item.CustomBracelet.Note">
+                                                            View
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- View Modal -->
+<!-- Modal chỉnh theo yêu cầu -->
+<div class="modal fade" id="viewModal" tabindex="-1" aria-labelledby="viewModalLabel" aria-hidden="true" ">
+    <div class="modal-dialog modal-lg custom-modal-position">
+        <div class="modal-content" style="border: 1px solid #000;">
+            <div class="modal-header" style="background-color: #f8f9fa;">
+                <h5 class="modal-title fw-bold text-dark" id="viewModalLabel">Mã số Charm</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body text-start">
+                <!-- Bảng mã charm -->
+                <table class="table table-bordered text-center align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Vị trí 1</th>
+                            <th>Vị trí 2</th>
+                            <th>Vị trí 3</th>
+                            <th>Vị trí 4</th>
+                        </tr>
+                    </thead>
+                    <tbody id="charm-codes-row1">
+                        <tr>
+                            <td id="charm-position-1"></td>
+                            <td id="charm-position-2"></td>
+                            <td id="charm-position-3"></td>
+                            <td id="charm-position-4"></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <table class="table table-bordered text-center align-middle mt-3">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Vị trí 5</th>
+                            <th>Vị trí 6</th>
+                            <th>Vị trí 7</th>
+                            <th>Vị trí 8</th>
+                        </tr>
+                    </thead>
+                    <tbody id="charm-codes-row2">
+                        <tr>
+                            <td id="charm-position-5"></td>
+                            <td id="charm-position-6"></td>
+                            <td id="charm-position-7"></td>
+                            <td id="charm-position-8"></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <!-- Ghi chú -->
+                <div class="mt-3">
+                    <label class="form-label" style="font-size: 18px; font-weight: bold; color: black;">Ghí chú cho vòng tay</label>
+                    <div id="charm-note" class="border rounded p-2 bg-white text-dark" style="font-size: 16px; line-height: 1.5;"></div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- CSS để căn modal lên trên và sang phải -->
+<style>
+    .custom-modal-position {
+        /* margin-top: 30px;
+            margin-right: 30px;  */
+        /* margin-bottom: 30px; */
+    }
+
+    /* Đảm bảo mọi ô đều căn giữa nội dung */
+    td, th {
+        vertical-align: middle !important;
+        text-align: center;
+    }
+</style>
+
+
+<!-- JavaScript for handling View modal -->
+<script>
+        document.querySelectorAll(".view-btn").forEach((button) => {
+        button.addEventListener("click", function () {
+            const productType = this.getAttribute("data-producttype");
+            const charmCodes = JSON.parse(this.getAttribute("data-charmpositions") || "[]");
+            const note = this.getAttribute("data-note") || "No note available for this product.";
+
+            document.getElementById("charm-note").textContent = note;
+
+            // Reset nội dung trước
+            for (let i = 1; i <= 8; i++) {
+                document.getElementById(`charm-position-${i}`).textContent = " ";
+            }
+
+            if (productType === "True" || productType === "true") {
+                // Gán charm vào từng ô, nếu thiếu thì để None
+                charmCodes.forEach((code, index) => {
+                    const pos = index + 1;
+                    if (pos <= 8) {
+                        document.getElementById(`charm-position-${pos}`).textContent = code || "None";
+                    }
+                });
+            } else {
+                document.getElementById("charm-codes-row1").innerHTML = `
+                    <tr><td colspan="4" class="text-center">No charm codes available for this product type</td></tr>
+                `;
+                document.getElementById("charm-codes-row2").innerHTML = `
+                    <tr><td colspan="4" class="text-center"></td></tr>
+                `;
+            }
+        });
+    });
+
+    // // Dữ liệu giả cho ghi chú
+    // const productNotes = {
+    //   PROD001:
+    //     "Vòng tay vàng 18K, thiết kế tinh xảo, phù hợp cho sự kiện trang trọng.",
+    //   PROD002: "Phụ kiện thời trang, dễ phối đồ, chất liệu cao cấp.",
+    // };
+
+    // document.querySelectorAll(".view-btn").forEach((button) => {
+    //   button.addEventListener("click", function () {
+    //     const row = this.closest("tr");
+    //     const productId = row
+    //       .querySelector("td:nth-child(1) h6")
+    //       .textContent.trim();
+    //     const productType = row
+    //       .querySelector("td:nth-child(6) span")
+    //       .textContent.trim();
+
+    //     // Hiển thị mã charm dựa trên productType
+    //     if (productType === "Bracelet") {
+    //       // Hàng 1: Position 1-4
+    //       document.getElementById("charm-position-1").textContent = "14";
+    //       document.getElementById("charm-position-2").textContent = "19";
+    //       document.getElementById("charm-position-3").textContent = "11";
+    //       document.getElementById("charm-position-4").textContent = "17";
+    //       // Hàng 2: Position 5-8
+    //       document.getElementById("charm-position-5").textContent = "1";
+    //       document.getElementById("charm-position-6").textContent = "None";
+    //       document.getElementById("charm-position-7").textContent = "None";
+    //       document.getElementById("charm-position-8").textContent = "15";
+    //     } else {
+    //       // Nếu không phải Bracelet, hiển thị thông báo
+    //       document.getElementById("charm-codes-row1").innerHTML = `
+    //         <tr><td colspan="4" class="text-center">No charm codes available for this product type</td></tr>
+    //       `;
+    //       document.getElementById("charm-codes-row2").innerHTML = `
+    //         <tr><td colspan="4" class="text-center"></td></tr>
+    //       `;
+    //     }
+
+    //     // Hiển thị ghi chú dựa trên productId
+    //     const note =
+    //       productNotes[productId] || "No note available for this product.";
+    //     document.getElementById("charm-note").textContent = note;
+    //   });
+    // });
+</script>
