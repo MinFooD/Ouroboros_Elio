@@ -71,9 +71,15 @@ namespace Ouroboros_Elio.Controllers
 				// Tùy chọn: ghi thông tin phụ vào cookie (không nên ghi nhạy cảm)
 				Response.Cookies.Append("UserName", user.UserName, new CookieOptions { HttpOnly = true, Secure = true });
                 Response.Cookies.Append("Email", user.Email, new CookieOptions { HttpOnly = true, Secure = true });
+				var roles = await _userManager.GetRolesAsync(user);
+				if (roles.Contains("Admin"))
+				{
+					// Chuyển hướng đến trang quản trị admin
+					return RedirectToAction("Dashboard", "Admin");
+				}
 
-                // Nếu chọn "Ghi nhớ tôi", lưu email vào cookie RememberedEmail
-                if (loginRequest.RememberMe)
+				// Nếu chọn "Ghi nhớ tôi", lưu email vào cookie RememberedEmail
+				if (loginRequest.RememberMe)
                 {
                     Response.Cookies.Append("RememberedEmail", user.Email, new CookieOptions
                     {

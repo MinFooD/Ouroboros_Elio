@@ -21,6 +21,14 @@ namespace Ouroboros_Elio.Controllers
 		public async Task<IActionResult> Custom()
 		{
 			var charms = await _charmService.GetArrayCharmsAsync();
+			var charm = charms.Select(c => new
+			{
+				c.CharmId,
+				c.Name,
+				c.Price,
+				// Thêm resize parameters
+				ImageUrl = $"{c.ImageUrl}?width=100&height=100&mode=crop&quality=80"
+			}).ToList();
 			ViewBag.Charms = charms;
 			return View();
 		}

@@ -31,7 +31,16 @@ namespace DataAccessLayer.Repositories
 			// Xóa các Charm liên kết với CustomBracelet
 			_context.CustomBraceletCharms.RemoveRange(exitingCustomBracelet.CustomBraceletCharms);
 			_context.CustomBracelets.Remove(exitingCustomBracelet);
-			await _context.SaveChangesAsync();
+			try
+			{
+				await _context.SaveChangesAsync();
+			}
+			catch (Exception ex)
+			{
+				// Log the exception or handle it as needed
+				Console.WriteLine($"Error deleting custom bracelet: {ex.Message}");
+				return false;
+			}
 			return true;
 		}
 		public async Task<CustomBracelet?> GetCustomBraceletByIdAsync(Guid? customBraceletId)

@@ -1,6 +1,4 @@
-﻿
-
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
@@ -8,14 +6,78 @@
     <link href="~/css/sortable.css" rel="stylesheet" />
     <link href="~/css/swal.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="preconnect" href="https://ouroboroselio.blob.core.windows.net">
+    <link rel="dns-prefetch" href="https://ouroboroselio.blob.core.windows.net">
+    <style>
+        /* Lazy loading placeholder */
+        .charm-placeholder {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+            min-height: 80px;
+            border-radius: 8px;
+        }
+
+        @@keyframes loading {
+            0%
+
+        {
+            background-position: 200% 0;
+        }
+
+        100% {
+            background-position: -200% 0;
+        }
+
+        }
+
+        .charm-item img {
+            transition: opacity 0.3s ease;
+            opacity: 0;
+        }
+
+            .charm-item img.loaded {
+                opacity: 1;
+            }
+
+        /* Virtual scrolling container */
+        .charm-container {
+            height: 400px;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .charm-virtual-list {
+            position: relative;
+        }
+
+        .charm-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 10px;
+            padding: 10px;
+        }
+
+        /* Optimized image loading */
+        .charm-item img {
+            width: 100%;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+    </style>
 </head>
 <body>
     <div class="container1">
         <div>
             <div class="charm-list">
                 <h3>✨ Danh sách Charm</h3>
-                <div class="charm-section">
-                    <div id="availableCharms"></div>
+
+                <!-- Virtual scrolling container -->
+                <div class="charm-container" id="charmContainer">
+                    <div class="charm-virtual-list" id="charmVirtualList">
+                        <div class="charm-grid" id="availableCharms"></div>
+                    </div>
                 </div>
             </div>
             <div class="note-section">
@@ -35,40 +97,223 @@
                 Lưu ý: Sản phẩm vòng tay bạn đã thiết kế đang tồn tại trong giỏ hàng sẽ bị xóa nếu bạn thiết kế 1 vòng tay khác thay thế!!!
             </div>
         </div>
-
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
     <script>
+        // Performance optimization variables
+        let allCharms = [];
+        let filteredCharms = [];
+        let visibleCharms = [];
+        let currentPage = 0;
+        const itemsPerPage = 20; // Load 20 items at a time
+        let isLoading = false;
+
+        // Image cache for better performance
+        const imageCache = new Map();
+
         const noteInput = document.getElementById("noteInput");
         const wordCount = document.getElementById("wordCount");
+        const charmContainer = document.getElementById("charmContainer");
         const maxChars = 200;
 
+        // Note input handler
         noteInput.addEventListener("input", function() {
             let currentLength = noteInput.value.length;
-
             if (currentLength > maxChars) {
-                noteInput.value = noteInput.value.substring(0, maxChars); // Cắt bớt nếu số ký tự vượt quá giới hạn
-                currentLength = maxChars; // Đảm bảo rằng chiều dài không vượt quá giới hạn
+                noteInput.value = noteInput.value.substring(0, maxChars);
+                currentLength = maxChars;
             }
-
-            // Cập nhật số lượng ký tự đã nhập
             wordCount.textContent = `Số ký tự: ${currentLength} / ${maxChars}`;
         });
 
-        const charms = @Html.Raw(Json.Serialize(ViewBag.Charms));
+        // Initialize data
+        allCharms = @Html.Raw(Json.Serialize(ViewBag.Charms));
+        filteredCharms = [...allCharms];
 
         const availableCharmsDiv = document.getElementById('availableCharms');
         const braceletDiv = document.getElementById('bracelet');
         const slots = [];
         const totalSlots = 8;
 
+        // Debounce function for search
+        // function debounce(func, wait) {
+        //     let timeout;
+        //     return function executedFunction(...args) {
+        //         const later = () => {
+        //             clearTimeout(timeout);
+        //             func(...args);
+        //         };
+        //         clearTimeout(timeout);
+        //         timeout = setTimeout(later, wait);
+        //     };
+        // }
+
+        // Search functionality
+        // const debouncedSearch = debounce((query) => {
+        //     const searchTerm = query.toLowerCase().trim();
+        //     if (searchTerm === '') {
+        //         filteredCharms = [...allCharms];
+        //     } else {
+        //         filteredCharms = allCharms.filter(charm =>
+        //             charm.name.toLowerCase().includes(searchTerm) ||
+        //             (charm.category && charm.category.toLowerCase().includes(searchTerm))
+        //         );
+        //     }
+        //     currentPage = 0;
+        //     renderAvailableCharms(true);
+        // }, 300);
+
+        // searchInput.addEventListener('input', (e) => {
+        //     debouncedSearch(e.target.value);
+        // });
+
+        // Optimized image loading with preloading
+        function createOptimizedImage(charm) {
+            const img = document.createElement('img');
+
+            // Set dimensions immediately to prevent layout shift
+            img.style.width = '100%';
+            img.style.height = '80px';
+            img.style.objectFit = 'cover';
+            img.style.backgroundColor = '#f0f0f0';
+
+            // Add loading='lazy' for native lazy loading
+            img.loading = 'lazy';
+            img.decoding = 'async';
+
+            if (imageCache.has(charm.imageUrl)) {
+                img.src = imageCache.get(charm.imageUrl);
+                img.style.opacity = '1';
+            } else {
+                // Start loading immediately but show placeholder
+                img.style.opacity = '0.3';
+                img.style.background = 'linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%)';
+
+                img.onload = () => {
+                    imageCache.set(charm.imageUrl, charm.imageUrl);
+                    img.style.opacity = '1';
+                    img.style.background = 'none';
+                };
+
+                img.onerror = function() {
+                    this.style.display = 'none';
+                    const parent = this.parentNode;
+                    if (parent) {
+                        parent.style.background = 'linear-gradient(45deg, #667eea, #764ba2)';
+                        parent.style.color = 'white';
+                        parent.style.display = 'flex';
+                        parent.style.alignItems = 'center';
+                        parent.style.justifyContent = 'center';
+                        parent.style.fontSize = '12px';
+                        parent.textContent = charm.name;
+                    }
+                };
+
+                // Load image immediately instead of waiting for intersection
+                img.src = charm.imageUrl;
+            }
+
+            img.alt = charm.name;
+            return img;
+        }
+
+        // Simplified charm item creation
+        function createCharmItem(charm) {
+            const wrapper = document.createElement('div');
+            wrapper.className = 'charm-wrapper';
+
+            const div = document.createElement('div');
+            div.className = 'charm-item';
+            div.dataset.id = charm.charmId;
+
+            const img = createOptimizedImage(charm);
+            div.appendChild(img);
+
+            const price = document.createElement('div');
+            price.className = 'charm-price';
+            price.textContent = charm.price ? `${charm.price.toLocaleString('vi-VN')}đ` : 'Liên hệ';
+
+            wrapper.appendChild(div);
+            wrapper.appendChild(price);
+
+            return wrapper;
+        }
+
+        // Virtual scrolling implementation
+        function renderAvailableCharms(reset = false) {
+            if (reset) {
+                availableCharmsDiv.innerHTML = '';
+                visibleCharms = [];
+                currentPage = 0;
+            }
+
+            const usedIds = new Set();
+            slots.forEach(slot => {
+                if (slot.children.length > 0) {
+                    const id = slot.children[0].dataset.id;
+                    usedIds.add(id);
+                }
+            });
+
+            const availableCharms = filteredCharms.filter(charm => !usedIds.has(charm.charmId));
+
+            if (availableCharms.length === 0) {
+                availableCharmsDiv.innerHTML = '<div class="empty-message">🎉 Không còn charm nào để chọn</div>';
+                return;
+            }
+
+            // Load more items
+            const startIndex = currentPage * itemsPerPage;
+            const endIndex = Math.min(startIndex + itemsPerPage, availableCharms.length);
+            const itemsToRender = availableCharms.slice(startIndex, endIndex);
+
+            // Use DocumentFragment for better performance
+            const fragment = document.createDocumentFragment();
+
+            itemsToRender.forEach(charm => {
+                const charmItem = createCharmItem(charm);
+                fragment.appendChild(charmItem);
+                visibleCharms.push(charm);
+            });
+
+            availableCharmsDiv.appendChild(fragment);
+            currentPage++;
+
+            // Show load more button if there are more items
+            if (endIndex < availableCharms.length) {
+                const loadMoreBtn = document.createElement('button');
+                loadMoreBtn.textContent = `Xem thêm (${availableCharms.length - endIndex} charm)`;
+                loadMoreBtn.className = 'load-more-btn';
+                loadMoreBtn.style.cssText = 'width: 100%; padding: 10px; margin: 10px 0; background: #f8f9fa; border: 1px solid #ddd; border-radius: 4px; cursor: pointer;';
+                loadMoreBtn.onclick = () => {
+                    loadMoreBtn.remove();
+                    renderAvailableCharms(false);
+                };
+                availableCharmsDiv.appendChild(loadMoreBtn);
+            }
+        }
+
+        // Infinite scroll
+        charmContainer.addEventListener('scroll', () => {
+            if (charmContainer.scrollTop + charmContainer.clientHeight >= charmContainer.scrollHeight - 100) {
+                if (!isLoading && currentPage * itemsPerPage < filteredCharms.length) {
+                    isLoading = true;
+                    setTimeout(() => {
+                        renderAvailableCharms(false);
+                        isLoading = false;
+                    }, 100);
+                }
+            }
+        });
+
+        // Rest of your existing functions (createSlots, removeCharmFromSlot, etc.)
         function removeCharmFromSlot(charm) {
             const parentSlot = charm.parentNode;
             if (parentSlot && parentSlot.classList.contains('slot')) {
                 parentSlot.removeChild(charm);
                 updateTotalPrice();
-                renderAvailableCharms();
+                renderAvailableCharms(true); // Reset and re-render
             }
         }
 
@@ -76,7 +321,7 @@
             braceletDiv.innerHTML = '';
             slots.length = 0;
             updateTotalPrice();
-            // Tạo sợi dây ở giữa
+
             const rope = document.createElement('div');
             rope.className = 'bracelet-rope';
             braceletDiv.appendChild(rope);
@@ -85,7 +330,6 @@
             const centerX = braceletDiv.clientWidth / 2;
             const centerY = braceletDiv.clientHeight / 2;
 
-            // Tạo vòng tròn hoàn chỉnh với 8 vị trí
             for (let i = 0; i < totalSlots; i++) {
                 const slot = document.createElement('div');
                 slot.className = 'slot';
@@ -93,7 +337,6 @@
                 slot.dataset.index = i;
                 slot.textContent = `${i + 1}`;
 
-                // Tính góc cho vòng tròn hoàn chỉnh (bắt đầu từ trên cùng)
                 const angle = (i * 2 * Math.PI) / totalSlots - Math.PI / 2;
                 const x = centerX + radius * Math.cos(angle) - 35;
                 const y = centerY + radius * Math.sin(angle) - 35;
@@ -122,16 +365,15 @@
                             }
                         }
 
-                        if (evt.from.id === 'availableCharms') {
+                        if (evt.from.id === 'availableCharms' || evt.from.closest('#availableCharms')) {
                             const charmItem = evt.item;
-                            const id = charmItem.dataset.id;
-                            const charm = charms.find(c => c.charmId === id);
+                            const id = charmItem.dataset.id || charmItem.querySelector('.charm-item')?.dataset.id;
+                            const charm = allCharms.find(c => c.charmId === id);
 
                             if (charm) {
-                                // Xóa phần giá khi charm vào vòng tay
                                 const price = charmItem.querySelector('.charm-price');
                                 if (price) {
-                                    charmItem.removeChild(price); // Loại bỏ giá
+                                    charmItem.removeChild(price);
                                 }
 
                                 const oldButton = charmItem.querySelector('button');
@@ -151,17 +393,17 @@
                                 charmItem.classList.remove('charm-item');
                                 charmItem.classList.add('ring-item');
 
-                                // Chỉ thêm ảnh vào vòng tay, không thêm giá
                                 const image = charmItem.querySelector('img');
-                                image.style.maxWidth = '100%'; // Điều chỉnh chiều rộng của ảnh trong vòng tay nếu cần
+                                if (image) {
+                                    image.style.maxWidth = '100%';
+                                }
                             }
                         }
                         updateTotalPrice();
-                        renderAvailableCharms();
+                        renderAvailableCharms(true);
                     },
                     onUpdate: function(evt) {
                         const charmItem = evt.item;
-
                         const oldButton = charmItem.querySelector('button');
                         if (oldButton) {
                             charmItem.removeChild(oldButton);
@@ -181,82 +423,20 @@
             }
         }
 
-        function createCharmItem(charm) {
-            const wrapper = document.createElement('div');
-            wrapper.className = 'charm-wrapper';
-
-            const div = document.createElement('div');
-            div.className = 'charm-item';
-            div.dataset.id = charm.charmId;
-
-            const img = document.createElement('img');
-            img.src = charm.imageUrl;
-            img.alt = charm.name;
-            img.onerror = function() {
-                this.style.display = 'none';
-                div.style.background = 'linear-gradient(45deg, #667eea, #764ba2)';
-                div.style.color = 'white';
-                div.style.display = 'flex';
-                div.style.alignItems = 'center';
-                div.style.justifyContent = 'center';
-                div.textContent = charm.name;
-            };
-
-            div.appendChild(img);
-
-            // Chỉ hiển thị giá khi ở trong danh sách charm (availableCharms)
-            const price = document.createElement('div');
-            price.className = 'charm-price';
-            price.textContent = charm.price ? `${charm.price.toLocaleString('vi-VN')}đ` : 'Liên hệ';
-
-            wrapper.appendChild(div);
-            wrapper.appendChild(price);
-
-            return wrapper;
-        }
-
-                function updateTotalPrice() {
+        function updateTotalPrice() {
             let totalPrice = 0;
-
-            // Duyệt từng slot, lấy charmId và tìm giá
             for (let i = 0; i < slots.length; i++) {
                 const slot = slots[i];
                 if (slot.children.length > 0) {
                     const charmId = slot.children[0].dataset.id;
-                    const charm = charms.find(c => c.charmId === charmId);
+                    const charm = allCharms.find(c => c.charmId === charmId);
                     if (charm && charm.price) {
                         totalPrice += charm.price;
                     }
                 }
             }
-
-            // Hiển thị giá (định dạng theo tiền VNĐ)
             const priceDisplay = document.getElementById('totalPriceDisplay');
             priceDisplay.textContent = `Tổng giá vòng tay: ${totalPrice.toLocaleString('vi-VN')}đ`;
-        }
-
-
-        function renderAvailableCharms() {
-            availableCharmsDiv.innerHTML = '';
-
-            const usedIds = new Set();
-            slots.forEach(slot => {
-                if (slot.children.length > 0) {
-                    const id = slot.children[0].dataset.id;
-                    usedIds.add(id);
-                }
-            });
-
-            const availableCharms = charms.filter(charm => !usedIds.has(charm.charmId));
-
-            if (availableCharms.length === 0) {
-                availableCharmsDiv.innerHTML = '<div class="empty-message">🎉 Không còn charm nào để chọn</div>';
-            } else {
-                availableCharms.forEach(charm => {
-                    const charmItem = createCharmItem(charm);
-                    availableCharmsDiv.appendChild(charmItem);
-                });
-            }
         }
 
         new Sortable(availableCharmsDiv, {
@@ -270,7 +450,6 @@
             ghostClass: 'sortable-ghost',
             chosenClass: 'sortable-chosen',
             onStart: function(evt) {
-                // Khi bắt đầu kéo, tìm charm-item bên trong wrapper
                 const wrapper = evt.item;
                 const charmItem = wrapper.querySelector('.charm-item');
                 if (charmItem) {
@@ -279,132 +458,91 @@
             }
         });
 
+        // Submit button handler (keeping your existing logic)
         document.getElementById('submitBtn').onclick = () => {
             const selectedIds = [];
-
-            // Duyệt qua tất cả các slot theo thứ tự
             for (let i = 0; i < slots.length; i++) {
                 const slot = slots[i];
                 if (slot.children.length > 0) {
-                    // Có charm trong slot này
                     selectedIds.push(slot.children[0].dataset.id);
                 } else {
-                    // Slot trống, gán null hoặc empty string
                     selectedIds.push("");
                 }
             }
 
-            // Lấy ghi chú
             const note = document.getElementById('noteInput').value.trim();
-
-            // Đếm số charm đã được đặt
             const filledSlots = selectedIds.filter(id => id !== "").length;
 
-            // Kiểm tra tối thiểu 1 charm
             if (filledSlots === 0) {
                 alert('🎯 Vui lòng đặt ít nhất 1 charm vào vòng tay trước khi gửi!');
                 return;
-            } else{
+            } else {
                 Swal.fire({
-                title: 'Xác nhận thêm vào giỏ',
-                text: 'Bạn có muốn thêm vòng tay này vào giỏ hàng không?',
-                icon: 'question',
-                showCancelButton: true,
-                confirmButtonText: 'Thêm vào giỏ',
-                cancelButtonText: 'Hủy',
-                customClass: {
-                    confirmButton: 'swal2-confirm',
-                    cancelButton: 'swal2-cancel'
-                }
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    console.log('Đang gửi vòng tay:', { note, selectedIds });
-                     $.ajax({
-                        url: '/Custom/AddBraceletToCart',
-                        type: 'POST',
-                        contentType: 'application/json',
-                        data: JSON.stringify({
-                            note: note,
-                            charmIds: selectedIds  // key là "charmIds"
-                        }),
-                        headers: {
-                            'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
-                        },
-                        success: function (response) {
-                            console.log('AJAX success:', response);
-                            if (response.success) {
-                                Swal.fire({
-                                    title: 'Thành công',
-                                    text: 'Sản phẩm đã được thêm vào giỏ hàng.',
-                                    icon: 'success',
-                                    confirmButtonText: 'OK'
-                                }).then(() => {
-                                    updateCartCount(); /* Gọi nếu có hàm cập nhật số lượng giỏ */
-                                    window.location.href = 'https://localhost:7290/Cart/CartDetail';
-                                });
-                            } else {
+                    title: 'Xác nhận thêm vào giỏ',
+                    text: 'Bạn có muốn thêm vòng tay này vào giỏ hàng không?',
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonText: 'Thêm vào giỏ',
+                    cancelButtonText: 'Hủy',
+                    customClass: {
+                        confirmButton: 'swal2-confirm',
+                        cancelButton: 'swal2-cancel'
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        console.log('Đang gửi vòng tay:', { note, selectedIds });
+                        $.ajax({
+                            url: '/Custom/AddBraceletToCart',
+                            type: 'POST',
+                            contentType: 'application/json',
+                            data: JSON.stringify({
+                                note: note,
+                                charmIds: selectedIds
+                            }),
+                            headers: {
+                                'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
+                            },
+                            success: function (response) {
+                                console.log('AJAX success:', response);
+                                if (response.success) {
+                                    Swal.fire({
+                                        title: 'Thành công',
+                                        text: 'Sản phẩm đã được thêm vào giỏ hàng.',
+                                        icon: 'success',
+                                        confirmButtonText: 'OK'
+                                    }).then(() => {
+                                        if (typeof updateCartCount === 'function') {
+                                            updateCartCount();
+                                        }
+                                        window.location.href = 'https://localhost:7290/Cart/CartDetail';
+                                    });
+                                } else {
+                                    Swal.fire({
+                                        title: 'Lỗi',
+                                        text: response.message || 'Không thể thêm vào giỏ hàng.',
+                                        icon: 'error',
+                                        confirmButtonText: 'Đóng'
+                                    });
+                                }
+                            },
+                            error: function (xhr, status, error) {
+                                console.error('AJAX error:', status, error, xhr.responseText);
                                 Swal.fire({
                                     title: 'Lỗi',
-                                    text: response.message || 'Không thể thêm vào giỏ hàng.',
+                                    text: 'Có lỗi xảy ra khi thêm sản phẩm vào giỏ hàng.',
                                     icon: 'error',
                                     confirmButtonText: 'Đóng'
                                 });
                             }
-                        },
-                        error: function (xhr, status, error) {
-                            console.error('AJAX error:', status, error, xhr.responseText);
-                            Swal.fire({
-                                title: 'Lỗi',
-                                text: 'Có lỗi xảy ra khi thêm sản phẩm vào giỏ hàng.',
-                                icon: 'error',
-                                confirmButtonText: 'Đóng'
-                            });
-                        }
-                    });
-                }
-            });
+                        });
+                    }
+                });
             }
-
-            // const noteText = note ? `\nGhi chú: "${note}"` : '';
-            // alert(`🎉 Vòng tay của bạn có ${filledSlots} charm!\nVị trí charm: [${selectedIds.join(', ')}]\n(null = vị trí trống)${note}`);
-
-            // Để gửi dữ liệu về server, bạn có thể sử dụng:
-            console.log('Selected charm IDs:', selectedIds);
-            console.log('Note:', note);
-
-            // Hoặc gửi POST request
-            // fetch('/your-endpoint', {
-            //     method: 'POST',
-            //     headers: {
-            //         'Content-Type': 'application/json',
-            //     },
-            //     body: JSON.stringify({
-            //         charmIds: selectedIds,
-            //         note: note
-            //     })
-            // });
-            // fetch('/Custom/AddBraceletToCart', {
-            // 	method: 'POST',
-            // 	headers: {
-            // 		'Content-Type': 'application/json',
-            // 	},
-            // 	body: JSON.stringify({
-            // 		note: note,
-            // 		charmIds: selectedIds
-            // 	})
-            // })
-            // .then(response => response.json())
-            // .then(data => {
-            // 	console.log('Response from server:', data);
-            // 	// Xử lý phản hồi từ server nếu cần
-            // })
-            // .catch(error => {
-            // 	console.error('Error:', error);
-            // 	// Xử lý lỗi nếu có
-            // });
         };
+
+        // Initialize everything
         createSlots();
-        renderAvailableCharms();
+        renderAvailableCharms(true);
     </script>
 </body>
 </html>

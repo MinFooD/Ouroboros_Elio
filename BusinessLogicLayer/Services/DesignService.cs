@@ -252,5 +252,10 @@ namespace BusinessLogicLayer.Services
 
             return designViewModels;
         }
-    }
+
+		public async Task<bool> VisitSystemTracking()
+		{
+            return await _designRepository.VisitSystemTracking();
+		}
+	}
 }

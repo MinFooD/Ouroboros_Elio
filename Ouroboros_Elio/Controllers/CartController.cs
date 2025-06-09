@@ -113,24 +113,24 @@ public class CartController : Controller
                     });
                 }
             }
-            //else if (productType == true && _charmService != null)
-            //{
-            //    var bracelet = await _charmService.GetCustomBraceletByIdAsync(designId);
-            //    if (bracelet != null)
-            //    {
-            //        var charms = await _charmService.GetCustomBraceletCharm(designId);
-            //        var minCharmQuantity = charms?.Any() == true ? charms.Min(c => c.Charm.Quantity) : 0;
-            //        if (quantity > minCharmQuantity)
-            //        {
-            //            return Json(new
-            //            {
-            //                success = false,
-            //                message = $"Chỉ còn {minCharmQuantity} sản phẩm trong kho.",
-            //                stockQuantity = minCharmQuantity
-            //            });
-            //        }
-            //    }
-            //}
+            else if (productType == true && _charmService != null)
+            {
+                var bracelet = await _charmService.GetCustomBraceletByIdAsync(designId);
+                if (bracelet != null)
+                {
+                    var charms = await _charmService.GetCustomBraceletCharm(designId);
+                    var minCharmQuantity = charms?.Any() == true ? charms.Min(c => c.Charm.Quantity) : 0;
+                    if (quantity > minCharmQuantity)
+                    {
+                        return Json(new
+                        {
+                            success = false,
+                            message = $"Chỉ còn {minCharmQuantity} sản phẩm trong kho.",
+                            stockQuantity = minCharmQuantity
+                        });
+                    }
+                }
+            }
 
             var (success, message) = await _cartService.UpdateQuantity(userGuid, designId, quantity, productType);
             var cart = await _cartService.GetCartByUserIdAsync(userGuid);

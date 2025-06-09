@@ -41,11 +41,14 @@ public class OrderRepository : IOrderRepository
             // Kiểm tra tồn kho
             foreach (var item in cart.CartItems)
             {
-                var design = designs.FirstOrDefault(d => d.DesignId == item.DesignId);
-                if (design == null)
-                    return (null, $"Sản phẩm {item.DesignId} không tồn tại.");
-                if (design.StockQuantity < item.Quantity)
-                    return (null, $"Sản phẩm xxx chỉ còn {design.StockQuantity} trong kho.");
+                if (item.ProductType == false)
+                {
+					var design = designs.FirstOrDefault(d => d.DesignId == item.DesignId);
+					if (design == null)
+						return (null, $"Sản phẩm {item.DesignId} không tồn tại.");
+					if (design.StockQuantity < item.Quantity)
+						return (null, $"Sản phẩm xxx chỉ còn {design.StockQuantity} trong kho.");
+				}
             }
 
             // Tạo đơn hàng mới
@@ -55,7 +58,7 @@ public class OrderRepository : IOrderRepository
                 UserId = cart.UserId,
                 OrderDate = DateTime.UtcNow,
                 TotalAmount = cart.Total,
-                Status = "Chưa giao",
+                Status = "Chưa giao hàng",
                 ShippingAddress = user.Address,
                 OrderItems = cart.CartItems.Select(item => new OrderItem
                 {
@@ -86,6 +89,24 @@ public class OrderRepository : IOrderRepository
                         return (null, $"Sản phẩm xxx đã hết hàng trong lúc xử lý đơn hàng.");
                     }
                 }
+                else
+                {
+                    var customBracelet = await _context.CustomBracelets.Include(cb => cb.CustomBraceletCharms).ThenInclude(cbc => cbc.Charm)
+						.FirstOrDefaultAsync(cb => cb.CustomBraceletId == item.CustomBraceletId);
+                    var charms = customBracelet?.CustomBraceletCharms.Select(cbc => cbc.Charm).ToList();
+                    if(charms != null && charms.Any())
+                    {
+						foreach (var charm in charms)
+						{
+							if (charm.Quantity < item.Quantity)
+							{
+								await transaction.RollbackAsync();
+								return (null, $"Charm {charm.Name} chỉ còn {charm.Quantity} trong kho.");
+							}
+							charm.Quantity -= item.Quantity;
+						}
+					}
+				}
             }
 
             // Xóa giỏ hàng

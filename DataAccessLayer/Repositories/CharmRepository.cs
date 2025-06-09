@@ -105,9 +105,20 @@ namespace DataAccessLayer.Repositories
 
 		public async Task<CustomBracelet?> GetCustomBraceletByUserIdAsync(Guid? userId)
 		{
+			var cart = await _cartRepository.GetCartByUserIdAsync(userId);
+			if(cart == null)
+			{
+				return null;
+			}
+			var cartItem = await _context.CartItems
+				.FirstOrDefaultAsync(x => x.CartId == cart.CartId && x.ProductType == true);
+			if(cartItem == null)
+			{
+				return null; // Không có vòng tay tuỳ chỉnh trong giỏ hàng
+			}
 			return await _context.CustomBracelets
 				.Include(cb => cb.CustomBraceletCharms)
-				.FirstOrDefaultAsync(cb => cb.UserId == userId);
+				.FirstOrDefaultAsync(cb => cb.CustomBraceletId == cartItem.CustomBraceletId);
 		}
 
 		public async Task<List<CustomBraceletCharm>> GetCustomBraceletCharm(Guid? customBraceletId)

@@ -5,6 +5,7 @@ namespace BusinessLogicLayer.ServiceContracts;
 
 public interface IDesignService
 {
+    Task<bool> VisitSystemTracking();
     Task<DesignViewModel?> GetDesignByIdAsync(Guid? designId);
     Task<List<DesignViewModel>?> GetAllDesignsAsync(Guid? modelId);
     Task<bool> VisitCountUp(Guid designId);

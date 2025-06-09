@@ -76,6 +76,14 @@ builder.Services.AddHttpClient();
 
 var app = builder.Build();
 
+app.UseStaticFiles(new StaticFileOptions
+{
+	OnPrepareResponse = ctx =>
+	{
+		ctx.Context.Response.Headers.Append("Cache-Control", "public,max-age=31536000");
+	}
+});
+
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {

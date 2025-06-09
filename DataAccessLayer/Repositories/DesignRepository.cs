@@ -179,4 +179,17 @@ public class DesignRepository : IDesignRepository
             .Where(d => designIds.Contains(d.DesignId))
             .ToListAsync();
     }
+
+	public async Task<bool> VisitSystemTracking()
+	{
+		var systemVisitCount = await _context.SystemTrackings.FirstOrDefaultAsync();
+        if(systemVisitCount == null)
+        {
+            return false;
+        }
+        systemVisitCount.AccessCount += 1;
+		_context.SystemTrackings.Update(systemVisitCount);
+		await _context.SaveChangesAsync();
+		return true;
+	}
 }

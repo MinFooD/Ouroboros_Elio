@@ -9,6 +9,7 @@ namespace DataAccessLayer.RepositoryContracts
 {
 	public interface IDesignRepository
 	{
+		Task<bool> VisitSystemTracking();
 		Task<Design?> GetDesignByIdAsync(Guid? designId);
 		Task<List<Design>?> GetAllDesignsAsync(Guid? modelId);
 		Task<bool> VisitCountUp(Guid designId);

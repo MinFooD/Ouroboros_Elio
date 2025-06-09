@@ -24,7 +24,8 @@ namespace Ouroboros_Elio.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var model = new HomeIndexViewModel();
+            var result = await _designService.VisitSystemTracking();
+			var model = new HomeIndexViewModel();
             model.Models = await _modelService.GetAllActiveModelsAsync() ?? new List<ModelViewModel>();
             model.Categories = await _categoryService.GetAllCategoriesAsync() ?? new List<CategoryViewModel>();
             foreach (var category in model.Categories)
