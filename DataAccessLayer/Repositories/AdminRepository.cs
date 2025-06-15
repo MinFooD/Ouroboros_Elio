@@ -32,7 +32,7 @@ public class AdminRepository : IAdminRepository
 
         var count = await query.CountAsync();
         var orders = await query
-            .OrderBy(o => o.OrderDate)
+            .OrderByDescending(o => o.OrderDate)
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
             .ToListAsync();
@@ -47,7 +47,7 @@ public class AdminRepository : IAdminRepository
             return false; // Order not found
         }
         order.CodeShipping = shippingCode;
-        order.Status = "Da giao hang";
+        order.Status = "Đã giao hàng";
         _context.Orders.Update(order);
         try
         {

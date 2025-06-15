@@ -32,7 +32,7 @@ namespace Ouroboros_Elio.Controllers
             {
                 model.DesignsByCategory[category.CategoryId] = await _designService.GetDesignsByCategoryAsync(category.CategoryId) ?? new List<DesignViewModel>();
             }
-            model.TopOrderedDesigns = await _designService.GetTopOrderedDesignsAsync(6) ?? new List<DesignViewModel>();
+            model.TopOrderedDesigns = await _designService.GetTopOrderedDesignsAsync(4) ?? new List<DesignViewModel>();
             return View(model);
         }
     }

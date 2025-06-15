@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Ouroboros_Elio.Controllers;
 
-[Authorize(Roles ="Admin")]
+[Authorize]
 public class AdminController : Controller
 {
     private readonly IAdminService _adminService;

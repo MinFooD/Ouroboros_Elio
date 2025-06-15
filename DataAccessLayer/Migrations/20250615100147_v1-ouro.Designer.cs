@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccessLayer.Migrations
 {
     [DbContext(typeof(OuroborosContext))]
-    [Migration("20250608091824_v1")]
-    partial class v1
+    [Migration("20250615100147_v1-ouro")]
+    partial class v1ouro
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

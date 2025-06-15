@@ -154,6 +154,12 @@
                                         <li class="megamenu-holder">
                                             <a href="/Contact/Index">Liên Hệ</a>
                                         </li>
+                                        @if (User.Identity.IsAuthenticated)
+                                        {
+                                            <li class="megamenu-holder">
+                                                <a href="/MyAccount/Index">Đơn hàng</a>
+                                            </li>
+                                        }
                                     </ul>
                                 </nav>
                             </div>
