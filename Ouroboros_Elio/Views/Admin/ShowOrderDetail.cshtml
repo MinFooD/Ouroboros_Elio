@@ -191,9 +191,6 @@
                                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                                             Description
                                         </th>
-                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                                            Image
-                                        </th>
                                         <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                                             Price
                                         </th>
@@ -227,11 +224,6 @@
                                                     </td>
                                                     <td class="align-middle text-center">
                                                         <span class="text-secondary text-xs font-weight-bold">@item.Design.Description</span>
-                                                    </td>
-                                                    <td>
-                                                        <img src="https://tnj.vn/16501-large_default/vong-tay-bac-nu-co-4-la-dep-ltn0070.jpg"
-                                                             class="avatar avatar-sm me-3"
-                                                             alt="Product Image" />
                                                     </td>
                                                     <td class="align-middle text-center">
                                                         <span class="text-secondary text-xs font-weight-bold">@(item.Price.HasValue? item.Price.Value.ToString("N0") : "0") ₫</span>
@@ -268,13 +260,8 @@
                                                     <td class="align-middle text-center">
                                                         <span class="text-secondary text-xs font-weight-bold">@item.CustomBracelet.CustomBraceletName</span>
                                                     </td>
-                                                    <td>
-                                                        <img src="https://anh.quatructuyen.com/media/catalog/product/cache/1/image/480x480/9df78eab33525d08d6e5fb8d27136e95/l/a/lac_tay_bac_1.jpg"
-                                                             class="avatar avatar-sm me-3"
-                                                             alt="Product Image" />
-                                                    </td>
                                                     <td class="align-middle text-center">
-                                                        <span class="text-secondary text-xs font-weight-bold">@item.Price</span>
+                                                        <span class="text-secondary text-xs font-weight-bold">@(item.Price.HasValue? item.Price.Value.ToString("N0") : "0") ₫</span>
                                                     </td>
                                                     <td class="align-middle text-center">
                                                         <span class="text-secondary text-xs font-weight-bold">@item.CustomBracelet.Category.CategoryName</span>

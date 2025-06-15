@@ -49,9 +49,10 @@
                                                         <tr>
                                                             <th>MÃ ĐƠN HÀNG</th>
                                                             <th>NGÀY ĐẶT</th>
-                                                            <th>TRẠNG THÁI</th>
+                                                            <th>MÃ GIAO HÀNG</th>
                                                             <th>TỔNG CỘNG</th>
                                                             <th>THAO TÁC</th>
+                                                            <th>VIETTELPOST</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
@@ -60,11 +61,23 @@
                                                             <tr>
                                                                 <td><a class="account-order-id" href="@Url.Action("OrderDetails", "MyAccount", new { orderId = order.OrderId })">#@order.OrderId.ToString().Substring(0, 8)</a></td>
                                                                 <td>@order.OrderDate.ToString("dd/MM/yyyy")</td>
-                                                                <td>@order.Status</td>
+                                                                @if(order.CodeShipping != null)
+                                                                {
+                                                                    <td>@order.CodeShipping</td>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <td>@order.Status</td>
+                                                                }
                                                                 <td>@order.TotalAmount.ToString("N0") ₫ cho @order.ItemCount sản phẩm</td>
                                                                 <td>
                                                                     <a href="@Url.Action("OrderDetails", "MyAccount", new { orderId = order.OrderId })" class="hiraola-btn hiraola-btn_dark hiraola-btn_sm">
                                                                         <span>Xem</span>
+                                                                    </a>
+                                                                </td>
+                                                                <td>
+                                                                    <a href="https://viettelpost.com.vn/tra-cuu-hanh-trinh-don/" target="_blank" class="hiraola-btn hiraola-btn_dark hiraola-btn_sm">
+                                                                        <span>Tra cứu</span>
                                                                     </a>
                                                                 </td>
                                                             </tr>

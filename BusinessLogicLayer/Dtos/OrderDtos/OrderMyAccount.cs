@@ -7,7 +7,8 @@ public class OrderMyAccount
     public string Status { get; set; }
     public decimal TotalAmount { get; set; }
     public int ItemCount { get; set; }
-    public List<OrderItemMyAccount> OrderItems { get; set; }
+    public string? CodeShipping { get; set; }
+	public List<OrderItemMyAccount> OrderItems { get; set; }
 }
 
 public class OrderItemMyAccount

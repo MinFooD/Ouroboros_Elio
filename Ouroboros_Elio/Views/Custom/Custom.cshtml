@@ -101,124 +101,145 @@
 
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
     <script>
-        // Performance optimization variables
+        // =================== OPTIMIZED JAVASCRIPT - KEEP ORIGINAL UI ===================
+
+        // 1. Enhanced performance variables
         let allCharms = [];
+        let availableCharmsMap = new Map(); // For O(1) lookups instead of array.find()
+        let usedCharmIds = new Set(); // Track used charms efficiently
+        let renderedCharms = new Set(); // Track what's already rendered to avoid duplicates
+        let shouldRerender = false; // Flag to control re-rendering
+
+        // Keep original variables
         let filteredCharms = [];
         let visibleCharms = [];
         let currentPage = 0;
-        const itemsPerPage = 20; // Load 20 items at a time
+        const itemsPerPage = 12; // Reduced from 20 for better performance
         let isLoading = false;
 
-        // Image cache for better performance
+        // 2. Enhanced image cache with size limits
         const imageCache = new Map();
+        const maxCacheSize = 80; // Limit cache to prevent memory issues
 
+        // Keep original DOM references
         const noteInput = document.getElementById("noteInput");
         const wordCount = document.getElementById("wordCount");
         const charmContainer = document.getElementById("charmContainer");
         const maxChars = 200;
 
-        // Note input handler
-        noteInput.addEventListener("input", function() {
+        // 3. Intersection Observer for true lazy loading (NEW!)
+        const imageObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const img = entry.target;
+                    const src = img.dataset.src;
+                    if (src && !img.src) {
+                        loadImageOptimized(img, src);
+                    }
+                }
+            });
+        }, {
+            rootMargin: '50px', // Start loading 50px before image comes into view
+            threshold: 0.1
+        });
+
+        // 4. Optimized image loading function
+        function loadImageOptimized(img, src) {
+            // Check cache first
+            if (imageCache.has(src)) {
+                img.src = imageCache.get(src);
+                img.classList.add('loaded');
+                img.style.opacity = '1';
+                return;
+            }
+
+            // Create temp image for preloading
+            const tempImg = new Image();
+            tempImg.onload = () => {
+                // Manage cache size to prevent memory issues
+                if (imageCache.size >= maxCacheSize) {
+                    const firstKey = imageCache.keys().next().value;
+                    imageCache.delete(firstKey);
+                }
+                imageCache.set(src, src);
+
+                img.src = src;
+                img.classList.add('loaded');
+                img.style.opacity = '1';
+                img.style.background = 'none';
+                imageObserver.unobserve(img); // Stop observing after loading
+            };
+
+            tempImg.onerror = function() {
+                img.style.display = 'none';
+                const parent = img.parentNode;
+                if (parent) {
+                    parent.style.background = 'linear-gradient(45deg, #667eea, #764ba2)';
+                    parent.style.color = 'white';
+                    parent.style.display = 'flex';
+                    parent.style.alignItems = 'center';
+                    parent.style.justifyContent = 'center';
+                    parent.style.fontSize = '12px';
+                    parent.textContent = img.alt || 'Lỗi tải';
+                }
+                imageObserver.unobserve(img);
+            };
+
+            tempImg.src = src;
+        }
+
+        // 5. Debounce function for performance
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        // 6. Optimized note input handler
+        const debouncedNoteUpdate = debounce(() => {
             let currentLength = noteInput.value.length;
             if (currentLength > maxChars) {
                 noteInput.value = noteInput.value.substring(0, maxChars);
                 currentLength = maxChars;
             }
             wordCount.textContent = `Số ký tự: ${currentLength} / ${maxChars}`;
-        });
+        }, 100);
 
-        // Initialize data
+        noteInput.addEventListener("input", debouncedNoteUpdate);
+
+        // 7. Initialize data with performance optimization
+        // Note: Replace this line with your actual data
         allCharms = @Html.Raw(Json.Serialize(ViewBag.Charms));
+        // For demo purposes, using sample data:
+        // allCharms = [
+        //     {charmId: '1', name: 'Charm 1', price: 50000, imageUrl: 'https:via.placeholder.com/100x80/ff6b6b/ffffff?text=Charm+1'},
+        //     {charmId: '2', name: 'Charm 2', price: 75000, imageUrl: 'https:via.placeholder.com/100x80/4ecdc4/ffffff?text=Charm+2'},
+        //     {charmId: '3', name: 'Charm 3', price: 60000, imageUrl: 'https:via.placeholder.com/100x80/45b7d1/ffffff?text=Charm+3'},
+        //     {charmId: '4', name: 'Charm 4', price: 80000, imageUrl: 'https:via.placeholder.com/100x80/f9ca24/ffffff?text=Charm+4'},
+        //     {charmId: '5', name: 'Charm 5', price: 65000, imageUrl: 'https:via.placeholder.com/100x80/6c5ce7/ffffff?text=Charm+5'},
+        //     {charmId: '6', name: 'Charm 6', price: 70000, imageUrl: 'https:via.placeholder.com/100x80/fd79a8/ffffff?text=Charm+6'}
+        // ];
+
         filteredCharms = [...allCharms];
 
+        // Build lookup maps for O(1) performance
+        allCharms.forEach(charm => {
+            availableCharmsMap.set(charm.charmId, charm);
+        });
+
+        // Keep original DOM references
         const availableCharmsDiv = document.getElementById('availableCharms');
         const braceletDiv = document.getElementById('bracelet');
         const slots = [];
         const totalSlots = 8;
 
-        // Debounce function for search
-        // function debounce(func, wait) {
-        //     let timeout;
-        //     return function executedFunction(...args) {
-        //         const later = () => {
-        //             clearTimeout(timeout);
-        //             func(...args);
-        //         };
-        //         clearTimeout(timeout);
-        //         timeout = setTimeout(later, wait);
-        //     };
-        // }
-
-        // Search functionality
-        // const debouncedSearch = debounce((query) => {
-        //     const searchTerm = query.toLowerCase().trim();
-        //     if (searchTerm === '') {
-        //         filteredCharms = [...allCharms];
-        //     } else {
-        //         filteredCharms = allCharms.filter(charm =>
-        //             charm.name.toLowerCase().includes(searchTerm) ||
-        //             (charm.category && charm.category.toLowerCase().includes(searchTerm))
-        //         );
-        //     }
-        //     currentPage = 0;
-        //     renderAvailableCharms(true);
-        // }, 300);
-
-        // searchInput.addEventListener('input', (e) => {
-        //     debouncedSearch(e.target.value);
-        // });
-
-        // Optimized image loading with preloading
-        function createOptimizedImage(charm) {
-            const img = document.createElement('img');
-
-            // Set dimensions immediately to prevent layout shift
-            img.style.width = '100%';
-            img.style.height = '80px';
-            img.style.objectFit = 'cover';
-            img.style.backgroundColor = '#f0f0f0';
-
-            // Add loading='lazy' for native lazy loading
-            img.loading = 'lazy';
-            img.decoding = 'async';
-
-            if (imageCache.has(charm.imageUrl)) {
-                img.src = imageCache.get(charm.imageUrl);
-                img.style.opacity = '1';
-            } else {
-                // Start loading immediately but show placeholder
-                img.style.opacity = '0.3';
-                img.style.background = 'linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%)';
-
-                img.onload = () => {
-                    imageCache.set(charm.imageUrl, charm.imageUrl);
-                    img.style.opacity = '1';
-                    img.style.background = 'none';
-                };
-
-                img.onerror = function() {
-                    this.style.display = 'none';
-                    const parent = this.parentNode;
-                    if (parent) {
-                        parent.style.background = 'linear-gradient(45deg, #667eea, #764ba2)';
-                        parent.style.color = 'white';
-                        parent.style.display = 'flex';
-                        parent.style.alignItems = 'center';
-                        parent.style.justifyContent = 'center';
-                        parent.style.fontSize = '12px';
-                        parent.textContent = charm.name;
-                    }
-                };
-
-                // Load image immediately instead of waiting for intersection
-                img.src = charm.imageUrl;
-            }
-
-            img.alt = charm.name;
-            return img;
-        }
-
-        // Simplified charm item creation
+        // 8. MASSIVELY optimized charm item creation
         function createCharmItem(charm) {
             const wrapper = document.createElement('div');
             wrapper.className = 'charm-wrapper';
@@ -227,7 +248,24 @@
             div.className = 'charm-item';
             div.dataset.id = charm.charmId;
 
-            const img = createOptimizedImage(charm);
+            // Create image with lazy loading
+            const img = document.createElement('img');
+            img.style.width = '100%';
+            img.style.height = '80px';
+            img.style.objectFit = 'cover';
+            img.style.backgroundColor = '#f0f0f0';
+            img.style.opacity = '0.3';
+            img.style.background = 'linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%)';
+            img.loading = 'lazy';
+            img.decoding = 'async';
+            img.alt = charm.name;
+
+            // Use dataset.src for lazy loading instead of immediate src
+            img.dataset.src = charm.imageUrl;
+
+            // Observe for lazy loading
+            imageObserver.observe(img);
+
             div.appendChild(img);
 
             const price = document.createElement('div');
@@ -240,41 +278,69 @@
             return wrapper;
         }
 
-        // Virtual scrolling implementation
+        // 9. Track used charms efficiently
+        function updateUsedCharms() {
+            usedCharmIds.clear();
+            slots.forEach(slot => {
+                if (slot.children.length > 0) {
+                    const charmElement = slot.children[0];
+                    const id = charmElement.dataset.id || charmElement.querySelector('.charm-item')?.dataset.id;
+                    if (id) {
+                        usedCharmIds.add(id);
+                    }
+                }
+            });
+        }
+
+        // 10. Request re-render with debouncing
+        const debouncedRender = debounce(() => {
+            if (!shouldRerender) return;
+            renderAvailableCharms(true);
+            shouldRerender = false;
+        }, 200);
+
+        function requestRerender() {
+            shouldRerender = true;
+            debouncedRender();
+        }
+
+        // 11. HEAVILY optimized rendering function
         function renderAvailableCharms(reset = false) {
             if (reset) {
                 availableCharmsDiv.innerHTML = '';
                 visibleCharms = [];
+                renderedCharms.clear();
                 currentPage = 0;
             }
 
-            const usedIds = new Set();
-            slots.forEach(slot => {
-                if (slot.children.length > 0) {
-                    const id = slot.children[0].dataset.id;
-                    usedIds.add(id);
-                }
-            });
+            // Use Set for O(1) lookup instead of array filtering
+            updateUsedCharms();
 
-            const availableCharms = filteredCharms.filter(charm => !usedIds.has(charm.charmId));
+            const availableCharms = allCharms.filter(charm => !usedCharmIds.has(charm.charmId));
 
             if (availableCharms.length === 0) {
                 availableCharmsDiv.innerHTML = '<div class="empty-message">🎉 Không còn charm nào để chọn</div>';
                 return;
             }
 
-            // Load more items
+            // Only render new items that haven't been rendered yet
             const startIndex = currentPage * itemsPerPage;
             const endIndex = Math.min(startIndex + itemsPerPage, availableCharms.length);
             const itemsToRender = availableCharms.slice(startIndex, endIndex);
+
+            if (itemsToRender.length === 0) return;
 
             // Use DocumentFragment for better performance
             const fragment = document.createDocumentFragment();
 
             itemsToRender.forEach(charm => {
-                const charmItem = createCharmItem(charm);
-                fragment.appendChild(charmItem);
-                visibleCharms.push(charm);
+                // Only create if not already rendered
+                if (!renderedCharms.has(charm.charmId)) {
+                    const charmItem = createCharmItem(charm);
+                    fragment.appendChild(charmItem);
+                    visibleCharms.push(charm);
+                    renderedCharms.add(charm.charmId);
+                }
             });
 
             availableCharmsDiv.appendChild(fragment);
@@ -282,6 +348,11 @@
 
             // Show load more button if there are more items
             if (endIndex < availableCharms.length) {
+                const existingLoadMore = availableCharmsDiv.querySelector('.load-more-btn');
+                if (existingLoadMore) {
+                    existingLoadMore.remove();
+                }
+
                 const loadMoreBtn = document.createElement('button');
                 loadMoreBtn.textContent = `Xem thêm (${availableCharms.length - endIndex} charm)`;
                 loadMoreBtn.className = 'load-more-btn';
@@ -294,29 +365,35 @@
             }
         }
 
-        // Infinite scroll
-        charmContainer.addEventListener('scroll', () => {
+        // 12. Optimized scroll handling
+        const throttledScroll = debounce(() => {
             if (charmContainer.scrollTop + charmContainer.clientHeight >= charmContainer.scrollHeight - 100) {
                 if (!isLoading && currentPage * itemsPerPage < filteredCharms.length) {
                     isLoading = true;
-                    setTimeout(() => {
+                    // Use requestAnimationFrame for smooth performance
+                    requestAnimationFrame(() => {
                         renderAvailableCharms(false);
                         isLoading = false;
-                    }, 100);
+                    });
                 }
             }
-        });
+        }, 100);
 
-        // Rest of your existing functions (createSlots, removeCharmFromSlot, etc.)
+        charmContainer.addEventListener('scroll', throttledScroll);
+
+        // 13. Optimized removeCharmFromSlot function
         function removeCharmFromSlot(charm) {
             const parentSlot = charm.parentNode;
             if (parentSlot && parentSlot.classList.contains('slot')) {
                 parentSlot.removeChild(charm);
                 updateTotalPrice();
-                renderAvailableCharms(true); // Reset and re-render
+
+                // Trigger optimized re-render
+                requestRerender();
             }
         }
 
+        // 14. Keep original createSlots function but optimize Sortable
         function createSlots() {
             braceletDiv.innerHTML = '';
             slots.length = 0;
@@ -347,6 +424,7 @@
                 braceletDiv.appendChild(slot);
                 slots.push(slot);
 
+                // Optimized Sortable configuration
                 new Sortable(slot, {
                     group: {
                         name: 'charms',
@@ -354,21 +432,22 @@
                             return to.el.children.length === 0 || from.el === to.el;
                         }
                     },
-                    animation: 300,
+                    animation: 200, // Reduced from 300 for better performance
                     ghostClass: 'sortable-ghost',
                     chosenClass: 'sortable-chosen',
                     onAdd: function(evt) {
                         const slotEl = evt.to;
                         if (slotEl.children.length > 1) {
-                            for (let i = 0; i < slotEl.children.length - 1; i++) {
-                                slotEl.removeChild(slotEl.children[i]);
+                            // Remove duplicates efficiently
+                            while (slotEl.children.length > 1) {
+                                slotEl.removeChild(slotEl.children[0]);
                             }
                         }
 
                         if (evt.from.id === 'availableCharms' || evt.from.closest('#availableCharms')) {
                             const charmItem = evt.item;
                             const id = charmItem.dataset.id || charmItem.querySelector('.charm-item')?.dataset.id;
-                            const charm = allCharms.find(c => c.charmId === id);
+                            const charm = availableCharmsMap.get(id); // O(1) lookup instead of array.find()
 
                             if (charm) {
                                 const price = charmItem.querySelector('.charm-price');
@@ -400,7 +479,7 @@
                             }
                         }
                         updateTotalPrice();
-                        renderAvailableCharms(true);
+                        requestRerender(); // Use optimized re-render
                     },
                     onUpdate: function(evt) {
                         const charmItem = evt.item;
@@ -423,13 +502,14 @@
             }
         }
 
-        function updateTotalPrice() {
+        // 15. Optimized price calculation with debouncing
+        const debouncedPriceUpdate = debounce(() => {
             let totalPrice = 15000;
             for (let i = 0; i < slots.length; i++) {
                 const slot = slots[i];
                 if (slot.children.length > 0) {
                     const charmId = slot.children[0].dataset.id;
-                    const charm = allCharms.find(c => c.charmId === charmId);
+                    const charm = availableCharmsMap.get(charmId); // O(1) lookup
                     if (charm && charm.price) {
                         totalPrice += charm.price;
                     }
@@ -437,8 +517,13 @@
             }
             const priceDisplay = document.getElementById('totalPriceDisplay');
             priceDisplay.textContent = `Tổng giá vòng tay: ${totalPrice.toLocaleString('vi-VN')}đ`;
+        }, 50);
+
+        function updateTotalPrice() {
+            debouncedPriceUpdate();
         }
 
+        // 16. Optimize Sortable for available charms (one-time setup)
         new Sortable(availableCharmsDiv, {
             group: {
                 name: 'charms',
@@ -446,7 +531,7 @@
                 put: false
             },
             sort: false,
-            animation: 300,
+            animation: 200, // Reduced animation time
             ghostClass: 'sortable-ghost',
             chosenClass: 'sortable-chosen',
             onStart: function(evt) {
@@ -458,7 +543,7 @@
             }
         });
 
-        // Submit button handler (keeping your existing logic)
+        // 17. Keep original submit handler
         document.getElementById('submitBtn').onclick = () => {
             const selectedIds = [];
             for (let i = 0; i < slots.length; i++) {
@@ -491,6 +576,8 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         console.log('Đang gửi vòng tay:', { note, selectedIds });
+                        // Replace with your actual AJAX call
+                        
                         $.ajax({
                             url: '/Custom/AddBraceletToCart',
                             type: 'POST',
@@ -535,14 +622,30 @@
                                 });
                             }
                         });
+                       
+
+                        // Demo success message
+                        // Swal.fire({
+                        //     title: 'Thành công',
+                        //     text: 'Sản phẩm đã được thêm vào giỏ hàng (Demo).',
+                        //     icon: 'success',
+                        //     confirmButtonText: 'OK'
+                        // });
                     }
                 });
             }
         };
 
-        // Initialize everything
-        createSlots();
-        renderAvailableCharms(true);
+        // 18. Initialize everything efficiently
+        function initializeOptimized() {
+            createSlots();
+            requestRerender();
+        }
+
+        // Start the optimized app
+        requestAnimationFrame(initializeOptimized);
+
+        // =================== END OPTIMIZATIONS ===================
     </script>
 </body>
 </html>

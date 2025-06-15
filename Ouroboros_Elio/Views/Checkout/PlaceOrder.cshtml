@@ -66,7 +66,14 @@
                                     <div class="col-md-6">
                                         <div class="checkout-form-list">
                                             <label>Số Điện Thoại <span class="required">*</span></label>
-                                            <input asp-for="PhoneNumber" type="text" required value="@Model.PhoneNumber" />
+                                            <input asp-for="PhoneNumber"
+                                                   type="text"
+                                                   required
+                                                   value="@Model.PhoneNumber"
+                                                   pattern="\d{9}"
+                                                   maxlength="9"
+                                                   title="Vui lòng nhập đúng 9 chữ số"
+                                                   oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
                                             <span asp-validation-for="PhoneNumber" class="text-danger"></span>
                                         </div>
                                     </div>
