@@ -234,7 +234,7 @@
                                                              alt="Product Image" />
                                                     </td>
                                                     <td class="align-middle text-center">
-                                                        <span class="text-secondary text-xs font-weight-bold">@item.Price</span>
+                                                        <span class="text-secondary text-xs font-weight-bold">@(item.Price.HasValue? item.Price.Value.ToString("N0") : "0") ₫</span>
                                                     </td>
                                                     <td class="align-middle text-center">
                                                         <span class="text-secondary text-xs font-weight-bold">@item.Design.Category.CategoryName</span>

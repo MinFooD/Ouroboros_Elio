@@ -99,7 +99,7 @@
                                             <th class="cart-product-name">Sản Phẩm</th>
                                             <th class="hiraola-product-price">Giá</th>
                                             <th class="hiraola-product-quantity">Số Lượng</th>
-                                            <th class="hiraola-product-subtotal">Tổng</th>
+                                            @* <th class="hiraola-product-subtotal">Tổng</th> *@
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -109,7 +109,7 @@
                                             {
                                                 var itemId = item.ProductType == false ? item.DesignId : item.CustomBraceletId;
                                                 var productType = item.ProductType;
-                                                var imageUrl = item.ProductType == false ? item.Design?.FirstImage?.ImageUrl : "https://www.shutterstock.com/image-vector/sledge-hammer-vector-isolated-on-600nw-2596804669.jpg";
+                                                var imageUrl = item.ProductType == false ? item.Design?.FirstImage?.ImageUrl : "";
                                                 var name = item.ProductType == false ? item.Design?.DesignName : item.CustomBracelet?.CustomBraceletName;
                                                 var detailUrl = item.ProductType == false ? $"/Product/ProductDetail?designId={item.DesignId}" : "javascript:void(0)";
                                                 <tr data-item-id="@itemId" data-product-type="@productType.ToString().ToLower()">
@@ -121,7 +121,7 @@
                                                     </td>
                                                     <td class="hiraola-product-thumbnail">
                                                         <a href="javascript:void(0)">
-                                                            <img src="@imageUrl" alt="Hiraola's Cart Thumbnail" style="max-width:30%">
+                                                            <img src="@imageUrl" alt="Chưa có ảnh minh họa" style="max-width:30%">
                                                         </a>
                                                     </td>
                                                     <td class="hiraola-product-name">
@@ -146,11 +146,11 @@
                                                             <div class="inc qtybutton"><i class="fa fa-angle-up"></i></div>
                                                         </div>
                                                     </td>
-                                                    <td class="product-subtotal">
+                                                    @* <td class="product-subtotal">
                                                         <span class="amount" data-subtotal="@((item.Quantity * item.Price))">
                                                             @($"{item.Quantity * item.Price:N0}") ₫
                                                         </span>
-                                                    </td>
+                                                    </td> *@
                                                 </tr>
                                             }
                                         }

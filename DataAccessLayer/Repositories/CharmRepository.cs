@@ -37,7 +37,7 @@ namespace DataAccessLayer.Repositories
 				};
 				await _context.CustomBracelets.AddAsync(customBracelet);
 				await _context.SaveChangesAsync();
-				decimal totalPrice = 0;
+				decimal totalPrice = 15000;
 				decimal? totalCapitalExpense = 0;
 				// Duyệt qua danh sách charm theo thứ tự vị trí
 				for (int i = 0; i < charms.Count; i++)
