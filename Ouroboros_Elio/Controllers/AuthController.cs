@@ -46,10 +46,10 @@ namespace Ouroboros_Elio.Controllers
 		{
 			var loginRequest = model.Login;
 
-			if (!ModelState.IsValid)
-			{
-				return View("Register", model);
-			}
+			//if (!ModelState.IsValid)
+			//{
+			//	return View("Register", model);
+			//}
 
 			var user = await _userManager.FindByEmailAsync(loginRequest.Gmail);
 			if (user == null)
